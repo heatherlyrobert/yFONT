@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0a"
-#define YFONT_VER_TXT   "initial load into github"
+#define YFONT_VER_NUM   "2.0b"
+#define YFONT_VER_TXT   "fix length of version text to match other libraries"
 
 
 /*===[[ GLX HEADERS ]]========================================================*/
@@ -67,26 +67,27 @@ typedef     struct      cVERT       tVERT;
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
 struct      cFONT {
-   /*---(working)-----------*/
-   FILE    *f;                         /* file (temp) for reading and writing */
-   char     name         [20];         /* short name of font (debugging)      */
+   /*---(file)--------------*/
+   FILE    *file;                      /* file (temp) for reading and writing */
+   char     name         [LEN_LABEL];  /* short name of font (debugging)      */
    char     slot;                      /* font array slot    (debugging)      */
    /*---(characteristics)---*/
-   int      p;                         /* base font point                     */
+   int      point;                     /* base font point                     */
    int      max_ascent;                /* greatest rise above baseline        */
    int      max_descent;               /* greatest fall below baseline        */
    int      margin;                    /* glyph margin allowed                */
    /*---(working)-----------*/
    int      min_glyph;                 /* smallest unicode num in font        */
+   int      max_glyph;                 /* smallest unicode num in font        */
    int      range;                     /* diff in min/max unicode numbers     */
    /*---(texture)-----------*/
-   ulong    w;                         /* texture width                       */
-   ulong    h;                         /* texture height                      */
-   GLuint   texobj;                    /* opengl texture reference            */
-   uchar   *teximage;                  /* actual texture                      */
+   ulong    width;                     /* texture width                       */
+   ulong    height;                    /* texture height                      */
+   GLuint   tex_ref;                   /* opengl texture reference            */
+   uchar   *texture;                   /* actual texture                      */
    /*---(glyphs)------------*/
-   int      n_glyph;                   /* number of glyphs included           */
-   tGLYPH  *a_glyphs;                  /* allocated glyph table               */
+   int      num_glyph;                 /* number of glyphs included           */
+   tGLYPH  *glyphs;                    /* allocated glyph table               */
    tVERT   *verts;                     /* glyph vertices                      */
    short   *lookup;                    /* vertex lookup table                 */
    /*---(done)--------------*/
@@ -140,6 +141,7 @@ struct      cVERT {
 
 char        yFONT__slot_next   (void);
 char        yFONT__slot_alloc  (char  a_slot);
+char        yFONT__slot_init   (char  a_slot);
 
 char        yFONT__file_open   (char  a_slot, char *a_name, char a_mode);
 char        yFONT__file_close  (char  a_slot);

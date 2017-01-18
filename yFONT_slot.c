@@ -54,7 +54,7 @@ yFONT__slot_alloc  (char a_slot)
       return rce;
    }
    /*---(allocate structure)-------------*/
-   DEBUG_YFONT_M  yLOG_info    ("allocating font data structure");
+   DEBUG_YFONT_M  yLOG_note    ("allocating font data structure");
    while (x_txf == NULL) {
       ++x_tries;
       x_txf = (tFONT *) malloc (sizeof (tFONT));
@@ -68,6 +68,88 @@ yFONT__slot_alloc  (char a_slot)
    DEBUG_YFONT_M  yLOG_point   ("*x_txf"    , x_txf);
    g_font [a_slot] = x_txf;
    DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
+   /*---(complete)-----------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char         /*--> wipe the contents of a new slot -------[ ------ [ ------ ]-*/
+yFONT__slot_init   (char a_slot)
+{
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   /*---(file)---------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear file variables");
+   g_font [a_slot]->file         = NULL;
+   strlcpy (g_font [a_slot]->file, "", LEN_LABEL);
+   g_font [a_slot]->slot         = a_slot;
+   /*---(characteristics)----------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear characteristics");
+   g_font [a_slot]->point        = 0;
+   g_font [a_slot]->max_ascent   = 0;
+   g_font [a_slot]->max_descent  = 0;
+   g_font [a_slot]->margin       = 0;
+   /*---(working)------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear working variables");
+   g_font [a_slot]->min_glyph    = 0;
+   g_font [a_slot]->max_glyph    = 0;
+   g_font [a_slot]->range        = 0;
+   /*---(texture)------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear texture variables");
+   g_font [a_slot]->width        = 0;
+   g_font [a_slot]->height       = 0;
+   g_font [a_slot]->tex_ref      = 0;
+   g_font [a_slot]->texture      = NULL;
+   /*---(glyphs)-------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear glyph variables");
+   g_font [a_slot]->num_glyph    = 0;
+   g_font [a_slot]->glyphs       = NULL;
+   g_font [a_slot]->verts        = NULL;
+   g_font [a_slot]->lookup       = NULL;
+   /*---(complete)-----------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char         /*--> wipe the contents of a used slot ------[ ------ [ ------ ]-*/
+yFONT__slot_wipe   (char a_slot)
+{
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+
+
+
+
+
+
+   /*---(working)------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear working variables");
+   if (g_font [a_slot]->file != NULL) {
+   }
+   strlcpy (g_font [a_slot]->file, "", LEN_LABEL);
+   /*---(characteristics)----------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear characteristics");
+   g_font [a_slot]->point        = 0;
+   g_font [a_slot]->max_ascent   = 0;
+   g_font [a_slot]->max_descent  = 0;
+   g_font [a_slot]->margin       = 0;
+   /*---(working)------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear temporary variables");
+   g_font [a_slot]->min_glyph    = 0;
+   g_font [a_slot]->max_glyph    = 0;
+   g_font [a_slot]->range        = 0;
+   /*---(texture)------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear texture variables");
+   g_font [a_slot]->width        = 0;
+   g_font [a_slot]->height       = 0;
+   g_font [a_slot]->tex_ref      = 0;
+   g_font [a_slot]->texture      = NULL;
+   /*---(glyphs)-------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("clear glyph variables");
+   g_font [a_slot]->num_glyph    = 0;
+   g_font [a_slot]->glyphs       = NULL;
+   g_font [a_slot]->verts        = NULL;
+   g_font [a_slot]->lookup       = NULL;
    /*---(complete)-----------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;

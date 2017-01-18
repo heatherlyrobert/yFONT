@@ -27,24 +27,31 @@ static int       yFONT__width       (tFONT *a_txf, char *a_str, int a_len);
 static char      yFONT__free        (tFONT *a_txf);
 
 
+
+
+/*====================------------------------------------====================*/
+/*===----                           utility                            ----===*/
+/*====================------------------------------------====================*/
+static void      o___UTILITY_________________o (void) {;}
+
 static char      yFONT_ver [200] = "";
+
 char*      /* ---- : return library versioning information -------------------*/
 yFONT_version      (void)
 {
    char    t [20] = "";
 #if    __TINYC__ > 0
-   strncpy (t, "[tcc built]", 15);
+   strncpy (t, "[tcc built  ]", 15);
 #elif  __GNUC__  > 0
-   strncpy (t, "[gnu gcc  ]", 15);
+   strncpy (t, "[gnu gcc    ]", 15);
+#elif  __HEPH__  > 0
+   strncpy (t, "[hephaestus ]", 15);
 #else
-   strncpy (t, "[unknown  ]", 15);
+   strncpy (t, "[unknown    ]", 15);
 #endif
    snprintf (yFONT_ver, 100, "%s   %s : %s", t, YFONT_VER_NUM, YFONT_VER_TXT);
    return yFONT_ver;
 }
-
-yFONT_slot
-
 
 static char        /* PURPOSE : clear a new font -----------------------------*/
 yFONT__init        (tFONT *a_txf)
