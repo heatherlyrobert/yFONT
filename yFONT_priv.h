@@ -8,13 +8,32 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0b"
-#define YFONT_VER_TXT   "fix length of version text to match other libraries"
+#define YFONT_VER_NUM   "2.0c"
+#define YFONT_VER_TXT   "compiled yFONT_slot functions"
 
 
-/*===[[ GLX HEADERS ]]========================================================*/
-#include <GL/gl.h>                   /* main header for opengl                */
-#include <GL/glx.h>                  /* for xlib/opengl integration           */
+
+/*===[[ HEADERS ]]========================================*/
+/*---(ansi-c standard)-------------------*/
+#include    <stdio.h>        /* CLIBC   standard input/output                 */
+#include    <stdlib.h>       /* CLIBC   standard general purpose              */
+#include    <string.h>       /* CLIBC   standard string handling              */
+
+/*---(X11 standard)----------------------*/
+#include    <X11/X.h>        /* X11     standard overall file                 */
+#include    <X11/Xlib.h>     /* X11     standard C API                        */
+
+
+/*---(opengl standard)-------------------*/
+#include    <GL/gl.h>        /* OPENGL  standard primary header               */
+#include    <GL/glx.h>       /* OPENGL  standard X11 integration              */
+
+/*---(heatherly made)--------------------*/
+#include    <yURG.h>         /* CUSTOM  heatherly urgent processing           */
+#include    <yLOG.h>         /* CUSTOM  heatherly program logging             */
+#include    <ySTR.h>         /* CUSTOM  heatherly string handling             */
+#include    <yVAR.h>         /* CUSTOM  heatherly variable testing            */
+#include    <yX11.h>         /* CUSTOM  heatherly xlib/glx setup/teardown     */
 
 
 
@@ -139,9 +158,11 @@ struct      cVERT {
 /*===[[ PROTOTYPES ]]=========================================================*/
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
+char        yFONT__slot_new    (void);
 char        yFONT__slot_next   (void);
 char        yFONT__slot_alloc  (char  a_slot);
 char        yFONT__slot_init   (char  a_slot);
+char        yFONT__slot_free   (void);
 
 char        yFONT__file_open   (char  a_slot, char *a_name, char a_mode);
 char        yFONT__file_close  (char  a_slot);

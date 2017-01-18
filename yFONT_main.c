@@ -7,8 +7,10 @@
 
 #include   <png.h>                     /* to handle avatars                   */
 
-#include "yFONT.h"
-#include "yFONT_priv.h"
+
+/*---(headers)---------------------------*/
+#include    "yFONT.h"
+#include    "yFONT_priv.h"
 
 
 
@@ -252,7 +254,7 @@ yFONT__trhead (char *a_name)
       return NULL;
    }
    /*---(initialize)----------------------------*/
-   yFONT__init(txf);
+   yFONT__slot_init  (txf);
    /*---(open file)-----------------------------*/
    snprintf(x_name, 900, "/usr/local/share/fonts/%s.txf", a_name);
    txf->f = fopen(x_name, "rb");
@@ -476,15 +478,8 @@ yFONT_load         (char *a_name)
    DEBUG_YFONT    yLOG_enter   (__FUNCTION__);
    /*---(get font slot)------------------*/
    DEBUG_YFONT    yLOG_note    ("assign the font slot");
-   x_slot = yFONT__slot_next  ();
+   x_slot = yFONT__slot_new   ();
    --rce;  if (x_slot <  0) {
-      DEBUG_YFONT    yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   /*---(allocate font)------------------*/
-   DEBUG_YFONT    yLOG_note    ("allocate font");
-   rc     = yFONT__slot_alloc (x_slot);
-   --rce;  if (rc <  0) {
       DEBUG_YFONT    yLOG_exit    (__FUNCTION__);
       return rce;
    }

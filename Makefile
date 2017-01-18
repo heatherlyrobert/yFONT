@@ -34,9 +34,9 @@ LIBU    = ${LIBDIR}         -lX11             -lGL              -lm             
 #===(file lists)============================================================================================================================================================================#
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (5)--------------
 HEADS   = ${BASE}.h         ${BASE}_priv.h
-OBJS    = ${BASE}.os        
-OBJD    = ${BASE}.o         
-OBJU    = ${BASE}_unit.o    ${BASE}.o         
+OBJS    = ${BASE}_main.os   ${BASE}_slot.os   ${BASE}_file.os   ${BASE}_head.os   ${BASE}_index.os  ${BASE}_glyph.os  
+OBJD    = ${BASE}_main.o    ${BASE}_slot.o    ${BASE}_file.o    ${BASE}_head.o    ${BASE}_index.o   ${BASE}_glyph.o   
+OBJU    = ${BASE}_unit.o    ${OBJD}
 
 #===(make variables)====================================================================================================================================================#
 COPY    = cp -f
@@ -51,7 +51,8 @@ STRIP   = @grep -v -e " DEBUG_" -e " yLOG_"
 
 
 #*---(executables)--------------------*#
-all                : ${DEBUG} ${BASE} ${UNIT} txf_make txf_show
+#all                : ${DEBUG} ${BASE} ${UNIT} txf_make txf_show
+all                : ${DEBUG} ${BASE}
 
 ${BASE}            : ${OBJS}
 	${LINK}  -shared -Wl,-soname,lib${BASE}.so.1   ${LIBS}  -o lib${BASE}.so.1.0   ${OBJS}
@@ -61,35 +62,71 @@ ${DEBUG}           : ${OBJD}
 	${LINK}  -shared -Wl,-soname,lib${DEBUG}.so.1  ${LIBD}  -o lib${DEBUG}.so.1.0  ${OBJD}
 	ar       rcs  lib${DEBUG}.a  ${OBJD}
 
-${UNIT}            : ${OBJU}
-	${LINK}  -o ${UNIT}        ${OBJU}   ${LIBU}
+#${UNIT}            : ${OBJU}
+#	${LINK}  -o ${UNIT}        ${OBJU}   ${LIBU}
 
 
-all                : gcc txf_make doc txf_show
+#all                : gcc txf_make doc txf_show
 
-gcc                : ${BASE}.h ${BASE}.c
-	${COMP}   -fPIC ${INCS} ${BASE}.c
-	${LINK}   -shared -Wl,-soname,lib${BASE}.so.1  ${LIBS}  -o lib${BASE}.so.1.0  ${BASE}.o
+#gcc                : ${BASE}.h ${BASE}.c
+#	${COMP}   -fPIC ${INCS} ${BASE}.c
+#	${LINK}   -shared -Wl,-soname,lib${BASE}.so.1  ${LIBS}  -o lib${BASE}.so.1.0  ${BASE}.o
 
 #tcc                : ${BASE}.h ${BASE}.c
 #	${PRINT}  "\n--------------------------------------\n"
 #	${PRINT}  "compile yFONT (tcc)\n"
 #	tcc       -Wall -Wunsupported -g -bench -shared -soname lib${BASE}.so.1  ${LIBS_T}  -o lib${BASE}.so.1.0  ${BASE}.c
 
-txf_make           : txf_make.c
-	${PRINT}  "\n--------------------------------------\n"
-	${PRINT}  "compile txf_make (tcc)\n"
-	gcc       -g -ansi -Wall -Wextra -o txf_make   txf_make.c ${INCS} ${LIBS_T} -lfreetype
-	${PRINT}  "\n--------------------------------------\n"
-	${PRINT}  "install txf_make and txf_inst\n"
-	${COPY}   txf_make    /usr/local/sbin/
-	${COPY}   txf_inst.sh /usr/local/sbin/txf_inst
-	chmod     0755        /usr/local/sbin/txf_inst
+#txf_make           : txf_make.c
+#	${PRINT}  "\n--------------------------------------\n"
+#	${PRINT}  "compile txf_make (tcc)\n"
+#	gcc       -g -ansi -Wall -Wextra -o txf_make   txf_make.c ${INCS} ${LIBS_T} -lfreetype
+#	${PRINT}  "\n--------------------------------------\n"
+#	${PRINT}  "install txf_make and txf_inst\n"
+#	${COPY}   txf_make    /usr/local/sbin/
+#	${COPY}   txf_inst.sh /usr/local/sbin/txf_inst
+#	chmod     0755        /usr/local/sbin/txf_inst
 
-txf_show           : yFONT.c yFONT.h txf_show.c
-	${COMP}   txf_show.c
-	${LINK}   -o txf_show yFONT.c txf_show.o ${LIBS}
-	${COPY}   txf_show    /usr/local/sbin/
+#txf_show           : yFONT.c yFONT.h txf_show.c
+#	${COMP}   txf_show.c
+#	${LINK}   -o txf_show yFONT.c txf_show.o ${LIBS}
+#	${COPY}   txf_show    /usr/local/sbin/
+
+#*---(components)---------------------*#
+
+${BASE}_main.o     : ${HEADS}       ${BASE}_main.c
+	${COMP}  -fPIC  ${BASE}_main.c                           ${INC}
+	${STRIP}        ${BASE}_main.c      > ${BASE}_main.cs
+	${COMP}  -fPIC  ${BASE}_main.cs    -o ${BASE}_main.os    ${INC}
+
+${BASE}_slot.o     : ${HEADS}       ${BASE}_slot.c
+	${COMP}  -fPIC  ${BASE}_slot.c                           ${INC}
+	${STRIP}        ${BASE}_slot.c      > ${BASE}_slot.cs
+	${COMP}  -fPIC  ${BASE}_slot.cs    -o ${BASE}_slot.os    ${INC}
+
+${BASE}_file.o     : ${HEADS}       ${BASE}_file.c
+	${COMP}  -fPIC  ${BASE}_file.c                           ${INC}
+	${STRIP}        ${BASE}_file.c      > ${BASE}_file.cs
+	${COMP}  -fPIC  ${BASE}_file.cs    -o ${BASE}_file.os    ${INC}
+
+${BASE}_head.o     : ${HEADS}       ${BASE}_head.c
+	${COMP}  -fPIC  ${BASE}_head.c                           ${INC}
+	${STRIP}        ${BASE}_head.c      > ${BASE}_head.cs
+	${COMP}  -fPIC  ${BASE}_head.cs    -o ${BASE}_head.os    ${INC}
+
+${BASE}_index.o    : ${HEADS}       ${BASE}_index.c
+	${COMP}  -fPIC  ${BASE}_index.c                          ${INC}
+	${STRIP}        ${BASE}_index.c     > ${BASE}_index.cs
+	${COMP}  -fPIC  ${BASE}_index.cs   -o ${BASE}_index.os   ${INC}
+
+${BASE}_glyph.o    : ${HEADS}       ${BASE}_glyph.c
+	${COMP}  -fPIC  ${BASE}_glyph.c                          ${INC}
+	${STRIP}        ${BASE}_glyph.c     > ${BASE}_glyph.cs
+	${COMP}  -fPIC  ${BASE}_glyph.cs   -o ${BASE}_glyph.os   ${INC}
+
+#${UNIT}.o          : ${HEADS} ${BASE}.unit
+#	koios    ${BASE}
+#	${COMP}  ${UNIT}.c  ${INCS}
 
 
 

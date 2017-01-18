@@ -1,3 +1,9 @@
+/*============================----beg-of-source---============================*/
+
+/*---(headers)---------------------------*/
+#include    "yFONT.h"
+#include    "yFONT_priv.h"
+
 
 
 char         /*--> open a font file for reading ----------[ ------ [ ------ ]-*/
@@ -44,10 +50,8 @@ yFONT__file_open   (char a_slot, char *a_name, char a_mode)
    if (f == NULL) {
       DEBUG_YFONT_M  yLOG_warn    ("font"      , "could not be openned");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      yFONT__slot_free  (a_slot);
       return rce;
-      fprintf(stderr, "yFONT_load() : can not open font file\n");
-      yFONT__free (txf);
-      return NULL;
    }
    /*---(complete)-----------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
