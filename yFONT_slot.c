@@ -104,12 +104,17 @@ yFONT__slot_init   (char a_slot)
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(file)---------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear file variables");
-   g_font [a_slot]->file         = NULL;
-   strlcpy (g_font [a_slot]->name, "", LEN_LABEL);
    g_font [a_slot]->slot         = a_slot;
+   g_font [a_slot]->file         = NULL;
+   strlcpy (g_font [a_slot]->version, "                    ", LEN_LABEL);
+   strlcpy (g_font [a_slot]->version, ""                    , LEN_LABEL);
+   strlcpy (g_font [a_slot]->name   , "                    ", LEN_LABEL);
+   strlcpy (g_font [a_slot]->name   , ""                    , LEN_LABEL);
    /*---(characteristics)----------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear characteristics");
    g_font [a_slot]->point        = 0;
+   g_font [a_slot]->format       = '-';
+   g_font [a_slot]->style        = '-';
    g_font [a_slot]->max_ascent   = 0;
    g_font [a_slot]->max_descent  = 0;
    g_font [a_slot]->margin       = 0;

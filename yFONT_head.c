@@ -6,98 +6,264 @@
 
 
 
-/*> typedef struct  cHEAD  tHEAD;                                                     <* 
- *> struct cHEAD {                                                                    <* 
- *>    char        magic_id;                                                          <* 
- *>    char        magic_num   [ 4];                                                  <* 
- *>    char        version     [ 5];                                                  <* 
- *>    char        name        [20];                                                  <* 
- *>    char        format;                                                            <* 
- *>    char        style;                                                             <* 
- *>    char        point;                                                             <* 
- *>    short       tex_width;                                                         <* 
- *>    short       tex_height;                                                        <* 
- *>    char        max_ascent;                                                        <* 
- *>    char        max_descent;                                                       <* 
- *>    char        margin;                                                            <* 
- *>    short       nglyphs;                                                           <* 
- *> };                                                                                <*/
+char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
+yFONT__head_write  (char a_slot)
+{
+   /*---(locals)--------------------------------*/
+   char      rce       = -10;               /* return code for errors         */
+   int       rc        = 0;                 /* generic return code            */
+   tFONT    *x_font    = NULL;              /* new font                       */
+   char      x_text    [LEN_STR];
+   int8_t    x_char    = 0;
+   int16_t   x_short   = 0;
+   int32_t   x_int     = 0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
+   /*---(check file type)-----------------------*/
+   x_font = g_font [a_slot];
+   /*---(write file info)----------------*/
+   --rce;  if ( 1 != fwrite ("\377"                 , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic ID"  , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   --rce;  if ( 4 != fwrite ("txf"                  , sizeof (char),  4, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic num" , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   --rce;  if ( 5 != fwrite (YFONT_VER_NUM          , sizeof (char),  5, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("version"   , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(write header)-------------------*/
+   --rce;  if (20 != fwrite (&(x_font->name       ) , sizeof (char), 20, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("name"      , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(point)--------------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->point      ) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("point"     , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(format)-------------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->format     ) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("format"    , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(style)--------------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->style      ) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("style"     , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(tex width)----------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->tex_w      ) , sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("text_w"    , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(tex height)---------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->tex_h      ) , sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("text_h"    , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(max ascent)---------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->max_ascent ) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_ascent", "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(max descent)--------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->max_descent) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_descen", "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(margin)-------------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->margin     ) , sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("margin"    , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
 
-/*> static tFONT*             /+ PURPOSE : read a font header                            +/                                                                <* 
- *> yFONT_head_read    (char *a_name)                                                                                                                      <* 
- *> {                                                                                                                                                      <* 
- *>    /+---(locals)--------------------------------+/                                                                                                     <* 
- *>    int       rc        = 0;                 /+ generic return code            +/                                                                       <* 
- *>    tFONT    *txf       = NULL;              /+ new font                       +/                                                                       <* 
- *>    char      fileid[4];                     /+ magic number of file           +/                                                                       <* 
- *>    int       type      = 0;                 /+ data type                      +/                                                                       <* 
- *>    int       value     = 0;                                                                                                                            <* 
- *>    char      x_name [1000];                                                                                                                            <* 
- *>    /+---(allocate the font)---------------------+/                                                                                                     <* 
- *>    txf = (tFONT *) malloc(sizeof(tFONT));                                                                                                              <* 
- *>    if (txf == NULL) {                                                                                                                                  <* 
- *>       fprintf(stderr, "yFONT_load() : can not allocate memory for font\n");                                                                            <* 
- *>       free (txf);                                                                                                                                      <* 
- *>       return NULL;                                                                                                                                     <* 
- *>    }                                                                                                                                                   <* 
- *>    /+---(initialize)----------------------------+/                                                                                                     <* 
- *>    yFONT__init(txf);                                                                                                                                   <* 
- *>    /+---(open file)-----------------------------+/                                                                                                     <* 
- *>    snprintf(x_name, 900, "/usr/local/share/fonts/%s.txf", a_name);                                                                                     <* 
- *>    txf->f = fopen(x_name, "rb");                                                                                                                       <* 
- *>    if (txf->f == NULL) {                                                                                                                               <* 
- *>       fprintf(stderr, "yFONT_load() : can not open font file\n");                                                                                      <* 
- *>       yFONT__free (txf);                                                                                                                               <* 
- *>       return NULL;                                                                                                                                     <* 
- *>    }                                                                                                                                                   <* 
- *>    /+---(check file type)-----------------------+/                                                                                                     <* 
- *>    rc = fread(fileid, 1, 4, txf->f);                                                                                                                   <* 
- *>    if (rc != 4) { fprintf(stderr, "yFONT_load() : premature end of file (magic#)\n"); yFONT__free (txf); return NULL; }                                <* 
- *>    if (strncmp(fileid, "\377txf", 4) != 0) {                                                                                                           <* 
- *>       fprintf(stderr, "yFONT_load() : not a txf formatted file\n");                                                                                    <* 
- *>       yFONT__free (txf);                                                                                                                               <* 
- *>       return NULL;                                                                                                                                     <* 
- *>    }                                                                                                                                                   <* 
- *>    /+---(name)----------------------------------+/                                                                                                     <* 
- *>    rc = fread (&x_name,   sizeof (char), 20, txf->f);                                                                                                  <* 
- *>    if (rc != 20) { fprintf(stderr, "yFONT_load() : premature end of file (name)\n"); yFONT__free (txf); return NULL; }                                 <* 
- *>    strcpy (txf->name, x_name);                                                                                                                         <* 
- *>    /+---(point size)----------------------------+/                                                                                                     <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (point)\n"); yFONT__free (txf); return NULL; }                                 <* 
- *>    txf->p           = value;                                                                                                                           <* 
- *>    if (txf->p < 6 || txf->p > 99) { fprintf(stderr, "yFONT_load() : point size out of range %d (6-99)\n", txf->p); yFONT__free (txf); return NULL; }   <* 
- *>    /+> printf("points      = %8d\n", txf->p);                                         <+/                                                              <* 
- *>    /+---(check metrics)-------------------------+/                                                                                                     <* 
- *>    rc = fread(&value,   sizeof(ulong), 1, txf->f);                                                                                                     <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (width)\n"); yFONT__free (txf); return NULL; }                                 <* 
- *>    txf->w           = value;                                                                                                                           <* 
- *>    /+> printf("tex width   = %8d\n", txf->w);                                         <+/                                                              <* 
- *>    /+---()---+/                                                                                                                                        <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (height)\n"); yFONT__free (txf); return NULL; }                                <* 
- *>    txf->h           = value;                                                                                                                           <* 
- *>    /+> printf("tex height  = %8d\n", txf->h);                                         <+/                                                              <* 
- *>    /+---()---+/                                                                                                                                        <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (ascent)\n"); yFONT__free (txf); return NULL; }                                <* 
- *>    txf->max_ascent  = value;                                                                                                                           <* 
- *>    /+> printf("max ascent  = %8d\n", txf->max_ascent);                                <+/                                                              <* 
- *>    /+---()---+/                                                                                                                                        <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (descent)\n"); yFONT__free (txf); return NULL; }                               <* 
- *>    txf->max_descent = value;                                                                                                                           <* 
- *>    /+> printf("max descent = %8d\n", txf->max_descent);                               <+/                                                              <* 
- *>    /+---()---+/                                                                                                                                        <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (margin)\n"); yFONT__free (txf); return NULL; }                                <* 
- *>    txf->margin      = value;                                                                                                                           <* 
- *>    /+---()---+/                                                                                                                                        <* 
- *>    rc = fread(&value,   sizeof(int), 1, txf->f);                                                                                                       <* 
- *>    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (num glyphs)\n"); yFONT__free (txf); return NULL; }                            <* 
- *>    txf->n_glyph  = value;                                                                                                                              <* 
- *>    /+> printf("num glyphs  = %8d\n", txf->n_glyph);                                <+/                                                                 <* 
- *>    /+---(complete)------------------------------+/                                                                                                     <* 
- *>    return txf;                                                                                                                                         <* 
- *> }                                                                                                                                                      <*/
+
+char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
+yFONT__head_read   (char a_slot)
+{
+   /*---(locals)--------------------------------*/
+   char      rce       = -10;               /* return code for errors         */
+   int       rc        = 0;                 /* generic return code            */
+   tFONT    *x_font    = NULL;              /* new font                       */
+   char      x_text    [LEN_STR];
+   uchar     x_uchar   = 0;
+   int8_t    x_char    = 0;
+   int16_t   x_short   = 0;
+   int32_t   x_int     = 0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
+   /*---(check file type)-----------------------*/
+   x_font = g_font [a_slot];
+   /*---(check initial char)--------------------*/
+   --rce;  if ( 1 != fread (&x_uchar, sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic ID"  , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("magic ID"  , x_uchar);
+   --rce;  if (x_uchar != 0xFF) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic ID"  , "does not match expected (0xFF)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(check magic number)--------------------*/
+   --rce;  if ( 4 != fread (&x_text, sizeof (char),  4, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic num" , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_text [3] = '\0';
+   DEBUG_YFONT_M  yLOG_info    ("magic num" , x_text);
+   --rce;  if (strcmp ("txf", x_text) != 0) {
+      DEBUG_YFONT_M  yLOG_warn    ("magic num" , "does not match expected (txf)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(read version)--------------------------*/
+   --rce;  if ( 5 != fread (&x_text, sizeof (char),  5, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("version"   , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_text [4] = '\0';
+   DEBUG_YFONT_M  yLOG_info    ("version"   , x_text);
+   /*---(read name)-----------------------------*/
+   --rce;  if (20 != fread (&x_text, sizeof (char), 20, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("name"      , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_text [19] = '\0';
+   strltrim (x_text, ySTR_BOTH, LEN_LABEL);
+   strlcpy (x_font->name, x_text, LEN_LABEL);
+   DEBUG_YFONT_M  yLOG_info    ("name"      , x_text);
+   /*---(point)---------------------------------*/
+   --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("point"     , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("point"     , x_char);
+   --rce;  if (x_char < 0 || x_char > 99) {
+      DEBUG_YFONT_M  yLOG_warn    ("point"     , "does not match range (1 to 99)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->point  = x_char;
+   /*---(format)--------------------------------*/
+   --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("format"    , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_char    ("format"    , x_char);
+   --rce;  if (strchr ("ls"   , x_char) == NULL) {
+      DEBUG_YFONT_M  yLOG_warn    ("format"    , "does not match expected (l or s)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->format = x_char;
+   /*---(style)---------------------------------*/
+   --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("style"     , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_char    ("style"     , x_char);
+   --rce;  if (strchr ("nbui" , x_char) == NULL) {
+      DEBUG_YFONT_M  yLOG_warn    ("style"     , "does not match expected (n, b, u, or i)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->style  = x_char;
+   /*---(texture width)-------------------------*/
+   --rce;  if ( 1 != fread (&x_short, sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("tex_w"     , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("tex_w"     , x_short);
+   --rce;  if (x_short < 1 || x_short > 9999) {
+      DEBUG_YFONT_M  yLOG_warn    ("tex_w"     , "does not fit in range (1 to 9999)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->tex_w  = x_short;
+   /*---(texture height)------------------------*/
+   --rce;  if ( 1 != fread (&x_short, sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("tex_h"     , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("tex_h"     , x_short);
+   --rce;  if (x_short < 1 || x_short > 9999) {
+      DEBUG_YFONT_M  yLOG_warn    ("tex_h"     , "does not fit in range (1 to 9999)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->tex_h  = x_short;
+   /*---(max ascent)----------------------------*/
+   --rce;  if ( 1 != fread (&x_char , sizeof (char   ),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_ascent", "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("max_ascent", x_char);
+   --rce;  if (x_char  <  0 || x_char >  100) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_ascent", "does not fit in range (0 to 100)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->max_ascent  = x_char;
+   /*---(max descent)---------------------------*/
+   --rce;  if ( 1 != fread (&x_char , sizeof (char   ),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_descen", "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("max_descen", x_char);
+   --rce;  if (x_char  >  0 || x_char <  -100) {
+      DEBUG_YFONT_M  yLOG_warn    ("max_descen", "does not fit in range (-0 to -100)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->max_descent = x_char;
+   /*---(margin)--------------------------------*/
+   --rce;  if ( 1 != fread (&x_char , sizeof (char   ),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("margin"    , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("margin"    , x_char);
+   --rce;  if (x_char  <  0 || x_char >    10) {
+      DEBUG_YFONT_M  yLOG_warn    ("margin"    , "does not fit in range (0 to 10)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->margin      = x_char;
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
 

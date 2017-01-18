@@ -115,3 +115,74 @@ SCRP          v21  verify font allocating and freeing                         
      exec     v21  prepare for testing                  yFONT__testend                                                                                i_equal     0                                                                      
 
 
+#23456789-12  123  123456789-123456789-123456789-12345  123456789-123456789-  123456789-123456789-123456789-123456789-123456789-123456789-123456789-  123456789-  123456789-123456789-123456789-123456789-123456789-123456789-123456789-  -  123456789-123456789- 
+#==(verb)===  ver  ===========(description)===========  =====(function)=====  ========================(arguments)===================================  ==(test)==  ==========================(results)===================================  t  ========(var)======= 
+SCRP          v21  verify reading and writing headers                           yFONT__file_open,yFONT__file_close,yFONT__head_write,yFONT__head_read   ----------  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+
+   COND       v21  prepare for run                                              - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  prepare for testing                  yFONT__testloud                                                                               i_equal     0                                                                      
+     exec     v21  clear all fonts                      yFONT__slot_purge                                                                             i_equal     0                                                                      
+
+   COND       v21  look before font allocated                                   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  : no font assigned                                    
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : no font assigned                                    
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : no font assigned                                    
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : no font assigned                                    
+
+   COND       v21  allocate font                                                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  allocate new font                    yFONT__slot_new                                                                               i_equal     0                                                                      
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  :  0:                                                 
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : point= 0, format=-, style=-                         
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : width =   0, height=   0                            
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : mascent =  0, mdescent=  0, margin  =  0            
+
+   COND       v21  force data into structure                                    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     code     v21  force a version                      - - - - - - - - - -   strlcpy (g_font [0]->version, YFONT_VER_NUM      , LEN_LABEL);                                                                                                 
+     code     v21  force a name                         - - - - - - - - - -   strlcpy (g_font [0]->name   , "yUNIT_testing"    , LEN_LABEL);                                                                                                 
+     code     v21  force a point                        - - - - - - - - - -   g_font [0]->point       =   10;                                                                                                                                
+     code     v21  force a format                       - - - - - - - - - -   g_font [0]->format      =  'l';                                                                                                                                
+     code     v21  force a style                        - - - - - - - - - -   g_font [0]->style       =  'u';                                                                                                                                
+     code     v21  force a tex width                    - - - - - - - - - -   g_font [0]->tex_w       = 1000;                                                                                                                                
+     code     v21  force a tex height                   - - - - - - - - - -   g_font [0]->tex_h       =  200;                                                                                                                                
+     code     v21  force a max ascent                   - - - - - - - - - -   g_font [0]->max_ascent  =    5;                                                                                                                                
+     code     v21  force a max descent                  - - - - - - - - - -   g_font [0]->max_descent =   -3;                                                                                                                                
+     code     v21  force a margin                       - - - - - - - - - -   g_font [0]->margin      =    2;                                                                                                                                
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  : 13:yUNIT_testing                                    
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : point=10, format=l, style=u                         
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : width =1000, height= 200                            
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : mascent =  5, mdescent= -3, margin  =  2            
+
+   COND       v21  open file and write header                                   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  open the file                        yFONT__file_open      0              , 'w'                                                    i_equal     0                                                                      
+     exec     v21  write header                         yFONT__head_write     0                                                                       i_equal     0                                                                      
+     exec     v21  close the file                       yFONT__file_close     0                                                                       i_equal     0                                                                      
+
+   COND       v21  free the font                                                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  free an existing font                yFONT__slot_free      0                                                                       i_equal     0                                                                      
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  : no font assigned                                    
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : no font assigned                                    
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : no font assigned                                    
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : no font assigned                                    
+
+   COND       v21  allocate font                                                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  allocate new font                    yFONT__slot_new                                                                               i_equal     0                                                                      
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  :  0:                                                 
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : point= 0, format=-, style=-                         
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : width =   0, height=   0                            
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : mascent =  0, mdescent=  0, margin  =  0            
+
+   COND       v21  open file and read header                                    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     code     v21  force a name                         - - - - - - - - - -   strlcpy (g_font [0]->name   , "yUNIT_testing"    , LEN_LABEL);                                                                                                 
+     exec     v21  open the file                        yFONT__file_open      0              , 'r'                                                    i_equal     0                                                                      
+     exec     v21  read header                          yFONT__head_read      0                                                                       i_equal     0                                                                      
+     exec     v21  close the file                       yFONT__file_close     0                                                                       i_equal     0                                                                      
+     get      v21  review name                          yFONT__unit           "font_name"    , 0                                                      s_equal     yFONT font name  : 13:yUNIT_testing                                    
+     get      v21  review chars                         yFONT__unit           "font_chars"   , 0                                                      s_equal     yFONT chars      : point=10, format=l, style=u                         
+     get      v21  review tex size                      yFONT__unit           "tex_size"     , 0                                                      s_equal     yFONT tex size   : width =1000, height= 200                            
+     get      v21  review char limits                   yFONT__unit           "char_limits"  , 0                                                      s_equal     yFONT char limit : mascent =  5, mdescent= -3, margin  =  2            
+
+   COND       v21  end the test                                                 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   ((01.001))  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+     exec     v21  clear all fonts                      yFONT__slot_purge                                                                             i_equal     0                                                                      
+     exec     v21  prepare for testing                  yFONT__testend                                                                                i_equal     0                                                                      
+
+

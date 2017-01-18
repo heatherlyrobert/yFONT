@@ -967,6 +967,42 @@ yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
    return 0;
 }
 
+/*====================------------------------------------====================*/
+/*===----                    unit testing accessor                     ----===*/
+/*====================------------------------------------====================*/
+static void      o___UNITTEST________________o (void) {;}
+
+#define       LEN_TEXT  2000
+char          unit_answer [ LEN_TEXT ];
+
+char*            /* [------] unit test accessor ------------------------------*/
+yFONT__unit        (char *a_question, int a_num)
+{
+   tFONT      *x_font      = NULL;              /* new font                       */
+   /*---(initialize)---------------------*/
+   strlcpy (unit_answer, "yFONT_unit, unknown request", 100);
+   /*---(string testing)-----------------*/
+   if        (strncmp(a_question, "font_name"   , 20)  == 0) {
+      x_font = g_font [a_num];
+      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT font name  : no font assigned");
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT font name  : %2d:%s", strllen (x_font->name, LEN_LABEL), x_font->name);
+   } else if (strncmp(a_question, "font_chars"  , 20)  == 0) {
+      x_font = g_font [a_num];
+      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT chars      : no font assigned");
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT chars      : point=%2d, format=%c, style=%c" , x_font->point, x_font->format, x_font->style);
+   } else if (strncmp(a_question, "tex_size"    , 20)  == 0) {
+      x_font = g_font [a_num];
+      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT tex size   : no font assigned");
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT tex size   : width =%4d, height=%4d" , x_font->tex_w, x_font->tex_h);
+   } else if (strncmp(a_question, "char_limits" , 20)  == 0) {
+      x_font = g_font [a_num];
+      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT char limit : no font assigned");
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT char limit : mascent =%3d, mdescent=%3d, margin  =%3d" , x_font->max_ascent, x_font->max_descent, x_font->margin);
+   }
+   /*---(complete)-----------------------*/
+   return unit_answer;
+}
+
 
 char       /*----: set up programgents/debugging -----------------------------*/
 yFONT__testquiet    (void)

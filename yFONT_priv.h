@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0e"
-#define YFONT_VER_TXT   "unit testing is excellent on yFONT_slot"
+#define YFONT_VER_NUM   "2.0f"
+#define YFONT_VER_TXT   "unit testing is excellent on yFONT_file, yFONT_head"
 
 
 
@@ -18,6 +18,7 @@
 #include    <stdio.h>        /* CLIBC   standard input/output                 */
 #include    <stdlib.h>       /* CLIBC   standard general purpose              */
 #include    <string.h>       /* CLIBC   standard string handling              */
+#include    <stdint.h>       /* CLIBC   standard integer sizes                */
 
 /*---(X11 standard)----------------------*/
 #include    <X11/X.h>        /* X11     standard overall file                 */
@@ -86,12 +87,16 @@ typedef     struct      cVERT       tVERT;
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
 struct      cFONT {
+   /*---(tie to fonts)------*/
+   char     slot;                      /* font array slot    (debugging)      */
    /*---(file)--------------*/
    FILE    *file;                      /* file (temp) for reading and writing */
+   char     version      [LEN_LABEL];  /* yFONT version that created          */
    char     name         [LEN_LABEL];  /* short name of font (debugging)      */
-   char     slot;                      /* font array slot    (debugging)      */
    /*---(characteristics)---*/
-   int      point;                     /* base font point                     */
+   char     point;                     /* base font point                     */
+   char     format;                    /* letter-based or symbol-based        */
+   char     style;                     /* normal, bold, underline, italic     */
    int      max_ascent;                /* greatest rise above baseline        */
    int      max_descent;               /* greatest fall below baseline        */
    int      margin;                    /* glyph margin allowed                */
@@ -165,12 +170,16 @@ char        yFONT__slot_init   (char  a_slot);
 char        yFONT__slot_purge  (void);
 char        yFONT__slot_free   (char  a_slot);
 
-char        yFONT__file_open   (char  a_slot, char *a_name, char a_mode);
+char        yFONT__file_open   (char  a_slot, char a_mode);
 char        yFONT__file_close  (char  a_slot);
+
+char        yFONT__head_write  (char  a_slot);
+char        yFONT__head_read   (char  a_slot);
 
 char        yFONT__verts       (tFONT *a_txf);
 char        yFONT__index       (tFONT *a_txf);
 
+char*       yFONT__unit        (char *a_question, int a_num);
 char        yFONT__testquiet   (void);
 char        yFONT__testloud    (void);
 char        yFONT__testend     (void);
