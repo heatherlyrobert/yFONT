@@ -27,9 +27,9 @@ INCS    = -I/usr/local/include -I/usr/include/freetype2
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (E)-------------- (F)--------------
 LINK    = gcc
 LIBDIR  = -L/usr/local/lib
-LIBS    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lyURG
-LIBD    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lyURG_debug      -lyLOG
-LIBU    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lyURG_debug      -lyLOG            -lyUNIT           -lyVAR
+LIBS    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lySTR            -lyURG
+LIBD    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lySTR_debug      -lyURG_debug      -lyLOG
+LIBU    = ${LIBDIR}         -lX11             -lGL              -lm               -lpng             -lySTR_debug      -lyURG_debug      -lyLOG            -lyUNIT           -lyVAR
 
 #===(file lists)============================================================================================================================================================================#
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (5)--------------
@@ -52,7 +52,7 @@ STRIP   = @grep -v -e " DEBUG_" -e " yLOG_"
 
 #*---(executables)--------------------*#
 #all                : ${DEBUG} ${BASE} ${UNIT} txf_make txf_show
-all                : ${DEBUG} ${BASE}
+all                : ${DEBUG} ${BASE} ${UNIT}
 
 ${BASE}            : ${OBJS}
 	${LINK}  -shared -Wl,-soname,lib${BASE}.so.1   ${LIBS}  -o lib${BASE}.so.1.0   ${OBJS}
@@ -62,8 +62,8 @@ ${DEBUG}           : ${OBJD}
 	${LINK}  -shared -Wl,-soname,lib${DEBUG}.so.1  ${LIBD}  -o lib${DEBUG}.so.1.0  ${OBJD}
 	ar       rcs  lib${DEBUG}.a  ${OBJD}
 
-#${UNIT}            : ${OBJU}
-#	${LINK}  -o ${UNIT}        ${OBJU}   ${LIBU}
+${UNIT}            : ${OBJU}
+	${LINK}  -o ${UNIT}        ${OBJU}   ${LIBU}
 
 
 #all                : gcc txf_make doc txf_show
@@ -124,9 +124,9 @@ ${BASE}_glyph.o    : ${HEADS}       ${BASE}_glyph.c
 	${STRIP}        ${BASE}_glyph.c     > ${BASE}_glyph.cs
 	${COMP}  -fPIC  ${BASE}_glyph.cs   -o ${BASE}_glyph.os   ${INC}
 
-#${UNIT}.o          : ${HEADS} ${BASE}.unit
-#	koios    ${BASE}
-#	${COMP}  ${UNIT}.c  ${INCS}
+${UNIT}.o          : ${HEADS} ${BASE}.unit
+	koios    ${BASE}
+	${COMP}  ${UNIT}.c  ${INCS}
 
 
 

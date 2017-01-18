@@ -65,9 +65,10 @@ yFONT__slot_alloc  (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_txf       = NULL;
+   tFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
    --rce;  if (g_font [a_slot] != NULL) {
@@ -77,9 +78,9 @@ yFONT__slot_alloc  (char a_slot)
    }
    /*---(allocate structure)-------------*/
    DEBUG_YFONT_M  yLOG_note    ("allocating font data structure");
-   --rce;  while (x_txf == NULL) {
+   --rce;  while (x_font == NULL) {
       ++x_tries;
-      x_txf = (tFONT *) malloc (sizeof (tFONT));
+      x_font = (tFONT *) malloc (sizeof (tFONT));
       if (x_tries > 10) {
          DEBUG_YFONT_M  yLOG_warn    ("malloc"    , "could not allocate a new font in 10 tries");
          DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
@@ -87,8 +88,8 @@ yFONT__slot_alloc  (char a_slot)
       }
    }
    /*---(assign to slot)-----------------*/
-   DEBUG_YFONT_M  yLOG_point   ("*x_txf"    , x_txf);
-   g_font [a_slot] = x_txf;
+   DEBUG_YFONT_M  yLOG_point   ("*x_font"   , x_font);
+   g_font [a_slot] = x_font;
    DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
    /*---(complete)-----------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
@@ -100,6 +101,7 @@ yFONT__slot_init   (char a_slot)
 {
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(file)---------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear file variables");
    g_font [a_slot]->file         = NULL;
@@ -133,6 +135,16 @@ yFONT__slot_init   (char a_slot)
    return 0;
 }
 
+char         /*--> free up all fonts ---------------------[ ------ [ ------ ]-*/
+yFONT__slot_purge  (void)
+{
+   char        i           = 0;
+   for (i = 0; i < MAX_FONT; ++i) {
+      yFONT__slot_free (i);
+   }
+   return 0;
+}
+
 char         /*--> free up a font entry ------------------[ ------ [ ------ ]-*/
 yFONT__slot_free   (char a_slot)
 {
@@ -142,6 +154,7 @@ yFONT__slot_free   (char a_slot)
    tFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
    --rce;  if (g_font [a_slot] == NULL) {
@@ -160,7 +173,7 @@ yFONT__slot_free   (char a_slot)
    DEBUG_YFONT_M  yLOG_note    ("checking/clearing lookup table");
    if (x_font->lookup   )   free (x_font->lookup  );
    DEBUG_YFONT_M  yLOG_note    ("freeing font");
-   free (x_font);
+   free (g_font [a_slot]);
    DEBUG_YFONT_M  yLOG_note    ("nulling slot entry");
    g_font [a_slot] = NULL;
    /*---(complete)-----------------------*/

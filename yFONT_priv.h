@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0d"
-#define YFONT_VER_TXT   "got it back to full compile before more changes"
+#define YFONT_VER_NUM   "2.0e"
+#define YFONT_VER_TXT   "unit testing is excellent on yFONT_slot"
 
 
 
@@ -111,7 +111,7 @@ struct      cFONT {
    short   *lookup;                    /* vertex lookup table                 */
    /*---(done)--------------*/
 };
-extern      tFONT       *g_fonts      [MAX_FONT];
+extern      tFONT       *g_font       [MAX_FONT];
 
 
 
@@ -162,6 +162,7 @@ char        yFONT__slot_new    (void);
 char        yFONT__slot_next   (void);
 char        yFONT__slot_alloc  (char  a_slot);
 char        yFONT__slot_init   (char  a_slot);
+char        yFONT__slot_purge  (void);
 char        yFONT__slot_free   (char  a_slot);
 
 char        yFONT__file_open   (char  a_slot, char *a_name, char a_mode);
@@ -170,6 +171,9 @@ char        yFONT__file_close  (char  a_slot);
 char        yFONT__verts       (tFONT *a_txf);
 char        yFONT__index       (tFONT *a_txf);
 
+char        yFONT__testquiet   (void);
+char        yFONT__testloud    (void);
+char        yFONT__testend     (void);
 
 
 #endif

@@ -526,7 +526,7 @@ yFONT_load         (char *a_name)
    yFONT__texture (x_txf, x_txf->tex_ref);
    /*> yFONT_list (x_txf);                                                              <*/
    /*---(complete)-----------------------*/
-   g_fonts[x_slot] = x_txf;
+   g_font [x_slot] = x_txf;
    DEBUG_YFONT    yLOG_exit    (__FUNCTION__);
    return x_slot;
 }
@@ -537,11 +537,11 @@ yFONT_free         (int  a_slot)
 {
    /*---(defense)-------------------------------*/
    if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
-   tFONT  *x_txf = g_fonts[a_slot];
+   tFONT  *x_txf = g_font [a_slot];
    if (x_txf == NULL)                     return YF_BAD_SLOT;
    /*---(free it up)----------------------------*/
    yFONT__free(x_txf);
-   g_fonts[a_slot] = NULL;
+   g_font [a_slot] = NULL;
    /*---(complete)------------------------------*/
    return 0;
 }
@@ -551,7 +551,7 @@ yFONT_printw (int  a_slot, int a_point, char a_align, char *a_str, int a_width, 
 {
    /*---(defense)-------------------------------*/
    if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
-   tFONT  *x_txf = g_fonts[a_slot];
+   tFONT  *x_txf = g_font [a_slot];
    if (x_txf == NULL)                     return YF_BAD_SLOT;
    /*---(locals)--------------------------------*/
    int       i         = 0;                 /* iterator -- character          */
@@ -596,7 +596,7 @@ yFONT_uprint       (int  a_slot, int a_point, char a_align, uint *a_array, int a
 {
    /*---(defense)-------------------------------*/
    if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
-   tFONT  *x_txf = g_fonts[a_slot];
+   tFONT  *x_txf = g_font [a_slot];
    if (x_txf == NULL)                     return YF_BAD_SLOT;
    /*---(locals)--------------------------------*/
    int       i         = 0;                 /* iterator -- character          */
@@ -643,7 +643,7 @@ yFONT_print  (int  a_slot, int a_point, char a_align, char *a_str)
 {
    /*---(defense)------------------------*/
    if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
-   tFONT  *x_txf = g_fonts[a_slot];
+   tFONT  *x_txf = g_font [a_slot];
    if (x_txf == NULL)                     return YF_BAD_SLOT;
    /*---(locals)-------------------------*/
    int       i         = 0;                 /* iterator -- character          */
@@ -964,6 +964,32 @@ yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
       glBindTexture(GL_TEXTURE_2D, 0);
    } glPopMatrix();
    /*---(complete)------------------------------*/
+   return 0;
+}
+
+
+char       /*----: set up programgents/debugging -----------------------------*/
+yFONT__testquiet    (void)
+{
+   char       *x_args [2]  = { "yFONT_debug","@@quiet" };
+   yURG_logger (2, x_args);
+   yURG_urgs   (2, x_args);
+   return 0;
+}
+
+char       /*----: set up programgents/debugging -----------------------------*/
+yFONT__testloud     (void)
+{
+   char       *x_args [3]  = { "yFONT_debug","@@kitchen","@@YFONT" };
+   yURG_logger (3, x_args);
+   yURG_urgs   (3, x_args);
+   return 0;
+}
+
+char       /*----: set up program urgents/debugging --------------------------*/
+yFONT__testend      (void)
+{
+   DEBUG_TOPS   yLOG_end     ();
    return 0;
 }
 
