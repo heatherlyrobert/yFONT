@@ -1,0 +1,74 @@
+.TH yFONT 5 2010-Aug "linux" "heatherly custom programming manual"
+
+.SH NAME
+TXF \- fast, clean, aesthetic pre-rendered texture mapped fonts
+
+.SH DESCRIPTION
+TXF is an intermediate font file format used to speed and simplify opengl
+programming.  the yFONT library allows opengl programs to rapidly display
+text using one or more specific pre-rendered TXF font files.
+
+.SH CREATION
+TXF files are created by the txf_make utility using the freetype library,
+a specific ttf font, some font settings, and a predetermined, limited
+character set.  the resulting TXF file contains a fast loading texture with
+all requested characters pre-rendered and ready to draw.  each TXF file is
+unique and contains a single font rendered at a requested point size.
+
+.SH ORIGIN
+the original txf font method was developed by mark kilgard in 1997 and
+remains a proven and effective technique.  it is an amazing way to de-couple
+opengl programs from massive, over-built font libraries.  while awesome, i
+have tweaked the format and methods as the original TXF format
+   -- was based on x-windows for font access (rough and hard)
+   -- produces non-antialiased images and so got chunky/broken up
+   -- was built for older, more memory limited graphics hardware
+   -- required textures to by in a power-of-2 format
+   -- used space saving algorithms that are quite complex
+   -- didn't like glyphs that have negative horizontal offsets
+   -- allowed quite a bit of user tweaking and options
+
+.SH FILE FORMAT
+   header
+   index
+   texture
+
+.SH HEADER
+
+   type    bytes   contents         description
+   ---(file type = 10)------
+   char    1       magic id         xFF or \377 or 11111111
+   char    4       magic number     txf 
+   char    5       version          9.9a  (yFONT library version number)
+   ---(font info = 23)------
+   char    20      font name        alphanumeric
+   char    1       format           (l)etter-based, (s)ybmol-based
+   char    1       style            (n)ormal, (b)old, (u)nderline, (i)talic
+   char    1       point size       +6 to +99
+   ---(stat/data =  9)------
+   short   2       texture width    +1 to +9999
+   short   2       texture height   +1 to +9999
+   char    1       max ascent       +0 to +100
+   char    1       max descent      -0 to -100
+   char    1       margin           +1 to +10
+   short   2       gylph count      +1 to +9999
+
+.SH INDEX
+
+   type    bytes   contents         description
+   ---(identifier)----------
+   long    4       unicode          standard character identification
+   char    1       reason           inclusion purpose
+   ---(texture)-------------
+   short   2       x-position       x-pos inside texture
+   short   2       y-position       y-pos inside texture
+   char    1       width            space taken inside texture
+   char    1       height           space taken inside texture
+   ---(placement)-----------
+   char    1       x-offset         offset for placement in opengl
+   char    1       y-offset         offset for placement in opengl
+   char    1       advancement      advancement for next character
+
+.SH TEXTURE
+
+
