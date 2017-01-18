@@ -24,7 +24,7 @@ GLuint  syms      =  0;
 static char      yFONT__init        (tFONT *a_txf);
 static tVERT*    yFONT__findvert    (tFONT *a_txf, uint   a_code);
 static char      yFONT__glyph       (tFONT *a_txf, uint   a_code);
-static GLuint    yFONT__texture     (tFONT *a_txf, GLuint texobj);
+static GLuint    yFONT__texture     (tFONT *a_txf, GLuint a_texobj);
 static int       yFONT__width       (tFONT *a_txf, char *a_str, int a_len);
 static char      yFONT__free        (tFONT *a_txf);
 
@@ -58,18 +58,19 @@ yFONT_version      (void)
 static char        /* PURPOSE : clear a new font -----------------------------*/
 yFONT__init        (tFONT *a_txf)
 {
-   a_txf->f            = NULL;
-   a_txf->p            = 0;
-   a_txf->w            = 0;
-   a_txf->h            = 0;
-   a_txf->texobj       = 0;
+   a_txf->file         = NULL;
+   a_txf->point        = 0;
+   a_txf->tex_w        = 0;
+   a_txf->tex_h        = 0;
+   a_txf->tex_ref      = 0;
+   a_txf->tex_bits     = NULL;
    a_txf->max_ascent   = 0;
    a_txf->max_descent  = 0;
-   a_txf->n_glyph      = 0;
+   a_txf->num_glyph    = 0;
    a_txf->min_glyph    = 0;
+   a_txf->max_glyph    = 0;
    a_txf->range        = 0;
-   a_txf->teximage     = NULL;
-   a_txf->a_glyphs     = NULL;
+   a_txf->glyphs       = NULL;
    a_txf->verts        = NULL;
    a_txf->lookup       = NULL;
    return 0;
@@ -80,10 +81,10 @@ yFONT__free        (tFONT  *a_txf)
 {
    if (a_txf == NULL)                     return YF_BAD_SLOT;
    /*---(free it up)----------------------------*/
-   if (a_txf->teximage)  free (a_txf->teximage);
-   if (a_txf->a_glyphs)  free (a_txf->a_glyphs);
-   if (a_txf->verts)     free (a_txf->verts);
-   if (a_txf->lookup)    free (a_txf->lookup);
+   if (a_txf->tex_bits )  free (a_txf->tex_bits);
+   if (a_txf->glyphs   )  free (a_txf->glyphs  );
+   if (a_txf->verts    )  free (a_txf->verts   );
+   if (a_txf->lookup   )  free (a_txf->lookup  );
    free (a_txf);
    /*---(complete)------------------------------*/
    return 0;
@@ -200,16 +201,16 @@ yFONT__width       (tFONT *a_txf, char *a_str, int a_len)
 }
 
 static GLuint      /* PURPOSE : set up a font texture                         */
-yFONT__texture     (tFONT *txf, GLuint texobj)
+yFONT__texture     (tFONT *txf, GLuint a_texobj)
 {
-   if (txf->texobj == 0) {
-      if (texobj == 0) {
-         glGenTextures(1, &txf->texobj);
+   if (txf->tex_ref == 0) {
+      if (a_texobj == 0) {
+         glGenTextures(1, &txf->tex_ref);
       } else {
-         txf->texobj = texobj;
+         txf->tex_ref = a_texobj;
       }
    }
-   glBindTexture   (GL_TEXTURE_2D, txf->texobj);
+   glBindTexture   (GL_TEXTURE_2D, txf->tex_ref);
    /*---(select quality)------------------------*/
    /* texture filtering is a performance vs quality tradeoff...
     *  GL_NEAREST                 -- fastest, no mipmappping
@@ -230,10 +231,10 @@ yFONT__texture     (tFONT *txf, GLuint texobj)
    /*---(copy into a texture)-------------------*/
    /* use the GL_ALPHA format to drive antialiased and clear text             */
    glTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-   glTexImage2D    (GL_TEXTURE_2D, 0, GL_ALPHA, txf->w, txf->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, txf->teximage);
+   glTexImage2D    (GL_TEXTURE_2D, 0, GL_ALPHA, txf->tex_w, txf->tex_h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, txf->tex_bits);
    /*---(complete)------------------------------*/
    glBindTexture   (GL_TEXTURE_2D, 0);
-   return txf->texobj;
+   return txf->tex_ref;
 }
 
 static tFONT*             /* PURPOSE : read a font header                            */
@@ -257,14 +258,14 @@ yFONT__trhead (char *a_name)
    yFONT__slot_init  (txf);
    /*---(open file)-----------------------------*/
    snprintf(x_name, 900, "/usr/local/share/fonts/%s.txf", a_name);
-   txf->f = fopen(x_name, "rb");
-   if (txf->f == NULL) {
+   txf->file = fopen(x_name, "rb");
+   if (txf->file == NULL) {
       fprintf(stderr, "yFONT_load() : can not open font file\n");
       yFONT__free (txf);
       return NULL;
    }
    /*---(check file type)-----------------------*/
-   rc = fread(fileid, 1, 4, txf->f);
+   rc = fread(fileid, 1, 4, txf->file);
    if (rc != 4) { fprintf(stderr, "yFONT_load() : premature end of file (magic#)\n"); yFONT__free (txf); return NULL; }
    if (strncmp(fileid, "\377txf", 4) != 0) {
       fprintf(stderr, "yFONT_load() : not a txf formatted file\n");
@@ -272,51 +273,51 @@ yFONT__trhead (char *a_name)
       return NULL;
    }
    /*---(name)----------------------------------*/
-   rc = fread (&x_name,   sizeof (char), 20, txf->f);
+   rc = fread (&x_name,   sizeof (char), 20, txf->file);
    if (rc != 20) { fprintf(stderr, "yFONT_load() : premature end of file (name)\n"); yFONT__free (txf); return NULL; }
    strcpy (txf->name, x_name);
    /*---(point size)----------------------------*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (point)\n"); yFONT__free (txf); return NULL; }
-   txf->p           = value;
-   if (txf->p < 6 || txf->p > 99) { fprintf(stderr, "yFONT_load() : point size out of range %d (6-99)\n", txf->p); yFONT__free (txf); return NULL; }
-   /*> printf("points      = %8d\n", txf->p);                                         <*/
+   txf->point           = value;
+   if (txf->point < 6 || txf->point > 99) { fprintf(stderr, "yFONT_load() : point size out of range %d (6-99)\n", txf->point); yFONT__free (txf); return NULL; }
+   /*> printf("points      = %8d\n", txf->point);                                         <*/
    /*---(check metrics)-------------------------*/
-   rc = fread(&value,   sizeof(ulong), 1, txf->f);
+   rc = fread(&value,   sizeof(ulong), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (width)\n"); yFONT__free (txf); return NULL; }
-   txf->w           = value;
-   /*> printf("tex width   = %8d\n", txf->w);                                         <*/
+   txf->tex_w           = value;
+   /*> printf("tex width   = %8d\n", txf->tex_w);                                         <*/
    /*---()---*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (height)\n"); yFONT__free (txf); return NULL; }
-   txf->h           = value;
-   /*> printf("tex height  = %8d\n", txf->h);                                         <*/
+   txf->tex_h           = value;
+   /*> printf("tex height  = %8d\n", txf->tex_h);                                         <*/
    /*---()---*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (ascent)\n"); yFONT__free (txf); return NULL; }
    txf->max_ascent  = value;
    /*> printf("max ascent  = %8d\n", txf->max_ascent);                                <*/
    /*---()---*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (descent)\n"); yFONT__free (txf); return NULL; }
    txf->max_descent = value;
    /*> printf("max descent = %8d\n", txf->max_descent);                               <*/
    /*---()---*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (margin)\n"); yFONT__free (txf); return NULL; }
    txf->margin      = value;
    /*---()---*/
-   rc = fread(&value,   sizeof(int), 1, txf->f);
+   rc = fread(&value,   sizeof(int), 1, txf->file);
    if (rc != 1) { fprintf(stderr, "yFONT_load() : premature end of file (num glyphs)\n"); yFONT__free (txf); return NULL; }
-   txf->n_glyph  = value;
-   /*> printf("num glyphs  = %8d\n", txf->n_glyph);                                <*/
+   txf->num_glyph  = value;
+   /*> printf("num glyphs  = %8d\n", txf->num_glyph);                                <*/
    /*---(complete)------------------------------*/
    return txf;
 }
 
 /*> /+---(read glyph verticies)------------------+/                                                                                                                                                                   <* 
- *> texw = txf->w;                                                                                                                                                                                                    <* 
- *> texh = txf->h;                                                                                                                                                                                                    <* 
+ *> texw = txf->tex_w;                                                                                                                                                                                                    <* 
+ *> texh = txf->tex_h;                                                                                                                                                                                                    <* 
  *> for (i = 0; i < txf->num_glyphs; i++) {                                                                                                                                                                           <* 
  *>    tGLYPH   *tgi;                                                                                                                                                                                                 <* 
  *>    tgi = &txf->tgi[i];                                                                                                                                                                                            <* 
@@ -370,18 +371,18 @@ yFONT__verts       (tFONT *a_txf)
    double      x_left      = 0;
    double      x_right     = 0;
    /*---(allocate the glyph verticies)----------*/
-   a_txf->verts = (tVERT *) malloc (a_txf->n_glyph * sizeof(tVERT));
+   a_txf->verts = (tVERT *) malloc (a_txf->num_glyph * sizeof(tVERT));
    if (a_txf->verts == NULL) {
       fprintf(stderr, "yFONT_load() : could not allocate glyph verticies\n");
       yFONT__free (a_txf);
       return YF_MEM_FULL;
    }
    /*---(read glyph verticies)-----------*/
-   x_texw = a_txf->w;
-   x_texh = a_txf->h;
-   for (i = 0; i < a_txf->n_glyph; i++) {
+   x_texw = a_txf->tex_w;
+   x_texh = a_txf->tex_h;
+   for (i = 0; i < a_txf->num_glyph; i++) {
       /*---(point to glyph)--------------*/
-      x_glyph = &a_txf->a_glyphs[i];
+      x_glyph = &a_txf->glyphs[i];
       /*> printf ("verts : %2d %-15s %5d %c : ", a_txf->slot, a_txf->name, x_glyph->c, (x_glyph->c < 128) ? x_glyph->c : '-');   <* 
        *> printf ("x=%5d y=%3d w=%3d h=%3d xo=%3d yo=%3d : ",                                                                    <* 
        *>       x_glyph->x, x_glyph->y, x_glyph->w, x_glyph->h, x_glyph->xo, x_glyph->yo);                                       <*/
@@ -431,14 +432,14 @@ yFONT__index       (tFONT *a_txf)
    uint        max_glyph   = 0;
    int         i           = 0;
    /*---(identify range)-----------------*/
-   min_glyph = a_txf->a_glyphs[0].c;
-   max_glyph = a_txf->a_glyphs[0].c;
-   for (i = 1; i < a_txf->n_glyph; i++) {
-      if (a_txf->a_glyphs[i].c < min_glyph) {
-         min_glyph = a_txf->a_glyphs[i].c;
+   min_glyph = a_txf->glyphs[0].c;
+   max_glyph = a_txf->glyphs[0].c;
+   for (i = 1; i < a_txf->num_glyph; i++) {
+      if (a_txf->glyphs[i].c < min_glyph) {
+         min_glyph = a_txf->glyphs[i].c;
       }
-      if (a_txf->a_glyphs[i].c > max_glyph) {
-         max_glyph = a_txf->a_glyphs[i].c;
+      if (a_txf->glyphs[i].c > max_glyph) {
+         max_glyph = a_txf->glyphs[i].c;
       }
    }
    a_txf->min_glyph = min_glyph;
@@ -453,8 +454,8 @@ yFONT__index       (tFONT *a_txf)
    /*---(initialize lookup table)--------*/
    for (i = 0; i < a_txf->range; i++)  a_txf->lookup [i] = -1;
    /*---(load lookup table)--------------*/
-   for (i = 0; i < a_txf->n_glyph; i++) {
-      a_txf->lookup [a_txf->a_glyphs[i].c - a_txf->min_glyph] = i;
+   for (i = 0; i < a_txf->num_glyph; i++) {
+      a_txf->lookup [a_txf->glyphs[i].c - a_txf->min_glyph] = i;
    }
    /*---(complete)-----------------------*/
    return 0;
@@ -464,6 +465,7 @@ int                /* PURPOSE : load a font from a file ----------------------*/
 yFONT_load         (char *a_name)
 {
    /*---(locals)--------------------------------*/
+   char        rce         = -10;           /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
    FILE     *file      = NULL;
    tFONT    *x_txf       = NULL;
@@ -496,32 +498,32 @@ yFONT_load         (char *a_name)
    x_txf  = yFONT__trhead (a_name);
    if (x_txf == NULL) return YF_BAD_HEAD;
    x_txf->slot = x_slot;
-   file = x_txf->f;
+   file = x_txf->file;
    /*---(allocate the glyph info)---------------*/
-   x_txf->a_glyphs = (tGLYPH *) malloc(x_txf->n_glyph * sizeof(tGLYPH));
-   if (x_txf->a_glyphs == NULL) {
+   x_txf->glyphs = (tGLYPH *) malloc(x_txf->num_glyph * sizeof(tGLYPH));
+   if (x_txf->glyphs == NULL) {
       fprintf(stderr, "yFONT_load() : could not allocate glyph info\n");
       yFONT__free (x_txf);
       return YF_MEM_FULL;
    }
    /*---(read all information)------------------*/
-   rc = fread(x_txf->a_glyphs, sizeof(tGLYPH), x_txf->n_glyph, file);
-   if (rc != x_txf->n_glyph) { fprintf(stderr, "yFONT_load() : premature end of file (reading glyphs)\n"); yFONT__free (x_txf); return YF_PREMATURE_END; }
+   rc = fread(x_txf->glyphs, sizeof(tGLYPH), x_txf->num_glyph, file);
+   if (rc != x_txf->num_glyph) { fprintf(stderr, "yFONT_load() : premature end of file (reading glyphs)\n"); yFONT__free (x_txf); return YF_PREMATURE_END; }
    /*---(allocate the glyph verticies)----------*/
    yFONT__verts (x_txf);
    yFONT__index (x_txf);
    /*---(type)---------------------------*/
-   x_txf->teximage = (uchar *) malloc (x_txf->w * x_txf->h);
-   if (x_txf->teximage == NULL) {
+   x_txf->tex_bits = (uchar *) malloc (x_txf->tex_w * x_txf->tex_h);
+   if (x_txf->tex_bits == NULL) {
       fprintf(stderr, "yFONT_load() : could not allocate glyph\n");
       yFONT__free (x_txf);
       return YF_MEM_FULL;
    }
-   rc = fread (x_txf->teximage, 1, x_txf->w * x_txf->h, file);
-   if (rc != x_txf->w * x_txf->h) { fprintf(stderr, "yFONT_load() : premature end of file (byte)\n"); yFONT__free (x_txf); return YF_MEM_FULL; }
+   rc = fread (x_txf->tex_bits, 1, x_txf->tex_w * x_txf->tex_h, file);
+   if (rc != x_txf->tex_w * x_txf->tex_h) { fprintf(stderr, "yFONT_load() : premature end of file (byte)\n"); yFONT__free (x_txf); return YF_MEM_FULL; }
 
    fclose(file);
-   yFONT__texture (x_txf, x_txf->texobj);
+   yFONT__texture (x_txf, x_txf->tex_ref);
    /*> yFONT_list (x_txf);                                                              <*/
    /*---(complete)-----------------------*/
    g_fonts[x_slot] = x_txf;
@@ -559,7 +561,7 @@ yFONT_printw (int  a_slot, int a_point, char a_align, char *a_str, int a_width, 
    int       l         = 1;                 /* number of lines                */
    int       space     = 0;                 /* last breakable place in text   */
    char     *x_str     = strdup(a_str);     /* alterable string               */
-   float     scale     = (float) a_point / (float) x_txf->p;
+   float     scale     = (float) a_point / (float) x_txf->point;
    int       v         = 0;                 /* vertical spacing               */
    v = (x_txf->max_ascent - x_txf->max_descent) * a_wrap * scale;
    if (l * v > a_height) return -1;
@@ -599,7 +601,7 @@ yFONT_uprint       (int  a_slot, int a_point, char a_align, uint *a_array, int a
    /*---(locals)--------------------------------*/
    int       i         = 0;                 /* iterator -- character          */
    int       x_len     = 0;                  /* string length                  */
-   float     scale     = (float) a_point / (float) x_txf->p;
+   float     scale     = (float) a_point / (float) x_txf->point;
    int       w         = 0;
    float     x         = 0;
    float     y         = 0;
@@ -624,7 +626,7 @@ yFONT_uprint       (int  a_slot, int a_point, char a_align, uint *a_array, int a
    /*---(draw text)-----------------------------*/
    glPushMatrix(); {
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-      glBindTexture (GL_TEXTURE_2D, x_txf->texobj);
+      glBindTexture (GL_TEXTURE_2D, x_txf->tex_ref);
       glScalef      (scale, scale, scale);
       glTranslatef  (x, y, 0);
       for (i = 0; i < x_len; ++i) {
@@ -646,7 +648,7 @@ yFONT_print  (int  a_slot, int a_point, char a_align, char *a_str)
    /*---(locals)-------------------------*/
    int       i         = 0;                 /* iterator -- character          */
    int       len       = strlen(a_str);     /* string length                  */
-   float     scale     = (float) a_point / (float) x_txf->p;
+   float     scale     = (float) a_point / (float) x_txf->point;
    int       w         = 0;
    float     x         = 0;
    float     y         = 0;
@@ -691,7 +693,7 @@ yFONT_print  (int  a_slot, int a_point, char a_align, char *a_str)
        *> }                                                                           <*/
       /*---(draw characters)-------------*/
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-      glBindTexture (GL_TEXTURE_2D, x_txf->texobj);
+      glBindTexture (GL_TEXTURE_2D, x_txf->tex_ref);
       /*> glScalef      (scale, scale, scale);                                        <*/
       glTranslatef  (x, y, 0);
       for (i = 0; i < len; ++i) {

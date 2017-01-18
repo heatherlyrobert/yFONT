@@ -118,10 +118,10 @@ yFONT__slot_init   (char a_slot)
    g_font [a_slot]->range        = 0;
    /*---(texture)------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear texture variables");
-   g_font [a_slot]->width        = 0;
-   g_font [a_slot]->height       = 0;
+   g_font [a_slot]->tex_w        = 0;
+   g_font [a_slot]->tex_h        = 0;
    g_font [a_slot]->tex_ref      = 0;
-   g_font [a_slot]->texture      = NULL;
+   g_font [a_slot]->tex_bits     = NULL;
    /*---(glyphs)-------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear glyph variables");
    g_font [a_slot]->num_glyph    = 0;
@@ -136,8 +136,33 @@ yFONT__slot_init   (char a_slot)
 char         /*--> free up a font entry ------------------[ ------ [ ------ ]-*/
 yFONT__slot_free   (char a_slot)
 {
+   /*---(locals)-----------+-----------+-*/
+   char        rce         = -10;           /* return code for errors         */
+   char        x_tries     =   0;
+   tFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
+   DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
+   --rce;  if (g_font [a_slot] == NULL) {
+      DEBUG_YFONT_M  yLOG_warn    ("font ptr"  , "already null pointer, nothing to do");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return 0;
+   }
+   x_font  = g_font [a_slot];
+   /*---(free it up)----------------------------*/
+   DEBUG_YFONT_M  yLOG_note    ("checking/clearing texture");
+   if (x_font->tex_bits )   free (x_font->tex_bits);
+   DEBUG_YFONT_M  yLOG_note    ("checking/clearing glyph table");
+   if (x_font->glyphs   )   free (x_font->glyphs  );
+   DEBUG_YFONT_M  yLOG_note    ("checking/clearing vert table");
+   if (x_font->verts    )   free (x_font->verts   );
+   DEBUG_YFONT_M  yLOG_note    ("checking/clearing lookup table");
+   if (x_font->lookup   )   free (x_font->lookup  );
+   DEBUG_YFONT_M  yLOG_note    ("freeing font");
+   free (x_font);
+   DEBUG_YFONT_M  yLOG_note    ("nulling slot entry");
+   g_font [a_slot] = NULL;
    /*---(complete)-----------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;

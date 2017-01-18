@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0c"
-#define YFONT_VER_TXT   "compiled yFONT_slot functions"
+#define YFONT_VER_NUM   "2.0d"
+#define YFONT_VER_TXT   "got it back to full compile before more changes"
 
 
 
@@ -100,10 +100,10 @@ struct      cFONT {
    int      max_glyph;                 /* smallest unicode num in font        */
    int      range;                     /* diff in min/max unicode numbers     */
    /*---(texture)-----------*/
-   ulong    width;                     /* texture width                       */
-   ulong    height;                    /* texture height                      */
+   ulong    tex_w;                     /* texture width                       */
+   ulong    tex_h;                     /* texture height                      */
    GLuint   tex_ref;                   /* opengl texture reference            */
-   uchar   *texture;                   /* actual texture                      */
+   uchar   *tex_bits;                  /* actual texture                      */
    /*---(glyphs)------------*/
    int      num_glyph;                 /* number of glyphs included           */
    tGLYPH  *glyphs;                    /* allocated glyph table               */
@@ -162,7 +162,7 @@ char        yFONT__slot_new    (void);
 char        yFONT__slot_next   (void);
 char        yFONT__slot_alloc  (char  a_slot);
 char        yFONT__slot_init   (char  a_slot);
-char        yFONT__slot_free   (void);
+char        yFONT__slot_free   (char  a_slot);
 
 char        yFONT__file_open   (char  a_slot, char *a_name, char a_mode);
 char        yFONT__file_close  (char  a_slot);
