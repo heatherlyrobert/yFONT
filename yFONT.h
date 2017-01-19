@@ -2,8 +2,8 @@
 
 /*===[[ HEADER ]]=============================================================*/
 
-/*   category      : (l)  library
- *   focus         : (--) visualization
+/*   category      : lib         (library)
+ *   focus         : vis         desktop and visualization
  *   application   : yFONT
  *   purpose       : fast, clean, and aesthetic texture-mapped fonts for opengl
  *

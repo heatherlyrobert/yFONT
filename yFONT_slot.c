@@ -186,5 +186,26 @@ yFONT__slot_free   (char a_slot)
    return 0;
 }
 
+tFONT*       /*--> test a slot reference -----------------[ ------ [ ------ ]-*/
+yFONT__slot_font   (char a_slot)
+{
+   /*---(locals)--------------------------------*/
+   tFONT      *x_font      = NULL;          /* new font                       */
+   /*---(defense : font)------------------------*/
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
+   if (a_slot < 0 || a_slot >= MAX_FONT) {
+      DEBUG_YFONT_M  yLOG_warn    ("slot"      , "not in required range (0 - MAX_FONT)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return NULL;
+   }
+   x_font = g_font [a_slot];
+   DEBUG_YFONT_M  yLOG_point   ("x_font"    , x_font);
+   if (x_font == NULL) {
+      DEBUG_YFONT_M  yLOG_warn    ("name"      , "can not be null");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return NULL;
+   }
+   return x_font;
+}
 
 /*============================----end-of-source---============================*/

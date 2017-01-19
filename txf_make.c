@@ -1123,8 +1123,13 @@ main               (int argc, char *argv[])
       return rc;
    }
    /*---(write txf header)----------------------*/
-   rc = MAKE__header ();
-   if (rc < 0) return rc;
+   if (rc >= 0)  rc = yFONT__slot_new   ();
+   if (rc >= 0)  x_slot = rc;
+   if (rc >= 0)  rc = yFONT__file_open  (x_slot);
+   if (rc >= 0)  rc = yFONT__head_write (x_slot);
+   if (rc <  0) {
+      return rc;
+   }
    MAKE__table ();
    /*---(allocate the texture)------------------*/
    DEBUG_OUTP   yLOG_note    ("allocating texture");

@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define YFONT_VER_NUM   "2.0f"
-#define YFONT_VER_TXT   "unit testing is excellent on yFONT_file, yFONT_head"
+#define YFONT_VER_NUM   "2.0g"
+#define YFONT_VER_TXT   "create header data accessors for cleanly adding data"
 
 
 
@@ -163,18 +163,28 @@ struct      cVERT {
 /*===[[ PROTOTYPES ]]=========================================================*/
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
-char        yFONT__slot_new    (void);
-char        yFONT__slot_next   (void);
-char        yFONT__slot_alloc  (char  a_slot);
-char        yFONT__slot_init   (char  a_slot);
-char        yFONT__slot_purge  (void);
-char        yFONT__slot_free   (char  a_slot);
+char        yFONT__slot_new      (void);
+char        yFONT__slot_next     (void);
+char        yFONT__slot_alloc    (char  a_slot);
+char        yFONT__slot_init     (char  a_slot);
+char        yFONT__slot_purge    (void);
+char        yFONT__slot_free     (char  a_slot);
+tFONT*      yFONT__slot_font     (char  a_slot);
 
-char        yFONT__file_open   (char  a_slot, char a_mode);
-char        yFONT__file_close  (char  a_slot);
+char        yFONT__file_open     (char  a_slot, char a_mode);
+char        yFONT__file_close    (char  a_slot);
 
-char        yFONT__head_write  (char  a_slot);
+/*---(read/write)-----------*/
 char        yFONT__head_read   (char  a_slot);
+char        yFONT__head_write  (char  a_slot);
+/*---(add data)-------------*/
+char        yFONT__head_name     (char a_slot, char *a_name);
+char        yFONT__head_chars    (char a_slot, char a_point, char a_format, char a_style);
+char        yFONT__head_tex      (char a_slot, short a_texw, short a_texh);
+char        yFONT__head_place    (char a_slot, char a_mascent, char a_mdescent, char a_margin);
+/*---(reporting)------------*/
+char        yFONT__head_title    (void);
+char        yFONT__head_entry    (char  a_slot);
 
 char        yFONT__verts       (tFONT *a_txf);
 char        yFONT__index       (tFONT *a_txf);
