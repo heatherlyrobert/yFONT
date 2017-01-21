@@ -113,8 +113,6 @@ yFONT__slot_init   (char a_slot)
    /*---(characteristics)----------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear characteristics");
    g_font [a_slot]->point        = 0;
-   g_font [a_slot]->format       = '-';
-   g_font [a_slot]->style        = '-';
    g_font [a_slot]->max_ascent   = 0;
    g_font [a_slot]->max_descent  = 0;
    g_font [a_slot]->margin       = 0;

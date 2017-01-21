@@ -321,39 +321,39 @@ yFONT__trhead (char *a_name)
  *> for (i = 0; i < txf->num_glyphs; i++) {                                                                                                                                                                           <* 
  *>    tGLYPH   *tgi;                                                                                                                                                                                                 <* 
  *>    tgi = &txf->tgi[i];                                                                                                                                                                                            <* 
- *>    float   t_top    = (texh - tgi->y)                             / texh;                                                                                                                                         <* 
- *>    float   t_bottom = (texh - (tgi->y + tgi->h))                  / texh;                                                                                                                                         <* 
- *>    float   t_left   = (tgi->x)                                    / texw;                                                                                                                                         <* 
- *>    float   t_right  = (tgi->x + tgi->w)                           / texw;                                                                                                                                         <* 
- *>    /+> printf("%c   -fx- -fy-  -xo- -yo-  -fw- -fh-  ---tx--- ---ty---  -vx- -vy-\n", tgi->c);   <+/                                                                                                              <* 
+ *>    float   t_top    = (texh - tgi->ypos)                             / texh;                                                                                                                                         <* 
+ *>    float   t_bottom = (texh - (tgi->ypos + tgi->tall))                  / texh;                                                                                                                                         <* 
+ *>    float   t_left   = (tgi->xpos)                                    / texw;                                                                                                                                         <* 
+ *>    float   t_right  = (tgi->xpos + tgi->w)                           / texw;                                                                                                                                         <* 
+ *>    /+> printf("%c   -fx- -fy-  -xo- -yo-  -fw- -fh-  ---tx--- ---ty---  -vx- -vy-\n", tgi->code);   <+/                                                                                                              <* 
  *>    /+---(top-left)---------------------------+/                                                                                                                                                                   <* 
  *>    txf->tgvi[i].t0[0] =  t_left;                                                                                                                                                                                  <* 
  *>    txf->tgvi[i].t0[1] =  t_top;                                                                                                                                                                                   <* 
  *>    /+> txf->tgvi[i].t0[1] =  1.0 - txf->tgvi[i].t0[1];                             <+/                                                                                                                            <* 
- *>    txf->tgvi[i].v0[0] =  tgi->xo;                                                                                                                                                                                 <* 
- *>    txf->tgvi[i].v0[1] =  tgi->yo;                                                                                                                                                                                 <* 
- *>    /+> printf("  0 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->x, tgi->y, tgi->xo, tgi->yo, tgi->w, tgi->h, txf->tgvi[i].t0[0], txf->tgvi[i].t0[1], txf->tgvi[i].v0[0], txf->tgvi[i].v0[1]);   <+/   <* 
+ *>    txf->tgvi[i].v0[0] =  tgi->xoff;                                                                                                                                                                                 <* 
+ *>    txf->tgvi[i].v0[1] =  tgi->yoff;                                                                                                                                                                                 <* 
+ *>    /+> printf("  0 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->xpos, tgi->ypos, tgi->xoff, tgi->yoff, tgi->w, tgi->tall, txf->tgvi[i].t0[0], txf->tgvi[i].t0[1], txf->tgvi[i].v0[0], txf->tgvi[i].v0[1]);   <+/   <* 
  *>    /+---(top-right)--------------------------+/                                                                                                                                                                   <* 
  *>    txf->tgvi[i].t1[0] =  t_right;                                                                                                                                                                                 <* 
  *>    txf->tgvi[i].t1[1] =  t_top;                                                                                                                                                                                   <* 
  *>    /+> txf->tgvi[i].t1[1] =  1.0 - txf->tgvi[i].t1[1];                             <+/                                                                                                                            <* 
- *>    txf->tgvi[i].v1[0] =  tgi->xo + tgi->w;                                                                                                                                                                        <* 
- *>    txf->tgvi[i].v1[1] =  tgi->yo;                                                                                                                                                                                 <* 
- *>    /+> printf("  1 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->x, tgi->y, tgi->xo, tgi->yo, tgi->w, tgi->h, txf->tgvi[i].t1[0], txf->tgvi[i].t1[1], txf->tgvi[i].v1[0], txf->tgvi[i].v1[1]);   <+/   <* 
+ *>    txf->tgvi[i].v1[0] =  tgi->xoff + tgi->w;                                                                                                                                                                        <* 
+ *>    txf->tgvi[i].v1[1] =  tgi->yoff;                                                                                                                                                                                 <* 
+ *>    /+> printf("  1 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->xpos, tgi->ypos, tgi->xoff, tgi->yoff, tgi->w, tgi->tall, txf->tgvi[i].t1[0], txf->tgvi[i].t1[1], txf->tgvi[i].v1[0], txf->tgvi[i].v1[1]);   <+/   <* 
  *>    /+---(bottom-right)-----------------------+/                                                                                                                                                                   <* 
  *>    txf->tgvi[i].t2[0] =  t_right;                                                                                                                                                                                 <* 
  *>    txf->tgvi[i].t2[1] =  t_bottom;                                                                                                                                                                                <* 
  *>    /+> txf->tgvi[i].t2[1] =  1.0 - txf->tgvi[i].t2[1];                             <+/                                                                                                                            <* 
- *>    txf->tgvi[i].v2[0] =  tgi->xo + tgi->w;                                                                                                                                                                        <* 
- *>    txf->tgvi[i].v2[1] =  tgi->yo - tgi->h;                                                                                                                                                                        <* 
- *>    /+> printf("  2 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->x, tgi->y, tgi->xo, tgi->yo, tgi->w, tgi->h, txf->tgvi[i].t2[0], txf->tgvi[i].t2[1], txf->tgvi[i].v2[0], txf->tgvi[i].v2[1]);   <+/   <* 
+ *>    txf->tgvi[i].v2[0] =  tgi->xoff + tgi->w;                                                                                                                                                                        <* 
+ *>    txf->tgvi[i].v2[1] =  tgi->yoff - tgi->tall;                                                                                                                                                                        <* 
+ *>    /+> printf("  2 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->xpos, tgi->ypos, tgi->xoff, tgi->yoff, tgi->w, tgi->tall, txf->tgvi[i].t2[0], txf->tgvi[i].t2[1], txf->tgvi[i].v2[0], txf->tgvi[i].v2[1]);   <+/   <* 
  *>    /+---(bottom-left)------------------------+/                                                                                                                                                                   <* 
  *>    txf->tgvi[i].t3[0] =  t_left;                                                                                                                                                                                  <* 
  *>    txf->tgvi[i].t3[1] =  t_bottom;                                                                                                                                                                                <* 
  *>    /+> txf->tgvi[i].t3[1] =  1.0 - txf->tgvi[i].t3[1];                             <+/                                                                                                                            <* 
- *>    txf->tgvi[i].v3[0] =  tgi->xo;                                                                                                                                                                                 <* 
- *>    txf->tgvi[i].v3[1] =  tgi->yo - tgi->h;                                                                                                                                                                        <* 
- *>    /+> printf("  3 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->x, tgi->y, tgi->xo, tgi->yo, tgi->w, tgi->h, txf->tgvi[i].t3[0], txf->tgvi[i].t3[1], txf->tgvi[i].v3[0], txf->tgvi[i].v3[1]);   <+/   <* 
+ *>    txf->tgvi[i].v3[0] =  tgi->xoff;                                                                                                                                                                                 <* 
+ *>    txf->tgvi[i].v3[1] =  tgi->yoff - tgi->tall;                                                                                                                                                                        <* 
+ *>    /+> printf("  3 %4d %4d  %4d %4d  %4d %4d  %8.6f %8.6f  %4d %4d\n", tgi->xpos, tgi->ypos, tgi->xoff, tgi->yoff, tgi->w, tgi->tall, txf->tgvi[i].t3[0], txf->tgvi[i].t3[1], txf->tgvi[i].v3[0], txf->tgvi[i].v3[1]);   <+/   <* 
  *>    /+---(advance)----------------------------+/                                                                                                                                                                   <* 
  *>    txf->tgvi[i].a     = tgi->a;                                                                                                                                                                                   <* 
  *> }                                                                                                                                                                                                                 <*/
@@ -383,41 +383,41 @@ yFONT__verts       (tFONT *a_txf)
    for (i = 0; i < a_txf->num_glyph; i++) {
       /*---(point to glyph)--------------*/
       x_glyph = &a_txf->glyphs[i];
-      /*> printf ("verts : %2d %-15s %5d %c : ", a_txf->slot, a_txf->name, x_glyph->c, (x_glyph->c < 128) ? x_glyph->c : '-');   <* 
+      /*> printf ("verts : %2d %-15s %5d %c : ", a_txf->slot, a_txf->name, x_glyph->code, (x_glyph->code < 128) ? x_glyph->code : '-');   <* 
        *> printf ("x=%5d y=%3d w=%3d h=%3d xo=%3d yo=%3d : ",                                                                    <* 
-       *>       x_glyph->x, x_glyph->y, x_glyph->w, x_glyph->h, x_glyph->xo, x_glyph->yo);                                       <*/
+       *>       x_glyph->xpos, x_glyph->ypos, x_glyph->w, x_glyph->tall, x_glyph->xoff, x_glyph->yoff);                                       <*/
       /*---(relative coordinates)--------*/
       /* flip top and bottom for opengl */
-      x_top    = (double) (x_glyph->y - 2                   )  / (double) x_texh;
-      x_bottom = (double) (x_glyph->y + x_glyph->h + 2)        / (double) x_texh;
-      x_left   = (double) (          x_glyph->x - 2         )  / (double) x_texw;
-      x_right  = (double) (      2 + x_glyph->x + x_glyph->w)  / (double) x_texw;
+      x_top    = (double) (x_glyph->ypos - 2                   )  / (double) x_texh;
+      x_bottom = (double) (x_glyph->ypos + x_glyph->tall + 2)        / (double) x_texh;
+      x_left   = (double) (          x_glyph->xpos - 2         )  / (double) x_texw;
+      x_right  = (double) (      2 + x_glyph->xpos + x_glyph->wide)  / (double) x_texw;
       /*> printf ("t=%7.5f b=%7.5f l=%7.5f r=%7.5f : ",                               <* 
        *>       x_top, x_bottom, x_left, x_right);                                    <*/
       /*---(top-left)--------------------*/
-      a_txf->verts[i].TL.rel_x  = x_glyph->xo - 2;
-      a_txf->verts[i].TL.rel_y  = x_glyph->yo + 2;
+      a_txf->verts[i].TL.rel_x  = x_glyph->xoff - 2;
+      a_txf->verts[i].TL.rel_y  = x_glyph->yoff + 2;
       a_txf->verts[i].TL.tex_x  = x_left;
       a_txf->verts[i].TL.tex_y  = x_top;
       /*> printf ("rx=%7d ry=%7d tx=%7.5f ty=%7.5f\n",                                                                     <* 
        *>       a_txf->verts[i].TL.rel_x, a_txf->verts[i].TL.rel_y, a_txf->verts[i].TL.tex_x, a_txf->verts[i].TL.tex_y);   <*/
       /*---(top-right)-------------------*/
-      a_txf->verts[i].TR.rel_x  = x_glyph->xo + x_glyph->w + 2;
-      a_txf->verts[i].TR.rel_y  = x_glyph->yo + 2;
+      a_txf->verts[i].TR.rel_x  = x_glyph->xoff + x_glyph->wide + 2;
+      a_txf->verts[i].TR.rel_y  = x_glyph->yoff + 2;
       a_txf->verts[i].TR.tex_x  = x_right;
       a_txf->verts[i].TR.tex_y  = x_top;
       /*---(bottom-right)----------------*/
-      a_txf->verts[i].BR.rel_x  = x_glyph->xo + x_glyph->w + 2;
-      a_txf->verts[i].BR.rel_y  = x_glyph->yo - x_glyph->h - 2;
+      a_txf->verts[i].BR.rel_x  = x_glyph->xoff + x_glyph->wide + 2;
+      a_txf->verts[i].BR.rel_y  = x_glyph->yoff - x_glyph->tall - 2;
       a_txf->verts[i].BR.tex_x  = x_right;
       a_txf->verts[i].BR.tex_y  = x_bottom;
       /*---(bottom-left)-----------------*/
-      a_txf->verts[i].BL.rel_x  = x_glyph->xo - 2;
-      a_txf->verts[i].BL.rel_y  = x_glyph->yo - x_glyph->h - 2;
+      a_txf->verts[i].BL.rel_x  = x_glyph->xoff - 2;
+      a_txf->verts[i].BL.rel_y  = x_glyph->yoff - x_glyph->tall - 2;
       a_txf->verts[i].BL.tex_x  = x_left;
       a_txf->verts[i].BL.tex_y  = x_bottom;
       /*---(advance)---------------------*/
-      a_txf->verts[i].a         = x_glyph->a;
+      a_txf->verts[i].a         = x_glyph->adv;
       /*---(done)------------------------*/
    }
    /*---(complete)------------------------------*/
@@ -432,14 +432,14 @@ yFONT__index       (tFONT *a_txf)
    uint        max_glyph   = 0;
    int         i           = 0;
    /*---(identify range)-----------------*/
-   min_glyph = a_txf->glyphs[0].c;
-   max_glyph = a_txf->glyphs[0].c;
+   min_glyph = a_txf->glyphs[0].code;
+   max_glyph = a_txf->glyphs[0].code;
    for (i = 1; i < a_txf->num_glyph; i++) {
-      if (a_txf->glyphs[i].c < min_glyph) {
-         min_glyph = a_txf->glyphs[i].c;
+      if (a_txf->glyphs[i].code < min_glyph) {
+         min_glyph = a_txf->glyphs[i].code;
       }
-      if (a_txf->glyphs[i].c > max_glyph) {
-         max_glyph = a_txf->glyphs[i].c;
+      if (a_txf->glyphs[i].code > max_glyph) {
+         max_glyph = a_txf->glyphs[i].code;
       }
    }
    a_txf->min_glyph = min_glyph;
@@ -455,7 +455,7 @@ yFONT__index       (tFONT *a_txf)
    for (i = 0; i < a_txf->range; i++)  a_txf->lookup [i] = -1;
    /*---(load lookup table)--------------*/
    for (i = 0; i < a_txf->num_glyph; i++) {
-      a_txf->lookup [a_txf->glyphs[i].c - a_txf->min_glyph] = i;
+      a_txf->lookup [a_txf->glyphs[i].code - a_txf->min_glyph] = i;
    }
    /*---(complete)-----------------------*/
    return 0;
@@ -985,11 +985,7 @@ yFONT__unit        (char *a_question, int a_num)
    if        (strncmp(a_question, "font_name"   , 20)  == 0) {
       x_font = g_font [a_num];
       if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT font name  : no font assigned");
-      else                snprintf (unit_answer, LEN_TEXT, "yFONT font name  : %2d:%s", strllen (x_font->name, LEN_LABEL), x_font->name);
-   } else if (strncmp(a_question, "font_chars"  , 20)  == 0) {
-      x_font = g_font [a_num];
-      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT chars      : no font assigned");
-      else                snprintf (unit_answer, LEN_TEXT, "yFONT chars      : point=%2d, format=%c, style=%c" , x_font->point, x_font->format, x_font->style);
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT font name  : %2d:%-20.20s     point=%2d", strllen (x_font->name, LEN_LABEL), x_font->name, x_font->point);
    } else if (strncmp(a_question, "tex_size"    , 20)  == 0) {
       x_font = g_font [a_num];
       if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT tex size   : no font assigned");
@@ -998,6 +994,12 @@ yFONT__unit        (char *a_question, int a_num)
       x_font = g_font [a_num];
       if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT char limit : no font assigned");
       else                snprintf (unit_answer, LEN_TEXT, "yFONT char limit : mascent =%3d, mdescent=%3d, margin  =%3d" , x_font->max_ascent, x_font->max_descent, x_font->margin);
+   } else if (strncmp(a_question, "num_glyph"   , 20)  == 0) {
+      x_font = g_font [a_num];
+      if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT nglyph     : no font assigned");
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT nglyph     : %4d" , x_font->num_glyph);
+   } else if (strncmp(a_question, "conf_font"   , 20)  == 0) {
+      snprintf (unit_answer, LEN_TEXT, "yFONT conf font  : %3d %s" , a_num, yFONT__conf_font (a_num));
    }
    /*---(complete)-----------------------*/
    return unit_answer;

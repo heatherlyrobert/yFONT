@@ -5,7 +5,7 @@
 #include    "yFONT_priv.h"
 
 char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
-yFONT__head_name   (char a_slot, char *a_name)
+yFONT__head_name   (char a_slot, char *a_name, char a_point)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
@@ -33,50 +33,15 @@ yFONT__head_name   (char a_slot, char *a_name)
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
-   /*---(update)--------------------------------*/
-   strlcpy (x_font->name, a_name, LEN_LABEL);
-   /*---(complete)------------------------------*/
-   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-   return 0;
-}
-
-char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
-yFONT__head_chars  (char a_slot, char a_point, char a_format, char a_style)
-{
-   /*---(locals)--------------------------------*/
-   char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
-   int         x_len       = 0;
-   /*---(header)-------------------------*/
-   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
-   /*---(defense : font)------------------------*/
-   --rce;  if ((x_font = yFONT__slot_font  (a_slot)) == NULL) {
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;;
-   }
-   /*---(defense : content)---------------------*/
    DEBUG_YFONT_M  yLOG_value   ("a_point"   , a_point);
-   --rce;  if (a_point <= 4 || a_point >  99) {
+   --rce;  if (a_point <  0 || a_point >  99) {
       DEBUG_YFONT_M  yLOG_warn    ("point"     , "not in required range (4 - 99)");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
-   DEBUG_YFONT_M  yLOG_char    ("a_format"  , a_format);
-   --rce;  if (strchr ("ls", a_format) == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("format"    , "must be either l (letter) or s (symbol)");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   DEBUG_YFONT_M  yLOG_char    ("a_style"   , a_style);
-   --rce;  if (strchr ("nbui", a_style ) == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("style"     , "must be n=norm,b=bold,u=under,i=ital");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
    /*---(update)--------------------------------*/
+   strlcpy (x_font->name, a_name, LEN_LABEL);
    x_font->point   = a_point;
-   x_font->format  = a_format;
-   x_font->style   = a_style;
    /*---(complete)------------------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
@@ -118,7 +83,7 @@ yFONT__head_tex    (char a_slot, short a_texw, short a_texh)
 }
 
 char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
-yFONT__head_place  (char a_slot, char a_mascent, char a_mdescent, char a_margin)
+yFONT__head_place  (char a_slot, char a_mascent, char a_mdescent)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
@@ -144,6 +109,29 @@ yFONT__head_place  (char a_slot, char a_mascent, char a_mdescent, char a_margin)
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
+   /*---(update)--------------------------------*/
+   x_font->max_ascent  = a_mascent;
+   x_font->max_descent = a_mdescent;
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
+yFONT__head_margin   (char a_slot, char a_margin)
+{
+   /*---(locals)--------------------------------*/
+   char        rce         = -10;           /* return code for errors         */
+   tFONT      *x_font      = NULL;          /* new font                       */
+   int         x_len       = 0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   /*---(defense : font)------------------------*/
+   --rce;  if ((x_font = yFONT__slot_font  (a_slot)) == NULL) {
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;;
+   }
+   /*---(defense : content)---------------------*/
    DEBUG_YFONT_M  yLOG_value   ("a_margin"  , a_margin);
    --rce;  if (a_margin   <  0 || a_margin   >  99) {
       DEBUG_YFONT_M  yLOG_warn    ("margin"    , "not in required range (0 to 99)");
@@ -151,9 +139,35 @@ yFONT__head_place  (char a_slot, char a_mascent, char a_mdescent, char a_margin)
       return rce;
    }
    /*---(update)--------------------------------*/
-   x_font->max_ascent  = a_mascent;
-   x_font->max_descent = a_mdescent;
    x_font->margin      = a_margin;
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
+yFONT__head_nglyph   (char a_slot, short a_nglyph)
+{
+   /*---(locals)--------------------------------*/
+   char        rce         = -10;           /* return code for errors         */
+   tFONT      *x_font      = NULL;          /* new font                       */
+   int         x_len       = 0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   /*---(defense : font)------------------------*/
+   --rce;  if ((x_font = yFONT__slot_font  (a_slot)) == NULL) {
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;;
+   }
+   /*---(defense : content)---------------------*/
+   DEBUG_YFONT_M  yLOG_value   ("a_nglyph"  , a_nglyph);
+   --rce;  if (a_nglyph  <= 0 || a_nglyph  >  9999) {
+      DEBUG_YFONT_M  yLOG_warn    ("nglyph"    , "not in required range (0 - 9999)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(update)--------------------------------*/
+   x_font->num_glyph = a_nglyph;
    /*---(complete)------------------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
@@ -203,18 +217,6 @@ yFONT__head_write  (char a_slot)
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
-   /*---(format)-------------------------*/
-   --rce;  if ( 1 != fwrite (&(x_font->format     ) , sizeof (char),  1, x_font->file)) {
-      DEBUG_YFONT_M  yLOG_warn    ("format"    , "could not be written");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   /*---(style)--------------------------*/
-   --rce;  if ( 1 != fwrite (&(x_font->style      ) , sizeof (char),  1, x_font->file)) {
-      DEBUG_YFONT_M  yLOG_warn    ("style"     , "could not be written");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
    /*---(tex width)----------------------*/
    --rce;  if ( 1 != fwrite (&(x_font->tex_w      ) , sizeof (int16_t),  1, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("text_w"    , "could not be written");
@@ -242,6 +244,12 @@ yFONT__head_write  (char a_slot)
    /*---(margin)-------------------------*/
    --rce;  if ( 1 != fwrite (&(x_font->margin     ) , sizeof (char),  1, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("margin"    , "could not be written");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(margin)-------------------------*/
+   --rce;  if ( 1 != fwrite (&(x_font->num_glyph  ) , sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("num_glyph" , "could not be written");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -323,32 +331,6 @@ yFONT__head_read   (char a_slot)
       return rce;
    }
    x_font->point  = x_char;
-   /*---(format)--------------------------------*/
-   --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
-      DEBUG_YFONT_M  yLOG_warn    ("format"    , "could not be read");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   DEBUG_YFONT_M  yLOG_char    ("format"    , x_char);
-   --rce;  if (strchr ("ls"   , x_char) == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("format"    , "does not match expected (l or s)");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   x_font->format = x_char;
-   /*---(style)---------------------------------*/
-   --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
-      DEBUG_YFONT_M  yLOG_warn    ("style"     , "could not be read");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   DEBUG_YFONT_M  yLOG_char    ("style"     , x_char);
-   --rce;  if (strchr ("nbui" , x_char) == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("style"     , "does not match expected (n, b, u, or i)");
-      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-      return rce;
-   }
-   x_font->style  = x_char;
    /*---(texture width)-------------------------*/
    --rce;  if ( 1 != fread (&x_short, sizeof (int16_t),  1, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("tex_w"     , "could not be read");
@@ -414,6 +396,19 @@ yFONT__head_read   (char a_slot)
       return rce;
    }
    x_font->margin      = x_char;
+   /*---(margin)--------------------------------*/
+   --rce;  if ( 1 != fread (&x_short, sizeof (int16_t),  1, x_font->file)) {
+      DEBUG_YFONT_M  yLOG_warn    ("num_glyph" , "could not be read");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_value   ("num_glyph" , x_short);
+   --rce;  if (x_short <= 0 || x_char >= 9999) {
+      DEBUG_YFONT_M  yLOG_warn    ("num_glyph" , "does not fit in range (1 to 9999)");
+      DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   x_font->num_glyph   = x_short;
    /*---(complete)------------------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
@@ -428,16 +423,33 @@ yFONT__head_title    (void)
 }
 
 char
-yFONT__head_entry    (char a_slot)
+yFONT__head_line     (char a_slot)
 {
    tFONT    *x_font    = NULL;              /* new font                       */
    x_font = g_font [a_slot];
-   printf ("%-20.20s  %4d  %c  %c  %4d  %4d  %4d  %4d  %4d  %4d\n",
+   printf ("%-20.20s  %4d  %4d  %4d  %4d  %4d  %4d  %4d\n",
          x_font->name       , x_font->point      ,
-         x_font->format     , x_font->style      ,
          x_font->tex_w      , x_font->tex_h      ,
          x_font->max_ascent , x_font->max_descent,
          x_font->margin     , x_font->num_glyph  );
+   return 0;
+}
+
+char
+yFONT__head_dump     (char a_slot)
+{
+   tFONT    *x_font    = NULL;              /* new font                       */
+   x_font = g_font [a_slot];
+   printf ("\n");
+   printf ("font header\n");
+   printf ("   name         : %s\n" , x_font->name       );
+   printf ("   point        : %4d\n", x_font->point      );
+   printf ("   max ascent   : %4d\n", x_font->max_ascent );
+   printf ("   max descent  : %4d\n", x_font->max_descent);
+   printf ("   margin       : %4d\n", x_font->margin     );
+   printf ("   tex width    : %4d\n", x_font->tex_w      );
+   printf ("   tex height   : %4d\n", x_font->tex_h      );
+   printf ("   num glyph    : %4d\n", x_font->num_glyph  );
    return 0;
 }
 
