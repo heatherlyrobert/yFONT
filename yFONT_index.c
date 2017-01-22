@@ -25,7 +25,7 @@ yFONT__index_alloc   (char a_slot)
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
    x_font = g_font [a_slot];
-   DEBUG_YFONT_M  yLOG_note    ("allocating font data structure");
+   DEBUG_YFONT_M  yLOG_note    ("allocating font table data structure");
    DEBUG_YFONT_M  yLOG_value   ("nglyph"    , x_font->num_glyph);
    --rce;  while (x_font->glyphs == NULL) {
       ++x_tries;
@@ -112,6 +112,13 @@ yFONT__index_wipe    (char  a_slot)
    return 0;
 }
 
+
+
+/*====================------------------------------------====================*/
+/*===----                     setting header values                    ----===*/
+/*====================------------------------------------====================*/
+static void      o___SETTERS_________________o (void) {;}
+
 char
 yFONT__index_code       (char  a_slot,  int a_entry, int a_code, char a_good)
 {
@@ -153,6 +160,13 @@ yFONT__index_pos        (char  a_slot,  int a_entry, short a_xpos, short a_ypos)
    return 0;
 }
 
+
+
+/*====================------------------------------------====================*/
+/*===----                     Getting header values                    ----===*/
+/*====================------------------------------------====================*/
+static void      o___GETTERS_________________o (void) {;}
+
 char
 yFONT__index_maxes      (char  a_slot)
 {
@@ -165,6 +179,31 @@ yFONT__index_wide       (char  a_slot, int  a_entry)
 {
    return  g_font[a_slot]->glyphs[a_entry].wide;
 }
+
+char
+yFONT__index_who        (char  a_slot, int  a_entry, int *a_code, char *a_good)
+{
+   if (a_code   != NULL)  *a_code   = g_font[a_slot]->glyphs[a_entry].code;
+   if (a_good   != NULL)  *a_good   = g_font[a_slot]->glyphs[a_entry].good;
+   return  0;
+}
+
+char
+yFONT__index_coords     (char  a_slot, int  a_entry, short *a_xpos, short *a_ypos, char *a_wide, char *a_tall)
+{
+   if (a_xpos   != NULL)  *a_xpos   = g_font[a_slot]->glyphs[a_entry].xpos;
+   if (a_ypos   != NULL)  *a_ypos   = g_font[a_slot]->glyphs[a_entry].ypos;
+   if (a_wide   != NULL)  *a_wide   = g_font[a_slot]->glyphs[a_entry].wide;
+   if (a_tall   != NULL)  *a_tall   = g_font[a_slot]->glyphs[a_entry].tall;
+   return  0;
+}
+
+
+
+/*====================------------------------------------====================*/
+/*===----                           reporting                          ----===*/
+/*====================------------------------------------====================*/
+static void      o___REPORTING_______________o (void) {;}
 
 char
 yFONT__index_dump       (char  a_slot)
@@ -184,6 +223,13 @@ yFONT__index_dump       (char  a_slot)
             x_font->glyphs[i].adv  , x_font->glyphs[i].good );
    }
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                      reading and writing                     ----===*/
+/*====================------------------------------------====================*/
+static void      o___FILES___________________o (void) {;}
 
 char
 yFONT__index_read       (char  a_slot)

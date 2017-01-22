@@ -37,7 +37,127 @@ yFONT \- fast, clean, aesthetic texture mapped fonts for opengl
 .R  print a word-wrapped string with some formatting control
 .BI "int   " "w " " = yFONT_printw ( int " "fp" ", int " "size" ", char " "align" ", char " "string" ","
 .BI "                             int " "width" ", int " "height" ", float " "spacing" " );"
-.nf
+
+.SH DESCRIPTION (short)
+yFONT is a heatherly-specific library and file format for placing readable text
+in three-dimentional opengl space.  it allows me to de-couple font rendering
+from executable programs allowing them to be leaner, meaner, and faster.
+
+.SH DESCRIPTION (backstory)
+there are many many answers to every requirement.
+
+.B situation (S)
+
+computer environments can present data in many formats
+
+any serious graphical programming effort requires readable, 3d manipulatable,
+and integratable text.  the text must move, twist, rotate, and zoom with the
+rest of the environment to be useful.
+
+computer 
+
+computer environments are made up of thousands of applications of all sizes
+and complexities.  hundreds of these applications are interactive and gather
+input through command-line arguments, question/answer dialog, textual user
+interfaces, graphical user interfaces, or other.  each interface has different
+purposes, ranges, and potentials and is therefore structured to match its
+focus and user skill set.  typical methods include menus, buttons, hotspots,
+shortcuts, pointing, key assignments, commands, command line arguments,
+plug-ins, scripts and macros, etc.
+
+.B complication (C)
+
+interface design is a non-standard, neglected, abused, and retarded dark art.
+each program's interface is often completely unique, developed from scratch,
+altered for each version, and targeted at the least common denominator
+(idiot).  the learning curve to use each application is typically painful
+and most users only ever learn the basics.  features are often limited to
+what can be shown in menus and simple options.  most apps quickly digress
+into gui picture buttons and simplistic mouse operation in order to keep it
+sufficiently chimpified.  the maxim goes, "gui's keep simple things simple
+and make hard things impossible."  HELLS NO.
+
+.B question (Q)
+
+how can we make using applications simplier, faster, more standard, and
+dramatically more powerful while easing access to advanced functions and
+keeping the on-going learning curve manageable ?
+
+.B answer (A)
+
+move to a nearly one-hundred percent keyboard interface based on a standardized
+and extended version of the successful modal vi/vim system.  done, fucking
+solved.  we will call it vi-keys.  don't care about the mouse-using chimps and
+touch-screen snot-gobblers :o
+
+.B benefits (b)
+   -- on-going learning curve is very low
+   -- fast context switching between applications
+   -- does not require switching back-and-forth to a mouse
+   -- makes common activities as fast and efficient as possible
+   -- enable powerful features in new contexts (macros, buffers, ... )
+
+.B challenges (c)
+   -- initial learning curve is very high
+   -- only standardized on my systems
+   -- takes a lot of time to define
+   -- takes a lot of willpower to stay with it
+
+.B objectives (o)
+   -- 1st level is basic two dimensional movement keys
+   -- 2nd level is 
+
+
+
+
+
+.SH DECISION
+
+.b situation.  
+any serious graphical programming effort requires readable, 3d manipulatable,
+and integratable text.  the text must move, twist, rotate, and zoom with the
+rest of the environment to be useful.
+
+.SH COMPLICATION
+but, opengl is focusing on drawing primatives, which it should be.  this means
+that using real 3d text requires big font rendering libraries or massive
+integrated tool kits.  too much.
+
+.SH OBJECTIVES
+   -- 
+
+.SH ALTERNATIVES
+what do i use
+   -- font library
+   -- integrated toolkit
+   -- freeware
+   -- custom-built
+
+.SH ANSWER
+i have chosen an old-school method to integrate beautiful fonts while
+de-coupling my graphics programming from font rendering.  it provides the
+basic capabilities i need without the overbuilt drama.
+
+.SH BRILLIANT IDEA SEED (credit where much credit is due)
+in 1997, mark kilgard developed and shared a method for making opengl
+font access cleaner, faster, and de-coupled from massive font libraries.
+he pre-rendered xwindows fonts into a intermediate texture format, which
+he called TXF, that could then be read and used within opengl programs.
+freaking brilliant and usable today.  there are other methods, i standardized
+on this base.  i have evolved and learned, but i am standing on his shoulders.
+
+.SH REALLY, WHAT'S THE POINT
+many, many libraries can do this better, faster, and would require zero work
+to use.  better yet, integrated toolkits like KDE, QT, GNOME, etc make this
+all invisible.  i am doing this so i can evolve and grow rather than live in a
+cage built by another.  better programmer, better designer, better architect.
+this beautiful format...
+   -- optimizes for opengl, not some kitchen-sink integrated toolkit
+   -- keeps my execution boxes smaller and cleaner (no font library)
+   -- taught me massive amounts about font usage
+   -- taught me massive amounts about binary file formats
+   -- taught me about maintenance as i am a voracious dogfooder
+
 .SH OVERVIEW
 yFONT is a simple and clean set of custom library functions to provide
 fast, flexible, and aesthetic display of 3D manipulatible text in

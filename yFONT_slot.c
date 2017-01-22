@@ -126,7 +126,7 @@ yFONT__slot_init   (char a_slot)
    g_font [a_slot]->tex_w        = 0;
    g_font [a_slot]->tex_h        = 0;
    g_font [a_slot]->tex_ref      = 0;
-   g_font [a_slot]->tex_bits     = NULL;
+   g_font [a_slot]->tex_map      = NULL;
    /*---(glyphs)-------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear glyph variables");
    g_font [a_slot]->num_glyph    = 0;
@@ -168,7 +168,7 @@ yFONT__slot_free   (char a_slot)
    x_font  = g_font [a_slot];
    /*---(free it up)----------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("checking/clearing texture");
-   if (x_font->tex_bits )   free (x_font->tex_bits);
+   if (x_font->tex_map  )   free (x_font->tex_map );
    DEBUG_YFONT_M  yLOG_note    ("checking/clearing glyph table");
    if (x_font->glyphs   )   free (x_font->glyphs  );
    DEBUG_YFONT_M  yLOG_note    ("checking/clearing vert table");

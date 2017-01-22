@@ -4,6 +4,13 @@
 #include    "yFONT.h"
 #include    "yFONT_priv.h"
 
+
+
+/*====================------------------------------------====================*/
+/*===----                     setting header values                    ----===*/
+/*====================------------------------------------====================*/
+static void      o___SETTERS_________________o (void) {;}
+
 char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
 yFONT__head_name   (char a_slot, char *a_name, char a_point)
 {
@@ -172,6 +179,13 @@ yFONT__head_nglyph   (char a_slot, short a_nglyph)
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                      reading and writing                     ----===*/
+/*====================------------------------------------====================*/
+static void      o___FILE____________________o (void) {;}
 
 char         /*--> read a font header --------------------[ ------ [ ------ ]-*/
 yFONT__head_write  (char a_slot)
@@ -414,6 +428,13 @@ yFONT__head_read   (char a_slot)
    return 0;
 }
 
+
+
+/*====================------------------------------------====================*/
+/*===----                           reporting                          ----===*/
+/*====================------------------------------------====================*/
+static void      o___REPORTING_______________o (void) {;}
+
 char
 yFONT__head_title    (void)
 {
@@ -447,8 +468,8 @@ yFONT__head_dump     (char a_slot)
    printf ("   max ascent   : %4d\n", x_font->max_ascent );
    printf ("   max descent  : %4d\n", x_font->max_descent);
    printf ("   margin       : %4d\n", x_font->margin     );
-   printf ("   tex width    : %4d\n", x_font->tex_w      );
-   printf ("   tex height   : %4d\n", x_font->tex_h      );
+   printf ("   tex width    : %4d (%6.2f x 16)\n", x_font->tex_w,  (float) x_font->tex_w / 16.0);
+   printf ("   tex height   : %4d (%6.2f x 16)\n", x_font->tex_h,  (float) x_font->tex_h / 16.0);
    printf ("   num glyph    : %4d\n", x_font->num_glyph  );
    return 0;
 }

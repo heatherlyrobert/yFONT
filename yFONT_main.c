@@ -63,7 +63,7 @@ yFONT__init        (tFONT *a_txf)
    a_txf->tex_w        = 0;
    a_txf->tex_h        = 0;
    a_txf->tex_ref      = 0;
-   a_txf->tex_bits     = NULL;
+   a_txf->tex_map      = NULL;
    a_txf->max_ascent   = 0;
    a_txf->max_descent  = 0;
    a_txf->num_glyph    = 0;
@@ -81,7 +81,7 @@ yFONT__free        (tFONT  *a_txf)
 {
    if (a_txf == NULL)                     return YF_BAD_SLOT;
    /*---(free it up)----------------------------*/
-   if (a_txf->tex_bits )  free (a_txf->tex_bits);
+   if (a_txf->tex_map  )  free (a_txf->tex_map );
    if (a_txf->glyphs   )  free (a_txf->glyphs  );
    if (a_txf->verts    )  free (a_txf->verts   );
    if (a_txf->lookup   )  free (a_txf->lookup  );
@@ -231,7 +231,7 @@ yFONT__texture     (tFONT *txf, GLuint a_texobj)
    /*---(copy into a texture)-------------------*/
    /* use the GL_ALPHA format to drive antialiased and clear text             */
    glTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-   glTexImage2D    (GL_TEXTURE_2D, 0, GL_ALPHA, txf->tex_w, txf->tex_h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, txf->tex_bits);
+   glTexImage2D    (GL_TEXTURE_2D, 0, GL_ALPHA, txf->tex_w, txf->tex_h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, txf->tex_map );
    /*---(complete)------------------------------*/
    glBindTexture   (GL_TEXTURE_2D, 0);
    return txf->tex_ref;
@@ -513,13 +513,13 @@ yFONT_load         (char *a_name)
    yFONT__verts (x_txf);
    yFONT__index (x_txf);
    /*---(type)---------------------------*/
-   x_txf->tex_bits = (uchar *) malloc (x_txf->tex_w * x_txf->tex_h);
-   if (x_txf->tex_bits == NULL) {
+   x_txf->tex_map  = (uchar *) malloc (x_txf->tex_w * x_txf->tex_h);
+   if (x_txf->tex_map  == NULL) {
       fprintf(stderr, "yFONT_load() : could not allocate glyph\n");
       yFONT__free (x_txf);
       return YF_MEM_FULL;
    }
-   rc = fread (x_txf->tex_bits, 1, x_txf->tex_w * x_txf->tex_h, file);
+   rc = fread (x_txf->tex_map , 1, x_txf->tex_w * x_txf->tex_h, file);
    if (rc != x_txf->tex_w * x_txf->tex_h) { fprintf(stderr, "yFONT_load() : premature end of file (byte)\n"); yFONT__free (x_txf); return YF_MEM_FULL; }
 
    fclose(file);

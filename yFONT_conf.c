@@ -25,6 +25,12 @@ tFONT_INFO  s_font_info [MAX_CONF];
 int         s_nentry     = 0;
 
 
+
+/*====================------------------------------------====================*/
+/*===----                     getting header values                    ----===*/
+/*====================------------------------------------====================*/
+static void      o___GETTERS_________________o (void) {;}
+
 /*2345678912+12345678912+12345678912+12345678912+12345678912+12345678912+12345*/
 static      FILE       *s_conf      = NULL;
 static      int         s_lines     = 0;
@@ -110,6 +116,13 @@ yFONT__conf_font     (char a_entry)
    return s_fontname;
 }
 
+
+
+/*====================------------------------------------====================*/
+/*===----                     setting header values                    ----===*/
+/*====================------------------------------------====================*/
+static void      o___SETTERS_________________o (void) {;}
+
 char         /*--> open the configuration file -----------[ leaf   [ ------ ]-*/
 yFONT__conf_name     (char *a_name)
 {
@@ -117,6 +130,13 @@ yFONT__conf_name     (char *a_name)
    else                 strlcpy (s_confname, a_name   , LEN_STR);
    return 0;
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                           reporting                          ----===*/
+/*====================------------------------------------====================*/
+static void      o___REPORTING_______________o (void) {;}
 
 char         /*--> open the configuration file -----------[ leaf   [ ------ ]-*/
 yFONT__conf_list     (void)
@@ -132,6 +152,13 @@ yFONT__conf_list     (void)
    printf ("\n");
    return 0;
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                     reading and parsing                      ----===*/
+/*====================------------------------------------====================*/
+static void      o___PARSING_________________o (void) {;}
 
 char         /*--> open the configuration file -----------[ leaf   [ ------ ]-*/
 yFONT__conf_open     (void)

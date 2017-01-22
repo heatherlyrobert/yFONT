@@ -34,8 +34,8 @@ LIBU    = ${LIBDIR}         -lX11             -lGL              -lm             
 #===(file lists)============================================================================================================================================================================#
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (5)--------------
 HEADS   = ${BASE}.h         ${BASE}_priv.h
-OBJS    = ${BASE}_main.os   ${BASE}_conf.os   ${BASE}_slot.os   ${BASE}_file.os   ${BASE}_head.os   ${BASE}_index.os  ${BASE}_glyph.os  
-OBJD    = ${BASE}_main.o    ${BASE}_conf.o    ${BASE}_slot.o    ${BASE}_file.o    ${BASE}_head.o    ${BASE}_index.o   ${BASE}_glyph.o   
+OBJS    = ${BASE}_main.os   ${BASE}_conf.os   ${BASE}_slot.os   ${BASE}_file.os   ${BASE}_head.os   ${BASE}_index.os  ${BASE}_map.os  
+OBJD    = ${BASE}_main.o    ${BASE}_conf.o    ${BASE}_slot.o    ${BASE}_file.o    ${BASE}_head.o    ${BASE}_index.o   ${BASE}_map.o   
 OBJU    = ${BASE}_unit.o    ${OBJD}
 
 #===(make variables)====================================================================================================================================================#
@@ -46,10 +46,9 @@ STRIP   = @grep -v -e " DEBUG_" -e " yLOG_"
 
 
 
-
 #*---(executables)--------------------*#
 #all                : ${DEBUG} ${BASE} ${UNIT} txf_make txf_show
-all                : ${DEBUG} ${BASE} ${UNIT}  txf_make
+all                : ${DEBUG} ${BASE} ${UNIT}  ${BASE}_make
 
 ${BASE}            : ${OBJS}
 	${LINK}  -shared -Wl,-soname,lib${BASE}.so.1   ${LIBS}  -o lib${BASE}.so.1.0   ${OBJS}
@@ -59,9 +58,9 @@ ${DEBUG}           : ${OBJD}
 	${LINK}  -shared -Wl,-soname,lib${DEBUG}.so.1  ${LIBD}  -o lib${DEBUG}.so.1.0  ${OBJD}
 	ar       rcs  lib${DEBUG}.a  ${OBJD}
 
-txf_make           : txf_make.o   ${OBJD}
-	${LINK}  -o txf_make        ${OBJS} txf_make.os  ${LIBS}  -lfreetype
-	${LINK}  -o txf_make_debug  ${OBJD} txf_make.o   ${LIBD}  -lfreetype
+${BASE}_make       : ${BASE}_make.o   ${OBJD}
+	${LINK}  -o ${BASE}_make        ${OBJS} ${BASE}_make.os  ${LIBS}  -lfreetype
+	${LINK}  -o ${BASE}_make_debug  ${OBJD} ${BASE}_make.o   ${LIBD}  -lfreetype
 
 ${DEBUG}           : ${OBJD}
 
@@ -69,31 +68,6 @@ ${UNIT}            : ${OBJU}
 	${LINK}  -o ${UNIT}        ${OBJU}   ${LIBU}
 
 
-#all                : gcc txf_make doc txf_show
-
-#gcc                : ${BASE}.h ${BASE}.c
-#	${COMP}   -fPIC ${INCS} ${BASE}.c
-#	${LINK}   -shared -Wl,-soname,lib${BASE}.so.1  ${LIBS}  -o lib${BASE}.so.1.0  ${BASE}.o
-
-#tcc                : ${BASE}.h ${BASE}.c
-#	${PRINT}  "\n--------------------------------------\n"
-#	${PRINT}  "compile yFONT (tcc)\n"
-#	tcc       -Wall -Wunsupported -g -bench -shared -soname lib${BASE}.so.1  ${LIBS_T}  -o lib${BASE}.so.1.0  ${BASE}.c
-
-#txf_make           : txf_make.c
-#	${PRINT}  "\n--------------------------------------\n"
-#	${PRINT}  "compile txf_make (tcc)\n"
-#	gcc       -g -ansi -Wall -Wextra -o txf_make   txf_make.c ${INCS} -I/usr/include/freetype2 ${LIBS_T} -lfreetype
-#	${PRINT}  "\n--------------------------------------\n"
-#	${PRINT}  "install txf_make and txf_inst\n"
-#	${COPY}   txf_make    /usr/local/sbin/
-#	${COPY}   txf_inst.sh /usr/local/sbin/txf_inst
-#	chmod     0755        /usr/local/sbin/txf_inst
-
-#txf_show           : yFONT.c yFONT.h txf_show.c
-#	${COMP}   txf_show.c
-#	${LINK}   -o txf_show yFONT.c txf_show.o ${LIBS}
-#	${COPY}   txf_show    /usr/local/sbin/
 
 #*---(components)---------------------*#
 
@@ -127,15 +101,20 @@ ${BASE}_index.o    : ${HEADS}       ${BASE}_index.c
 	${STRIP}        ${BASE}_index.c     > ${BASE}_index.cs
 	${COMP}  -fPIC  ${BASE}_index.cs   -o ${BASE}_index.os   ${INC}
 
-${BASE}_glyph.o    : ${HEADS}       ${BASE}_glyph.c
-	${COMP}  -fPIC  ${BASE}_glyph.c                          ${INC}
-	${STRIP}        ${BASE}_glyph.c     > ${BASE}_glyph.cs
-	${COMP}  -fPIC  ${BASE}_glyph.cs   -o ${BASE}_glyph.os   ${INC}
+${BASE}_map.o      : ${HEADS}       ${BASE}_map.c
+	${COMP}  -fPIC  ${BASE}_map.c                            ${INC}
+	${STRIP}        ${BASE}_map.c       > ${BASE}_map.cs
+	${COMP}  -fPIC  ${BASE}_map.cs     -o ${BASE}_map.os     ${INC}
 
-txf_make.o         : ${HEADS}       txf_make.c        
-	${COMP}  -fPIC  txf_make.c                               ${INC} -I/usr/include/freetype2
-	${STRIP}        txf_make.c          > txf_make.cs       
-	${COMP}  -fPIC  txf_make.cs        -o txf_make.os        ${INC} -I/usr/include/freetype2
+${BASE}_make.o     : ${HEADS}       ${BASE}_make.c        
+	${COMP}  -fPIC  ${BASE}_make.c                           ${INC} -I/usr/include/freetype2
+	${STRIP}        ${BASE}_make.c      > ${BASE}_make.cs
+	${COMP}  -fPIC  ${BASE}_make.cs    -o ${BASE}_make.os    ${INC} -I/usr/include/freetype2
+
+${BASE}_show.o     : ${HEADS}       ${BASE}_show.c        
+	${COMP}  -fPIC  ${BASE}_show.c                           ${INC}
+	${STRIP}        ${BASE}_show.c      > ${BASE}_show.cs
+	${COMP}  -fPIC  ${BASE}_show.cs    -o ${BASE}_show.os    ${INC}
 
 ${UNIT}.o          : ${HEADS} ${BASE}.unit
 	koios    ${BASE}
@@ -188,15 +167,15 @@ install            :
 	_lib      -A ${DEBUG}
 	ldconfig
 	#---(production version)--------------#
-	${COPY}   txf_make         ${IDIR}/
-	chown     root:root        ${IDIR}/txf_make
-	chmod     0755             ${IDIR}/txf_make
-	@sha1sum  txf_make
+	${COPY}   ${BASE}_make         ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_make
+	chmod     0755                 ${IDIR}/${BASE}_make
+	@sha1sum  ${BASE}_make
 	#---(debug version)-------------------#
-	${COPY}   txf_make_debug   ${IDIR}/
-	chown     root:root        ${IDIR}/txf_make_debug
-	chmod     0755             ${IDIR}/txf_make_debug
-	@sha1sum  txf_make_debug
+	${COPY}   ${BASE}_make_debug   ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_make_debug
+	chmod     0755                 ${IDIR}/${BASE}_make_debug
+	@sha1sum  ${BASE}_make_debug
 	#---(documentation)-------------------#
 	rm -f     ${MDIR}/${MBASE}.bz2
 	cp -f     ${MBASE}    ${MDIR}

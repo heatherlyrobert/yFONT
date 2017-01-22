@@ -122,8 +122,6 @@ int         nglist      = 0;
 
 typedef struct cACCESSOR  tACCESSOR;
 struct  cACCESSOR {
-   /*---(flags)--------------------------*/
-   char        verbose;
    /*---(files)--------------------------*/
    char        font_name  [LEN_STR];     /* font name from command line         */
    char        out_name   [LEN_STR];     /* name of output txf font name        */
@@ -133,10 +131,12 @@ struct  cACCESSOR {
    char        point;                    /* point size of font                  */
    char        adjust;                   /* actual point size (for adjustment)  */
    int         margin;                   /* character margin added              */
+   int         texw;                     /* width of texture                    */
    /*---(freetype)-----------------------*/
    FT_Library  lib;
    FT_Face     face;                     /* freetype interface variable         */
    tGLYPH      glyph;                    /* current glyph                       */
+   /*---(texture)------------------------*/
 
 
 
@@ -146,22 +146,17 @@ struct  cACCESSOR {
    char      glist       [LEN_LABEL];
 
    char      byte;                     /* texture format (bit or byte)        */
-   int       sp_char;                  /* character to use for space size     */
    /*> uchar    *glist;                    /+ incomming glyph list                +/   <*/
    /*> int       glist      [MAX_GLYPHS];  /+ incomming glyph list                +/   <*/
    /*> int       nglist;                   /+ number of glyphs requested          +/   <*/
    int       nglyphs;                  /* number of glyphs included           */
 
    int       row;                      /* size of a row                       */
-   ulong     texw;                     /* width of texture                    */
-   ulong     texh;                     /* height of texture                   */
 
    uchar    *texture;                  /* font texture map                    */
    tGLYPH   *glyph_table;              /* all glyphs                          */
 };
 tACCESSOR      my;
-
-#define    VERBOSE     if (my.verbose == 'y') 
 
 
 struct {
@@ -176,22 +171,11 @@ struct {
    { "single" , "a"                                                                                              },
 };
 
-int format = YFONT_BYTE;
+/*> int format = YFONT_BYTE;                                                          <*/
 
-/* #define REPORT_GLYPHS */
-#ifdef REPORT_GLYPHS
-#define DEBUG_GLYPH4(msg,a,b,c,d) printf(msg,a,b,c,d)
-#define DEBUG_GLYPH(msg) printf(msg)
-#else
-#define DEBUG_GLYPH4(msg,a,b,c,d) { /* nothing */ }
-#define DEBUG_GLYPH(msg) { /* nothing */ }
-#endif
 
-#define MAX_GLYPHS_PER_GRAB 512  /* this is big enough for 2^9 glyph
-                                    character sets */
-
-int         s_limit = 30 * 256;
-/*> int         s_limit =  4 * 256 - 1;                                               <*/
+/*> int         s_limit = 30 * 256;                                                   <*/
+int         s_limit =  (12 * 256) - 1;
 
 void       /* PURPOSE : trim junk from the front and back of a string --------*/
 str_trim           (char *a_cstring)
@@ -224,9 +208,9 @@ PROG_init          (void)
 {
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(flags)--------------------------*/
    DEBUG_TOPS   yLOG_note    ("intialize program status flags");
-   my.verbose = '-';
    /*---(fonts and files)----------------*/
    DEBUG_TOPS   yLOG_note    ("intialize font and file names");
    FONT__init    ();
@@ -245,6 +229,7 @@ char         /*--: argument processing -------------------[ ------ [ ------ ]-*/
 PROG_args     (int argc, char *argv[])
 {
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(locals)--------------------------------*/
    char     *a         = NULL;               /* current argument              */
    int       i         = 0;                  /* loop iterator                 */
@@ -257,13 +242,10 @@ PROG_args     (int argc, char *argv[])
       a = argv[i];
       if (a[0] == '@')  continue;
       DEBUG_ARGS  yLOG_info  ("argument"  , a);
-      if      (strcmp (a, "--verbose") == 0)  my.verbose      = 'y';
-      else if (strcmp (a, "-v")        == 0)  my.verbose      = 'y';
-      else                                    strlcpy (my.font_name, argv[i], LEN_LABEL);
+      strlcpy (my.font_name, argv[i], LEN_LABEL);
    }
    /*---(updates)-------------------------------*/
    DEBUG_PROG   yLOG_info    ("font_name" , my.font_name);
-   DEBUG_PROG   yLOG_char    ("verbose"   , my.verbose);
    /*---(complete)-----------------------*/
    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -279,6 +261,7 @@ static void      o___FONTS___________________o (void) {;}
 char
 FONT__init         (void)
 {
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    strlcpy (my.font_name , "", LEN_LABEL);
    strlcpy (my.out_name  , "", LEN_LABEL);
    strlcpy (my.out_file  , "", LEN_LABEL);
@@ -295,6 +278,7 @@ FONT__choose       (char a_slot)
    char       *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT  yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    DEBUG_YFONT  yLOG_value   ("font_name" , my.font_name);
    /*---(check for all fonts)------------*/
    if      (strcmp (my.font_name, "all") == 0) {
@@ -360,6 +344,7 @@ GLIST__clear         (void)
    int         i           =   0;
    int         j           =   0;
    /*---(null list)----------------------*/
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    for (i = 0; i < MAX_GLYPHS; ++i) {
       glist [i].unicode = -1;
       glist [i].reason  = '-';
@@ -378,6 +363,7 @@ GLIST__normal        (char *a_list)
    int         i           =   0;
    int         j           =   0;
    /*---(defense)------------------------*/
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    if (a_list == NULL)  return -1;
    /*---(load)---------------------------*/
    for (i = 0; i < MAX_TLISTS; ++i) {
@@ -411,6 +397,7 @@ GLIST__mandarin    (char *a_list)
    char       *x_coords    = NULL;          /* strtok pointer                 */
    char       *q           = "\x1F";        /* strtok delimiter               */
    /*---(mandarin)-----------------------*/
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    if (strcmp ("mand" , a_list) != 0) {
       return -1;
    }
@@ -474,6 +461,7 @@ GLIST__load        (char a_slot, char *a_list)
 {
    /*---(locals)-----------+-----------+-*/
    char        rc          = 0;
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    if (rc == 0)  rc = GLIST__clear       ();
    if (rc == 0)  rc = GLIST__normal      (a_list);
    if (rc <  0)  rc = GLIST__mandarin    (a_list);
@@ -498,6 +486,7 @@ FREETYPE__setup      (char *a_font, int a_point)
     */
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
    char        rce         = -10;      /* generic return code for errors      */
@@ -547,6 +536,7 @@ FREETYPE__shutdown   (void)
     */
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
    char        rce         = -10;      /* generic return code for errors      */
@@ -619,7 +609,7 @@ FREE__find         (uint a_char)
 /*====================------------------------------------====================*/
 /*===----                      glyph-focused functions                 ----===*/
 /*====================------------------------------------====================*/
-static void      o___GLYTH___________________o (void) {;}
+static void      o___GLYPH___________________o (void) {;}
 
 char         /*--: gather glyph statistics ---------------[ ------ [ ------ ]-*/
 GLYPH__metrics     (void)
@@ -685,6 +675,7 @@ INDEX__load        (char a_slot)
    char        x_good      =    '-';   /* good vs bad                         */
    /*---(header)-------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(measure all glyphs)-------------*/
    for (i = 0; i < nglist; ++i) {
       x_good = '-';
@@ -696,6 +687,7 @@ INDEX__load        (char a_slot)
       /*---(handle misses)---------------*/
       DEBUG_INPT   yLOG_value   ("rc"        , rc);
       if (rc <  0) {
+         x_good = '?';
          yFONT__index_code   (a_slot, i, x_code, x_good);
          continue;
       }
@@ -732,7 +724,7 @@ INDEX__layout      (char a_slot)
 {
    /*---(locals)-----------+-----------+-*/
    int         i           =      0;   /* iterator -- gylphs                  */
-   int         x_tall      =      0;   /* greatest character height           */
+   char        x_tall      =      0;   /* greatest character height           */
    char        x_wide      =      0;
    short       x_texw      =      0;
    short       x_texh      =      0;
@@ -740,6 +732,7 @@ INDEX__layout      (char a_slot)
    int         x_cumh      =      0;   /* current height                      */
    /*---(header)-------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(initialize)---------------------*/
    x_tall  = yFONT__index_maxes  (a_slot);
    x_cumw  = my.margin + 1;
@@ -777,10 +770,98 @@ INDEX__layout      (char a_slot)
    DEBUG_INPT   yLOG_value   ("x_texw"    , x_texw);
    DEBUG_INPT   yLOG_value   ("x_texh"    , x_texh);
    yFONT__head_tex   (a_slot, x_texw, x_texh);
+   my.texw = x_texw;
    /*---(complete)-----------------------*/
    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                    texture-focused functions                 ----===*/
+/*====================------------------------------------====================*/
+static void      o___TEXTURE_________________o (void) {;}
+
+char
+TEX__glyph           (char a_slot, int a_entry, int a_texw)
+{
+   /*---(locals)-----------+-----------+-*/
+   char        rc          =  0;
+   int         x_row       =  0;   /* vertical iterator                   */
+   int         x_col       =  0;   /* horizontal iterator                 */
+   short       x_xpos      =  0;
+   short       x_ypos      =  0;
+   char        x_tall      =  0;   /* greatest character height           */
+   char        x_wide      =  0;
+   ulong       x_bitloc    =  0;       /* byte location in source glyph       */
+   uchar       x_value     =  0;       /* byte value in source glyph          */
+   ulong       x_texloc    =  0;       /* byte location in texture            */
+   /*---(coordinates)--------------------*/
+   rc = yFONT__index_coords (a_slot, a_entry, &x_xpos, &x_ypos, &x_wide, &x_tall);
+   if (rc < 0)  return rc;
+   DEBUG_INPT   yLOG_enter   (__FUNCTION__);
+   /*---(row-by-row)---------------------*/
+   for (x_row = 0; x_row < x_tall; ++x_row) {
+      DEBUG_INPT   yLOG_value   ("row"       , x_row);
+      /*---(col-by-col)------------------*/
+      for (x_col = 0; x_col < x_wide; ++x_col) {
+         /*---(transfer value)-----------*/
+         x_bitloc   = (x_row * x_wide) + x_col;
+         x_value    = (uchar) my.face->glyph->bitmap.buffer[x_bitloc];
+         x_texloc   = ((x_ypos + x_row) * a_texw) + (x_xpos + x_col);
+         g_font [a_slot]->tex_map [x_texloc] = x_value;
+         /*---(done with value)----------*/
+      }
+      /*---(done with col)---------------*/
+   }
+   /*---(done with row)------------------*/
+   DEBUG_INPT   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+TEX__crop            (char x_slot)
+{
+}
+
+char
+TEX__draw            (char a_slot)
+{
+   /*---(locals)-----------+-----------+-*/
+   char        rc          =   0;
+   int         i           =   0;   /* iterator -- gylphs                  */
+   int         x_code      =   0;
+   char        x_good      = '-';
+   /*---(header)-------------------------*/
+   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   /*---(allocate texture)---------------*/
+   rc = yFONT__map_alloc (a_slot);
+   DEBUG_TOPS   yLOG_value   ("rc"        , rc);
+   if (rc < 0) {
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      return rc;
+   }
+   /*---(transfer all glyphs)------------*/
+   for (i = 0; i < nglist; ++i) {
+      rc = yFONT__index_who  (a_slot, i, &x_code, &x_good);
+      if (rc < 0)                         continue;
+      if (strchr ("?r", x_good) != NULL)  continue;
+      rc = FREE__find (x_code);
+      rc = TEX__glyph (a_slot, i, my.texw);
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+
+
+/*====================------------------------------------====================*/
+/*===----                         old stuff                            ----===*/
+/*====================------------------------------------====================*/
+static void      o___OLD_STUFF_______________o (void) {;}
 
 /*> char         /+--: load the character information --------[ ------ [ ------ ]-+/                                   <* 
  *> MAKE__load         (void)                                                                                          <* 
@@ -921,147 +1002,154 @@ INDEX__layout      (char a_slot)
 *>    return 0;                                                                                                       <* 
 *> }                                                                                                                  <*/
 
-char
-MAKE__image        (int a_index)
-{
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   ulong     texloc, bitloc;
-   int       i, j;
-   int       k;
-   int       width, offset;
-   uchar     value         = 0;
-   int       x_top         = 0;
-   int       x_left        = 0;
-   int       x_width       = 0;
-   int       x_height      = 0;
-   int       x_ctop        = 3000;
-   int       x_clef        = 3000;
-   int       x_cbot        = -1;
-   int       x_crig        = -1;
-   DEBUG_OUTP   yLOG_value   ("texh"      , my.texh);
-   DEBUG_OUTP   yLOG_value   ("texw"      , my.texw);
-   DEBUG_OUTP   yLOG_value   ("size"      , my.texh * my.texw);
-   DEBUG_OUTP   yLOG_value   ("height"    , my.glyph.tall);
-   DEBUG_OUTP   yLOG_value   ("width"     , my.glyph.wide);
-   DEBUG_OUTP   yLOG_value   ("x"         , my.glyph.xpos);
-   DEBUG_OUTP   yLOG_value   ("y"         , my.glyph.ypos);
-   for (i = 0; i < my.glyph.tall; ++i) {
-      DEBUG_OUTP   yLOG_value   ("row (i)"   , i);
-      /*> offset = (my.texh - my.glyph.ypos - i) * (my.texw);                            <*/
-      x_top    = my.glyph.ypos;
-      /*> x_left   = my.glyph.xpos + my.margin;                                          <* 
-       *> x_width  = my.glyph.wide - (my.margin * 2);                                    <*/
-      x_left   = my.glyph.xpos;
-      x_width  = my.glyph.wide;
-      x_height = my.glyph.tall;
-      offset   = (my.glyph.ypos + i) * my.texw;
-      /*> offset   = (my.glyph.ypos + my.glyph.tall - i) * my.texw;                         <*/
-      DEBUG_OUTP   yLOG_value   ("offset"    , offset);
-      for (j = 0; j < x_width; ++j) {
-         DEBUG_OUTP   yLOG_value   ("col (j)"   , j);
-         bitloc   =  (i * x_width) + j;
-         DEBUG_OUTP   yLOG_value   ("source"    , bitloc);
-         value    = (uchar) my.face->glyph->bitmap.buffer[bitloc];
-         DEBUG_OUTP   yLOG_value   ("value"     , value);
-         width    = x_left + j;
-         DEBUG_OUTP   yLOG_value   ("width"     , width);
-         texloc   =  offset + width;
-         DEBUG_OUTP   yLOG_value   ("destin"    , texloc);
-         /*> printf ("%3d,%3d) %3d   from  %6d to %6d\n", i, j, value, bitloc, texloc);   <*/
-         /*> if (value == 0) printf("  ");                                         <* 
-          *> else            printf ("%02x", value);                               <*/
-         my.texture [texloc] = value;
-      }
-      /*> printf("\n");                                                            <*/
-   }
-   if (strchr ("mM", glist [a_index].reason) != NULL) {
-      fprintf (my.o, "%-4d : u=%5d, h=%3d, w=%3d\n", a_index, glist [a_index].unicode, my.glyph.tall, my.glyph.wide);
-      for (k = 0; k <= 8; k += 4) {
-         fprintf (my.o, "%-4d : u=%5d, k=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_index, glist [a_index].unicode, k, glist [a_index].coords [0 + k], glist [a_index].coords [1 + k], glist [a_index].coords [2 + k], glist [a_index].coords [3 + k]);
-         x_ctop = my.glyph.tall * ((100 - glist [a_index].coords [0 + k]) / 100.0);
-         x_clef = my.glyph.wide * (glist [a_index].coords [1 + k] / 100.0);
-         x_cbot = my.glyph.tall * ((100 - glist [a_index].coords [2 + k]) / 100.0);
-         x_crig = my.glyph.wide * (glist [a_index].coords [3 + k] / 100.0);
-         fprintf (my.o, "%-4d : u=%5d, k=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_index, glist [a_index].unicode, k, x_ctop, x_clef, x_cbot, x_crig);
-         if (x_ctop == x_cbot && x_clef == x_crig) {
-            fprintf (my.o, "   skipping\n");
-            continue;
-         }
-         for (i = x_ctop; i <= x_cbot; ++i) {
-            x_left   = my.glyph.xpos;
-            offset   = (my.glyph.ypos + i) * my.texw;
-            for (j = x_clef; j < x_crig; ++j) {
-               width    = x_left + j;
-               texloc   =  offset + width;
-               my.texture [texloc] = 0;
-            }
-         }
-      }
-   }
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
+/*> char                                                                                                                                                                                                                                                <* 
+ *> MAKE__image        (int a_index)                                                                                                                                                                                                                    <* 
+ *> {                                                                                                                                                                                                                                                   <* 
+ *>    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);                                                                                                                                                                                                        <* 
+ *>    ulong     texloc, bitloc;                                                                                                                                                                                                                        <* 
+ *>    int       i, j;                                                                                                                                                                                                                                  <* 
+ *>    int       k;                                                                                                                                                                                                                                     <* 
+ *>    int       width, offset;                                                                                                                                                                                                                         <* 
+ *>    uchar     value         = 0;                                                                                                                                                                                                                     <* 
+ *>    int       x_top         = 0;                                                                                                                                                                                                                     <* 
+ *>    int       x_left        = 0;                                                                                                                                                                                                                     <* 
+ *>    int       x_width       = 0;                                                                                                                                                                                                                     <* 
+ *>    int       x_height      = 0;                                                                                                                                                                                                                     <* 
+ *>    int       x_ctop        = 3000;                                                                                                                                                                                                                  <* 
+ *>    int       x_clef        = 3000;                                                                                                                                                                                                                  <* 
+ *>    int       x_cbot        = -1;                                                                                                                                                                                                                    <* 
+ *>    int       x_crig        = -1;                                                                                                                                                                                                                    <* 
+ *>    DEBUG_OUTP   yLOG_value   ("texh"      , my.texh);                                                                                                                                                                                               <* 
+ *>    DEBUG_OUTP   yLOG_value   ("texw"      , my.texw);                                                                                                                                                                                               <* 
+ *>    DEBUG_OUTP   yLOG_value   ("size"      , my.texh * my.texw);                                                                                                                                                                                     <* 
+ *>    DEBUG_OUTP   yLOG_value   ("height"    , my.glyph.tall);                                                                                                                                                                                         <* 
+ *>    DEBUG_OUTP   yLOG_value   ("width"     , my.glyph.wide);                                                                                                                                                                                         <* 
+ *>    DEBUG_OUTP   yLOG_value   ("x"         , my.glyph.xpos);                                                                                                                                                                                         <* 
+ *>    DEBUG_OUTP   yLOG_value   ("y"         , my.glyph.ypos);                                                                                                                                                                                         <* 
+ *>    for (i = 0; i < my.glyph.tall; ++i) {                                                                                                                                                                                                            <* 
+ *>       DEBUG_OUTP   yLOG_value   ("row (i)"   , i);                                                                                                                                                                                                  <* 
+ *>       /+> offset = (my.texh - my.glyph.ypos - i) * (my.texw);                            <+/                                                                                                                                                        <* 
+ *>       x_top    = my.glyph.ypos;                                                                                                                                                                                                                     <* 
+ *>       /+> x_left   = my.glyph.xpos + my.margin;                                          <*                                                                                                                                                         <* 
+ *>        *> x_width  = my.glyph.wide - (my.margin * 2);                                    <+/                                                                                                                                                        <* 
+ *>       x_left   = my.glyph.xpos;                                                                                                                                                                                                                     <* 
+ *>       x_width  = my.glyph.wide;                                                                                                                                                                                                                     <* 
+ *>       x_height = my.glyph.tall;                                                                                                                                                                                                                     <* 
+ *>       offset   = (my.glyph.ypos + i) * my.texw;                                                                                                                                                                                                     <* 
+ *>       /+> offset   = (my.glyph.ypos + my.glyph.tall - i) * my.texw;                         <+/                                                                                                                                                     <* 
+ *>       DEBUG_OUTP   yLOG_value   ("offset"    , offset);                                                                                                                                                                                             <* 
+ *>       for (j = 0; j < x_width; ++j) {                                                                                                                                                                                                               <* 
+ *>          DEBUG_OUTP   yLOG_value   ("col (j)"   , j);                                                                                                                                                                                               <* 
+ *>          bitloc   =  (i * x_width) + j;                                                                                                                                                                                                             <* 
+ *>          DEBUG_OUTP   yLOG_value   ("source"    , bitloc);                                                                                                                                                                                          <* 
+ *>          value    = (uchar) my.face->glyph->bitmap.buffer[bitloc];                                                                                                                                                                                  <* 
+ *>          DEBUG_OUTP   yLOG_value   ("value"     , value);                                                                                                                                                                                           <* 
+ *>          width    = x_left + j;                                                                                                                                                                                                                     <* 
+ *>          DEBUG_OUTP   yLOG_value   ("width"     , width);                                                                                                                                                                                           <* 
+ *>          texloc   =  offset + width;                                                                                                                                                                                                                <* 
+ *>          DEBUG_OUTP   yLOG_value   ("destin"    , texloc);                                                                                                                                                                                          <* 
+ *>          /+> printf ("%3d,%3d) %3d   from  %6d to %6d\n", i, j, value, bitloc, texloc);   <+/                                                                                                                                                       <* 
+ *>          /+> if (value == 0) printf("  ");                                         <*                                                                                                                                                               <* 
+ *>           *> else            printf ("%02x", value);                               <+/                                                                                                                                                              <* 
+ *>          my.texture [texloc] = value;                                                                                                                                                                                                               <* 
+ *>       }                                                                                                                                                                                                                                             <* 
+ *>       /+> printf("\n");                                                            <+/                                                                                                                                                              <* 
+ *>    }                                                                                                                                                                                                                                                <* 
+ *>    if (strchr ("mM", glist [a_index].reason) != NULL) {                                                                                                                                                                                             <* 
+ *>       fprintf (my.o, "%-4d : u=%5d, h=%3d, w=%3d\n", a_index, glist [a_index].unicode, my.glyph.tall, my.glyph.wide);                                                                                                                               <* 
+ *>       for (k = 0; k <= 8; k += 4) {                                                                                                                                                                                                                 <* 
+ *>          fprintf (my.o, "%-4d : u=%5d, k=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_index, glist [a_index].unicode, k, glist [a_index].coords [0 + k], glist [a_index].coords [1 + k], glist [a_index].coords [2 + k], glist [a_index].coords [3 + k]);   <* 
+ *>          x_ctop = my.glyph.tall * ((100 - glist [a_index].coords [0 + k]) / 100.0);                                                                                                                                                                 <* 
+ *>          x_clef = my.glyph.wide * (glist [a_index].coords [1 + k] / 100.0);                                                                                                                                                                         <* 
+ *>          x_cbot = my.glyph.tall * ((100 - glist [a_index].coords [2 + k]) / 100.0);                                                                                                                                                                 <* 
+ *>          x_crig = my.glyph.wide * (glist [a_index].coords [3 + k] / 100.0);                                                                                                                                                                         <* 
+ *>          fprintf (my.o, "%-4d : u=%5d, k=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_index, glist [a_index].unicode, k, x_ctop, x_clef, x_cbot, x_crig);                                                                                                   <* 
+ *>          if (x_ctop == x_cbot && x_clef == x_crig) {                                                                                                                                                                                                <* 
+ *>             fprintf (my.o, "   skipping\n");                                                                                                                                                                                                        <* 
+ *>             continue;                                                                                                                                                                                                                               <* 
+ *>          }                                                                                                                                                                                                                                          <* 
+ *>          for (i = x_ctop; i <= x_cbot; ++i) {                                                                                                                                                                                                       <* 
+ *>             x_left   = my.glyph.xpos;                                                                                                                                                                                                               <* 
+ *>             offset   = (my.glyph.ypos + i) * my.texw;                                                                                                                                                                                               <* 
+ *>             for (j = x_clef; j < x_crig; ++j) {                                                                                                                                                                                                     <* 
+ *>                width    = x_left + j;                                                                                                                                                                                                               <* 
+ *>                texloc   =  offset + width;                                                                                                                                                                                                          <* 
+ *>                my.texture [texloc] = 0;                                                                                                                                                                                                             <* 
+ *>             }                                                                                                                                                                                                                                       <* 
+ *>          }                                                                                                                                                                                                                                          <* 
+ *>       }                                                                                                                                                                                                                                             <* 
+ *>    }                                                                                                                                                                                                                                                <* 
+ *>    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);                                                                                                                                                                                                        <* 
+ *>    return 0;                                                                                                                                                                                                                                        <* 
+ *> }                                                                                                                                                                                                                                                   <*/
 
-char         /*--> write txf glyph table -----------------[ ------ [ ------ ]-*/
-MAKE__table        (void)
-{
-   /*---(begin)--------------------------*/
-   DEBUG_OUTP   yLOG_enter   (__FUNCTION__);
-   int k = 0;
-   for (k = 0; k < nglist; ++k) {
-      fwrite (&my.glyph_table [k], sizeof (tGLYPH), 1, my.file);
-   }
-   /*---(complete)-----------------------*/
-   DEBUG_OUTP   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
+/*> char         /+--> write txf glyph table -----------------[ ------ [ ------ ]-+/   <* 
+ *> MAKE__table        (void)                                                          <* 
+ *> {                                                                                  <* 
+ *>    /+---(begin)--------------------------+/                                        <* 
+ *>    DEBUG_OUTP   yLOG_enter   (__FUNCTION__);                                       <* 
+ *>    int k = 0;                                                                      <* 
+ *>    for (k = 0; k < nglist; ++k) {                                                  <* 
+ *>       fwrite (&my.glyph_table [k], sizeof (tGLYPH), 1, my.file);                   <* 
+ *>    }                                                                               <* 
+ *>    /+---(complete)-----------------------+/                                        <* 
+ *>    DEBUG_OUTP   yLOG_exit    (__FUNCTION__);                                       <* 
+ *>    return 0;                                                                       <* 
+ *> }                                                                                  <*/
 
-char         /*--> write txf glyph table -----------------[ ------ [ ------ ]-*/
-MAKE__draw         (void)
-{
-   char        rc          = 0;
-   int         save_c      = 0;
-   int k = 0;
-   /*---(begin)--------------------------*/
-   DEBUG_OUTP   yLOG_enter   (__FUNCTION__);
-   for (k = 0; k < nglist; ++k) {
-      DEBUG_OUTP   yLOG_value   ("character" , k);
-      DEBUG_OUTP   yLOG_value   ("unicode"   , glist[k].unicode);
-      rc = FREE__find    (glist[k].unicode);
-      DEBUG_OUTP   yLOG_value   ("find_rc"   , rc);
-      my.glyph.code    = glist[k].unicode;
-      if (rc < 0) {
-         my.glyph.code = ' ';
-         /*> return rc;                                                               <*/
-      }
-      rc = GLYPH__metrics ();
-      DEBUG_OUTP   yLOG_value   ("metrics_rc", rc);
-      /*---(watch for space)--------------------*/
-      if (my.glyph.code == ' ') {
-         my.glyph.code = 'a';
-         FREE__find    (my.glyph.code);
-         GLYPH__metrics ();
-         my.glyph.code = ' ';
-      }
-      if (my.glyph.code != save_c) {
-         my.glyph.code = save_c;
-      }
-      /*---(load glyph)------------------*/
-      my.glyph.code   = my.glyph_table[k].code;
-      my.glyph.xpos   = my.glyph_table[k].xpos;
-      my.glyph.ypos   = my.glyph_table[k].ypos;
-      my.glyph.wide   = my.glyph_table[k].wide;
-      my.glyph.tall   = my.glyph_table[k].tall;
-      my.glyph.xoff  = my.glyph_table[k].xoff;
-      my.glyph.yoff  = my.glyph_table[k].yoff;
-      my.glyph.adv   = my.glyph_table[k].adv;
-      /*---(copy image)-------------------------*/
-      if (my.glyph.code != ' ')  MAKE__image(k);
-   }
-   /*---(complete)-----------------------*/
-   DEBUG_OUTP   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
+/*> char         /+--> write txf glyph table -----------------[ ------ [ ------ ]-+/            <* 
+ *> MAKE__draw         (void)                                                                   <* 
+ *> {                                                                                           <* 
+ *>    char        rc          = 0;                                                             <* 
+ *>    int         save_c      = 0;                                                             <* 
+ *>    int k = 0;                                                                               <* 
+ *>    /+---(begin)--------------------------+/                                                 <* 
+ *>    DEBUG_OUTP   yLOG_enter   (__FUNCTION__);                                                <* 
+ *>    for (k = 0; k < nglist; ++k) {                                                           <* 
+ *>       DEBUG_OUTP   yLOG_value   ("character" , k);                                          <* 
+ *>       DEBUG_OUTP   yLOG_value   ("unicode"   , glist[k].unicode);                           <* 
+ *>       rc = FREE__find    (glist[k].unicode);                                                <* 
+ *>       DEBUG_OUTP   yLOG_value   ("find_rc"   , rc);                                         <* 
+ *>       my.glyph.code    = glist[k].unicode;                                                  <* 
+ *>       if (rc < 0) {                                                                         <* 
+ *>          my.glyph.code = ' ';                                                               <* 
+ *>          /+> return rc;                                                               <+/   <* 
+ *>       }                                                                                     <* 
+ *>       rc = GLYPH__metrics ();                                                               <* 
+ *>       DEBUG_OUTP   yLOG_value   ("metrics_rc", rc);                                         <* 
+ *>       /+---(watch for space)--------------------+/                                          <* 
+ *>       if (my.glyph.code == ' ') {                                                           <* 
+ *>          my.glyph.code = 'a';                                                               <* 
+ *>          FREE__find    (my.glyph.code);                                                     <* 
+ *>          GLYPH__metrics ();                                                                 <* 
+ *>          my.glyph.code = ' ';                                                               <* 
+ *>       }                                                                                     <* 
+ *>       if (my.glyph.code != save_c) {                                                        <* 
+ *>          my.glyph.code = save_c;                                                            <* 
+ *>       }                                                                                     <* 
+ *>       /+---(load glyph)------------------+/                                                 <* 
+ *>       my.glyph.code   = my.glyph_table[k].code;                                             <* 
+ *>       my.glyph.xpos   = my.glyph_table[k].xpos;                                             <* 
+ *>       my.glyph.ypos   = my.glyph_table[k].ypos;                                             <* 
+ *>       my.glyph.wide   = my.glyph_table[k].wide;                                             <* 
+ *>       my.glyph.tall   = my.glyph_table[k].tall;                                             <* 
+ *>       my.glyph.xoff  = my.glyph_table[k].xoff;                                              <* 
+ *>       my.glyph.yoff  = my.glyph_table[k].yoff;                                              <* 
+ *>       my.glyph.adv   = my.glyph_table[k].adv;                                               <* 
+ *>       /+---(copy image)-------------------------+/                                          <* 
+ *>       if (my.glyph.code != ' ')  MAKE__image(k);                                            <* 
+ *>    }                                                                                        <* 
+ *>    /+---(complete)-----------------------+/                                                 <* 
+ *>    DEBUG_OUTP   yLOG_exit    (__FUNCTION__);                                                <* 
+ *>    return 0;                                                                                <* 
+ *> }                                                                                           <*/
+
+
+
+/*====================------------------------------------====================*/
+/*===----                         main driver                          ----===*/
+/*====================------------------------------------====================*/
+static void      o___MAIN____________________o (void) {;}
 
 int
 main               (int argc, char *argv[])
@@ -1079,8 +1167,6 @@ main               (int argc, char *argv[])
    if (rc <  0) {
       return rc;
    }
-
-
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
    /*---(set up font)--------------------*/
@@ -1092,6 +1178,7 @@ main               (int argc, char *argv[])
    if (rc >= 0)  rc = GLIST__load          (x_slot, my.glist);
    if (rc >= 0)  rc = INDEX__load          (x_slot);
    if (rc >= 0)  rc = INDEX__layout        (x_slot);
+   if (rc >= 0)  rc = TEX__draw            (x_slot);
    if (rc <  0) {
       return rc;
    }
@@ -1102,6 +1189,7 @@ main               (int argc, char *argv[])
    FREETYPE__shutdown   ();
    yFONT__slot_free     (x_slot);
 
+   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
    exit (0);
 
    /*---(write txf header)----------------------*/
@@ -1110,25 +1198,25 @@ main               (int argc, char *argv[])
    if (rc <  0) {
       return rc;
    }
-   MAKE__table ();
-   /*---(allocate the texture)------------------*/
-   DEBUG_OUTP   yLOG_note    ("allocating texture");
-   my.texture = (uchar *) malloc (my.texw * my.texh * sizeof (uchar));
-   DEBUG_OUTP   yLOG_point   ("texture"   , my.texture);
-   if (my.texture == NULL) {
-      printf("FATAL: calloc could not allocate memory for texture\n");
-      return -10;
-   }
-   x_max = my.texw * my.texh;
-   for (i = 0; i < x_max; ++i)  my.texture [i] = 0;
-   /*---(write the per glyph info)--------------*/
-   MAKE__draw ();
-   fwrite (my.texture, my.texh * my.texw, 1, my.file);
-   fclose (my.file);
-   printf ("header      =  %7d\n",  8 * 4);
-   printf ("glyphs      =  %7d\n",  my.nglyphs * sizeof(tGLYPH));
-   printf ("texture     =  %7d\n",  my.texh * my.texw);
-   printf ("TOTAL       =  %7d\n",  (8 * 4) + (my.nglyphs * sizeof(tGLYPH)) + (my.texh * my.texw));
+   /*> MAKE__table ();                                                                <*/
+   /*> /+---(allocate the texture)------------------+/                                                    <* 
+    *> DEBUG_OUTP   yLOG_note    ("allocating texture");                                                  <* 
+    *> my.texture = (uchar *) malloc (my.texw * my.texh * sizeof (uchar));                                <* 
+    *> DEBUG_OUTP   yLOG_point   ("texture"   , my.texture);                                              <* 
+    *> if (my.texture == NULL) {                                                                          <* 
+    *>    printf("FATAL: calloc could not allocate memory for texture\n");                                <* 
+    *>    return -10;                                                                                     <* 
+    *> }                                                                                                  <* 
+    *> x_max = my.texw * my.texh;                                                                         <* 
+    *> for (i = 0; i < x_max; ++i)  my.texture [i] = 0;                                                   <* 
+    *> /+---(write the per glyph info)--------------+/                                                    <* 
+    *> MAKE__draw ();                                                                                     <* 
+    *> fwrite (my.texture, my.texh * my.texw, 1, my.file);                                                <* 
+    *> fclose (my.file);                                                                                  <* 
+    *> printf ("header      =  %7d\n",  8 * 4);                                                           <* 
+    *> printf ("glyphs      =  %7d\n",  my.nglyphs * sizeof(tGLYPH));                                     <* 
+    *> printf ("texture     =  %7d\n",  my.texh * my.texw);                                               <* 
+    *> printf ("TOTAL       =  %7d\n",  (8 * 4) + (my.nglyphs * sizeof(tGLYPH)) + (my.texh * my.texw));   <*/
    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
    return 0;
 }

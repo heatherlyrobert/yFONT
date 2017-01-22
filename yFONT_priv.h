@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0h"
-#define     YFONT_VER_TXT   "creates clean indexes now, ready for texture"
+#define     YFONT_VER_NUM   "2.0i"
+#define     YFONT_VER_TXT   "draws texture map of font"
 
 
 
@@ -103,14 +103,15 @@ struct      cFONT {
    int      min_glyph;                 /* smallest unicode num in font        */
    int      max_glyph;                 /* smallest unicode num in font        */
    int      range;                     /* diff in min/max unicode numbers     */
+   /*---(glyphs)------------*/
+   int16_t  num_glyph;                 /* number of glyphs included           */
+   tGLYPH  *glyphs;                    /* allocated glyph table               */
    /*---(texture)-----------*/
    int16_t  tex_w;                     /* texture width                       */
    int16_t  tex_h;                     /* texture height                      */
    GLuint   tex_ref;                   /* opengl texture reference            */
-   uchar   *tex_bits;                  /* actual texture                      */
-   /*---(glyphs)------------*/
-   int16_t  num_glyph;                 /* number of glyphs included           */
-   tGLYPH  *glyphs;                    /* allocated glyph table               */
+   uchar   *tex_map;                   /* actual texture                      */
+   /*---(working)-----------*/
    tVERT   *verts;                     /* glyph vertices                      */
    short   *lookup;                    /* vertex lookup table                 */
    /*---(done)--------------*/
@@ -124,17 +125,17 @@ extern      tFONT       *g_font       [MAX_FONT];
 
 struct cGLYPH {
    /*---(lookup)--------------*/
-   uint        code;          /* unicode number                               */
+   int32_t     code;          /* unicode number                               */
    char        good;          /* good (y) or bad (-)                          */
    /*---(texture)-------------*/
-   uint        xpos;          /* glyph x position in texture                  */
-   uint        ypos;          /* glyph y position in texture                  */
-   uchar       wide;          /* glyph width                                  */
-   uchar       tall;          /* glyph height                                 */
+   int16_t     xpos;          /* glyph x position in texture                  */
+   int16_t     ypos;          /* glyph y position in texture                  */
+   char        wide;          /* glyph width                                  */
+   char        tall;          /* glyph height                                 */
    /*---(placement)-----------*/
-   schar       xoff;          /* glyph placement offset -- horizontal         */
-   schar       yoff;          /* glyph placement offset -- vertical           */
-   schar       adv;           /* position advancement for next glyph start    */
+   char        xoff;          /* glyph placement offset -- horizontal         */
+   char        yoff;          /* glyph placement offset -- vertical           */
+   char        adv;           /* position advancement for next glyph start    */
    /*---(done)----------------*/
 };
 
@@ -207,6 +208,10 @@ char        yFONT__index_pos     (char  a_slot,  int a_order, short a_xpos, shor
 char        yFONT__index_maxes   (char  a_slot);
 char        yFONT__index_wide    (char  a_slot, int  a_entry);
 char        yFONT__index_dump    (char  a_slot);
+char        yFONT__index_who     (char  a_slot, int  a_entry, int *a_code, char *a_good);
+char        yFONT__index_coords  (char  a_slot, int  a_entry, short *a_xpos, short *a_ypos, char *a_wide, char *a_tall);
+
+char        yFONT__glyph_alloc   (char a_slot);
 
 char        yFONT__verts       (tFONT *a_txf);
 char        yFONT__index       (tFONT *a_txf);

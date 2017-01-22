@@ -31,7 +31,7 @@ have tweaked the format and methods as the original TXF format
 .SH FILE FORMAT
    header
    index
-   texture
+   map
 
 .SH HEADER
 
@@ -53,7 +53,6 @@ have tweaked the format and methods as the original TXF format
 
 .SH INDEX
 
-
    type    bytes   contents         description
    ---(identifier)----------
    int32   4       unicode          standard character identification
@@ -68,6 +67,6 @@ have tweaked the format and methods as the original TXF format
    char    1       y-offset         offset for placement in opengl
    char    1       advancement      advancement for next character
 
-.SH TEXTURE
+.SH MAP
 
 
