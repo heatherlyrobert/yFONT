@@ -130,6 +130,7 @@ struct  cACCESSOR {
    /*---(characteristics)----------------*/
    char        point;                    /* point size of font                  */
    char        adjust;                   /* actual point size (for adjustment)  */
+   int         spacer;                   /* unicode of space character          */
    int         margin;                   /* character margin added              */
    int         texw;                     /* width of texture                    */
    /*---(freetype)-----------------------*/
@@ -279,14 +280,14 @@ FONT__choose       (char a_slot)
    /*---(header)-------------------------*/
    DEBUG_YFONT  yLOG_enter   (__FUNCTION__);
    URG_VERB     printf       ("%s\n", __FUNCTION__);
-   DEBUG_YFONT  yLOG_value   ("font_name" , my.font_name);
+   DEBUG_YFONT  yLOG_info    ("font_name" , my.font_name);
    /*---(check for all fonts)------------*/
    if      (strcmp (my.font_name, "all") == 0) {
       DEBUG_YFONT  yLOG_note    ("program in ALL font mode");
       /*---(check for first)-------------*/
       if (strcmp (my.out_name, "") == 0) {
          DEBUG_YFONT  yLOG_note    ("first font to be chosen");
-         rc = yFONT__conf_head (my.out_name, &my.point, &my.adjust, my.glist, my.src_file);
+         rc = yFONT__conf_head (my.out_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
          DEBUG_YFONT  yLOG_value   ("rc"        , rc);
          if (rc < 0) {
             DEBUG_YFONT  yLOG_note    ("no fonts found in configuration");
@@ -297,7 +298,7 @@ FONT__choose       (char a_slot)
       /*---(check for next)--------------*/
       else {
          DEBUG_YFONT  yLOG_note    ("next font to be chosen");
-         rc = yFONT__conf_next (my.out_name, &my.point, &my.adjust, my.glist, my.src_file);
+         rc = yFONT__conf_next (my.out_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
          DEBUG_YFONT  yLOG_value   ("rc"        , rc);
          if (rc < 0) {
             DEBUG_YFONT  yLOG_note    ("no more fonts available");
@@ -310,7 +311,12 @@ FONT__choose       (char a_slot)
    /*---(check for specific font)--------*/
    else {
       DEBUG_YFONT  yLOG_note    ("program in SPECIFIC font mode");
-      rc = yFONT__conf_info (my.font_name, &my.point, &my.adjust, my.glist, my.src_file);
+      if (strcmp (my.out_name, "") != 0) {
+         DEBUG_YFONT  yLOG_note    ("already run on this font");
+         DEBUG_YFONT  yLOG_exit    (__FUNCTION__);
+         return rce;
+      }
+      rc = yFONT__conf_info (my.font_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
       DEBUG_YFONT  yLOG_value   ("rc"        , rc);
       if (rc < 0) {
          DEBUG_YFONT  yLOG_note    ("font not found in configuration");
@@ -465,8 +471,6 @@ GLIST__load        (char a_slot, char *a_list)
    if (rc == 0)  rc = GLIST__clear       ();
    if (rc == 0)  rc = GLIST__normal      (a_list);
    if (rc <  0)  rc = GLIST__mandarin    (a_list);
-   yFONT__head_nglyph  (a_slot, nglist);
-   yFONT__index_alloc  (a_slot);
    return rc;
 }
 
@@ -496,6 +500,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("freetype2"      , "library could not be openned");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("initialization successful");
@@ -503,6 +508,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_note    ("load the source font");
    --rce;  if (a_font == NULL) {
       DEBUG_INPT   yLOG_fatal   ("font"           , "font name string argument is null");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_info    ("a_font"    , a_font);
@@ -510,6 +516,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not find font");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("font load successful");
@@ -520,6 +527,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not set pixel size");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("point size setting successful");
@@ -546,6 +554,7 @@ FREETYPE__shutdown   (void)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not close font");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("font unloaded successful");
@@ -555,6 +564,7 @@ FREETYPE__shutdown   (void)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("freetype2"      , "library could not be closed");
+      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("shutdown successful");
@@ -683,6 +693,11 @@ INDEX__load        (char a_slot)
       DEBUG_INPT   yLOG_value   ("CHAR"      , i);
       x_code = my.glyph.code = glist [i].unicode;
       DEBUG_INPT   yLOG_value   ("unicode"   , x_code);
+      if (x_code == 32) {
+         x_code = my.spacer;
+         x_good = 'r';
+      }
+      DEBUG_INPT   yLOG_value   ("unicode"   , x_code);
       rc = FREE__find    (x_code);
       /*---(handle misses)---------------*/
       DEBUG_INPT   yLOG_value   ("rc"        , rc);
@@ -692,19 +707,11 @@ INDEX__load        (char a_slot)
          continue;
       }
       /*---(handle success)--------------*/
-      if (rc == 0)  x_good = 'y';
+      if (rc == 0 && x_good == '-')  x_good = 'y';
       GLYPH__metrics ();
-      /*---(watch for bad spaces)--------*/
-      if (my.glyph.code == ' ' && my.glyph.adv == 0) {
-         DEBUG_INPT   yLOG_note    ("special handling for null space character");
-         my.glyph.code = 'a';
-         FREE__find     (my.glyph.code);
-         GLYPH__metrics ();
-         my.glyph.code = ' ';
-         x_good = 'r';
-      }
       /*---(load index)------------------*/
-      yFONT__index_code   (a_slot, i, x_code       , x_good);
+      x_code = glist [i].unicode;
+      yFONT__index_code   (a_slot, i, x_code           , x_good);
       yFONT__index_size   (a_slot, i, my.glyph.wide, my.glyph.tall);
       yFONT__index_offset (a_slot, i, my.glyph.xoff, my.glyph.yoff, my.glyph.adv);
       /*---(handle special)--------------*/
@@ -800,10 +807,9 @@ TEX__glyph           (char a_slot, int a_entry, int a_texw)
    /*---(coordinates)--------------------*/
    rc = yFONT__index_coords (a_slot, a_entry, &x_xpos, &x_ypos, &x_wide, &x_tall);
    if (rc < 0)  return rc;
-   DEBUG_INPT   yLOG_enter   (__FUNCTION__);
+   /*> DEBUG_INPT   yLOG_enter   (__FUNCTION__);                                      <*/
    /*---(row-by-row)---------------------*/
    for (x_row = 0; x_row < x_tall; ++x_row) {
-      DEBUG_INPT   yLOG_value   ("row"       , x_row);
       /*---(col-by-col)------------------*/
       for (x_col = 0; x_col < x_wide; ++x_col) {
          /*---(transfer value)-----------*/
@@ -816,13 +822,54 @@ TEX__glyph           (char a_slot, int a_entry, int a_texw)
       /*---(done with col)---------------*/
    }
    /*---(done with row)------------------*/
-   DEBUG_INPT   yLOG_exit    (__FUNCTION__);
+   /*> DEBUG_INPT   yLOG_exit    (__FUNCTION__);                                      <*/
    return 0;
 }
 
 char
-TEX__crop            (char x_slot)
+TEX__crop            (char a_slot, int a_entry, int a_texw)
 {
+   /*---(locals)-----------+-----------+-*/
+   char        rc          =  0;
+   int         x_row       =  0;   /* vertical iterator                   */
+   int         x_col       =  0;   /* horizontal iterator                 */
+   short       x_xpos      =  0;
+   short       x_ypos      =  0;
+   char        x_tall      =  0;   /* greatest character height           */
+   char        x_wide      =  0;
+   char        x_ctop      =  0;
+   char        x_clef      =  0;
+   char        x_cbot      =  0;   /* greatest character height           */
+   char        x_crig      =  0;
+   ulong       x_bitloc    =  0;       /* byte location in source glyph       */
+   uchar       x_value     =  0;       /* byte value in source glyph          */
+   ulong       x_texloc    =  0;       /* byte location in texture            */
+   int         x_run       =  0;
+   /*---(coordinates)--------------------*/
+   rc = yFONT__index_coords (a_slot, a_entry, &x_xpos, &x_ypos, &x_wide, &x_tall);
+   if (rc < 0)  return rc;
+   /*---(crop header)--------------------*/
+   fprintf (my.o, "%-4d : u=%5d, h=%3d, w=%3d\n", a_entry, glist [a_entry].unicode, x_tall, x_wide);
+   for (x_run = 0; x_run <= 8; x_run += 4) {
+      /*---(set crop coords)-------------*/
+      fprintf (my.o, "%-4d : u=%5d, x_run=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_entry, glist [a_entry].unicode, x_run, glist [a_entry].coords [0 + x_run], glist [a_entry].coords [1 + x_run], glist [a_entry].coords [2 + x_run], glist [a_entry].coords [3 + x_run]);
+      x_ctop = x_tall * ((100 - glist [a_entry].coords [0 + x_run]) / 100.0);
+      x_clef = x_wide * (glist [a_entry].coords [1 + x_run] / 100.0);
+      x_cbot = x_tall * ((100 - glist [a_entry].coords [2 + x_run]) / 100.0);
+      x_crig = x_wide * (glist [a_entry].coords [3 + x_run] / 100.0);
+      fprintf (my.o, "%-4d : u=%5d, x_run=%d, t=%3d, l=%3d, b=%3d, r=%3d\n", a_entry, glist [a_entry].unicode, x_run, x_ctop, x_clef, x_cbot, x_crig);
+      if (x_ctop == x_cbot && x_clef == x_crig) {
+         fprintf (my.o, "   skipping\n");
+         continue;
+      }
+      for (x_row = x_ctop; x_row <= x_cbot; ++x_row) {
+         for (x_col = x_clef; x_col < x_crig; ++x_col) {
+            x_texloc   = ((x_ypos + x_row) * a_texw) + (x_xpos + x_col);
+            g_font [a_slot]->tex_map [x_texloc] = 0;
+         }
+      }
+   }
+   return 0;
 }
 
 char
@@ -837,7 +884,6 @@ TEX__draw            (char a_slot)
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
    URG_VERB     printf       ("%s\n", __FUNCTION__);
    /*---(allocate texture)---------------*/
-   rc = yFONT__map_alloc (a_slot);
    DEBUG_TOPS   yLOG_value   ("rc"        , rc);
    if (rc < 0) {
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
@@ -850,6 +896,9 @@ TEX__draw            (char a_slot)
       if (strchr ("?r", x_good) != NULL)  continue;
       rc = FREE__find (x_code);
       rc = TEX__glyph (a_slot, i, my.texw);
+      if (strchr ("mM", glist [i].reason) != NULL) {
+         rc = TEX__crop  (a_slot, i, my.texw);
+      }
    }
    /*---(complete)-----------------------*/
    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
@@ -1073,15 +1122,15 @@ static void      o___OLD_STUFF_______________o (void) {;}
  *>             offset   = (my.glyph.ypos + i) * my.texw;                                                                                                                                                                                               <* 
  *>             for (j = x_clef; j < x_crig; ++j) {                                                                                                                                                                                                     <* 
  *>                width    = x_left + j;                                                                                                                                                                                                               <* 
- *>                texloc   =  offset + width;                                                                                                                                                                                                          <* 
- *>                my.texture [texloc] = 0;                                                                                                                                                                                                             <* 
- *>             }                                                                                                                                                                                                                                       <* 
- *>          }                                                                                                                                                                                                                                          <* 
- *>       }                                                                                                                                                                                                                                             <* 
- *>    }                                                                                                                                                                                                                                                <* 
- *>    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);                                                                                                                                                                                                        <* 
- *>    return 0;                                                                                                                                                                                                                                        <* 
- *> }                                                                                                                                                                                                                                                   <*/
+*>                texloc   =  offset + width;                                                                                                                                                                                                          <* 
+*>                my.texture [texloc] = 0;                                                                                                                                                                                                             <* 
+*>             }                                                                                                                                                                                                                                       <* 
+*>          }                                                                                                                                                                                                                                          <* 
+*>       }                                                                                                                                                                                                                                             <* 
+*>    }                                                                                                                                                                                                                                                <* 
+*>    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);                                                                                                                                                                                                        <* 
+*>    return 0;                                                                                                                                                                                                                                        <* 
+*> }                                                                                                                                                                                                                                                   <*/
 
 /*> char         /+--> write txf glyph table -----------------[ ------ [ ------ ]-+/   <* 
  *> MAKE__table        (void)                                                          <* 
@@ -1160,63 +1209,57 @@ main               (int argc, char *argv[])
    uint      x_max     = 0;
    int       x_slot    = 0;
    /*---(setup)--------------------------*/
-   if (rc >= 0)  rc = yURG_logger (argc, argv);
-   if (rc >= 0)  rc = PROG_init   ();
-   if (rc >= 0)  rc = yURG_urgs   (argc, argv);
-   if (rc >= 0)  rc = PROG_args   (argc, argv);
+   if (rc >= 0)  rc = yURG_logger          (argc, argv);
+   if (rc >= 0)  rc = PROG_init            ();
+   if (rc >= 0)  rc = yURG_urgs            (argc, argv);
+   if (rc >= 0)  rc = PROG_args            (argc, argv);
+   if (rc >= 0)  rc = yFONT__conf_parse    ();
    if (rc <  0) {
       return rc;
    }
+   /*> yFONT__conf_list ();                                                           <*/
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
    /*---(set up font)--------------------*/
-   if (rc >= 0)  rc = yFONT__conf_parse    ();
-   if (rc >= 0)  rc = yFONT__slot_new      ();
-   if (rc >= 0)  x_slot = rc;
-   if (rc >= 0)  rc = FONT__choose         (x_slot);
-   if (rc >= 0)  rc = FREETYPE__setup      (my.src_file, my.point + my.adjust);
-   if (rc >= 0)  rc = GLIST__load          (x_slot, my.glist);
-   if (rc >= 0)  rc = INDEX__load          (x_slot);
-   if (rc >= 0)  rc = INDEX__layout        (x_slot);
-   if (rc >= 0)  rc = TEX__draw            (x_slot);
-   if (rc <  0) {
-      return rc;
+   while (1) {
+      rc = 0;
+      if (rc >= 0)  rc = yFONT__slot_new      ();
+      if (rc >= 0)  x_slot = rc;
+      URG_VERB   printf ("current slot : %d\n", x_slot);
+      if (rc >= 0)  rc = FONT__choose         (x_slot);
+      if (rc <  0)  break;
+      if (rc >= 0)  rc = FREETYPE__setup      (my.src_file, my.point + my.adjust);
+      if (rc <  0)  break;
+      if (rc >= 0)  rc = GLIST__load          (x_slot, my.glist);
+      if (rc >= 0)  rc = yFONT__head_nglyph   (x_slot, nglist);
+      if (rc >= 0)  rc = yFONT__index_alloc   (x_slot);
+      if (rc >= 0)  rc = INDEX__load          (x_slot);
+      if (rc >= 0)  rc = INDEX__layout        (x_slot);
+      if (rc >= 0)  rc = yFONT__map_alloc     (x_slot);
+      if (rc >= 0)  rc = yFONT__map_clear     (x_slot);
+      if (rc >= 0)  rc = TEX__draw            (x_slot);
+      /*---(reporting)-----------------------------*/
+      if (rc >= 0)  rc = yFONT__head_dump     (x_slot);
+      if (rc >= 0)  rc = yFONT__index_dump    (x_slot);
+      if (rc >= 0)  rc = yFONT__map_texart    (x_slot);
+      /*---(calculations)--------------------------*/
+      if (rc >= 0)  rc = yFONT__verts_alloc   (x_slot);
+      if (rc >= 0)  rc = yFONT__verts_load    (x_slot);
+      if (rc >= 0)  rc = yFONT__index_lookup  (x_slot);
+      /*---(write txf)-----------------------------*/
+      if (rc >= 0)  rc = yFONT__file_open     (x_slot, 'w');
+      if (rc >= 0)  rc = yFONT__head_write    (x_slot);
+      if (rc >= 0)  rc = yFONT__index_write   (x_slot);
+      if (rc >= 0)  rc = yFONT__map_write     (x_slot);
+      if (rc >= 0)  rc = yFONT__file_close    (x_slot);
+      /*---(shutdown)------------------------------*/
+      rc = yFONT__map_free      (x_slot);
+      rc = yFONT__index_free    (x_slot);
+      rc = FREETYPE__shutdown   ();
+      rc = yFONT__slot_free     (x_slot);
+      /*---(done)----------------------------------*/
    }
-   yFONT__head_dump  (x_slot);
-   yFONT__index_dump (x_slot);
 
-
-   FREETYPE__shutdown   ();
-   yFONT__slot_free     (x_slot);
-
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
-   exit (0);
-
-   /*---(write txf header)----------------------*/
-   if (rc >= 0)  rc = yFONT__file_open  (x_slot, 'w');
-   if (rc >= 0)  rc = yFONT__head_write (x_slot);
-   if (rc <  0) {
-      return rc;
-   }
-   /*> MAKE__table ();                                                                <*/
-   /*> /+---(allocate the texture)------------------+/                                                    <* 
-    *> DEBUG_OUTP   yLOG_note    ("allocating texture");                                                  <* 
-    *> my.texture = (uchar *) malloc (my.texw * my.texh * sizeof (uchar));                                <* 
-    *> DEBUG_OUTP   yLOG_point   ("texture"   , my.texture);                                              <* 
-    *> if (my.texture == NULL) {                                                                          <* 
-    *>    printf("FATAL: calloc could not allocate memory for texture\n");                                <* 
-    *>    return -10;                                                                                     <* 
-    *> }                                                                                                  <* 
-    *> x_max = my.texw * my.texh;                                                                         <* 
-    *> for (i = 0; i < x_max; ++i)  my.texture [i] = 0;                                                   <* 
-    *> /+---(write the per glyph info)--------------+/                                                    <* 
-    *> MAKE__draw ();                                                                                     <* 
-    *> fwrite (my.texture, my.texh * my.texw, 1, my.file);                                                <* 
-    *> fclose (my.file);                                                                                  <* 
-    *> printf ("header      =  %7d\n",  8 * 4);                                                           <* 
-    *> printf ("glyphs      =  %7d\n",  my.nglyphs * sizeof(tGLYPH));                                     <* 
-    *> printf ("texture     =  %7d\n",  my.texh * my.texw);                                               <* 
-    *> printf ("TOTAL       =  %7d\n",  (8 * 4) + (my.nglyphs * sizeof(tGLYPH)) + (my.texh * my.texw));   <*/
    DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
    return 0;
 }

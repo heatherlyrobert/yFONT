@@ -201,15 +201,16 @@
 
 char     *yFONT_version      (void);
 
-int       yFONT_load         (char *a_name);
-char      yFONT_free         (int   a_slot);
+char      yFONT_load         (char *a_name);
+char      yFONT_free         (char  a_slot);
 
-int       yFONT_uprint       (int  a_slot, int a_point, char a_align, unsigned int *a_array, int a_max);
-int       yFONT_print        (int   a_slot, int a_point, char a_align, char *a_str);
-int       yFONT_printw       (int   a_slot, int a_point, char a_align, char *a_str, int a_width, int a_height, float a_wrap);
+char      yFONT_print        (char  a_slot, char  a_point, char  a_align, char *a_text);
+char      yFONT_printw       (char  a_slot, char  a_point, char  a_align, char *a_text , int  a_wide, int  a_tall, float  a_spacing);
+char      yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *a_array, int  a_max);
 
-int       yFONT_symload      (char *a_name);
-int       yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod);
+
+/*> int       yFONT_symload      (char *a_name);                                      <*/
+/*> int       yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod);   <*/
 
 
 #define    YF_NO_SLOTS         -1

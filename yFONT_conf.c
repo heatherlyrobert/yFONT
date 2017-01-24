@@ -18,6 +18,7 @@ struct  cFONT_INFO {
    char        name        [LEN_LABEL];
    char        point;                  /* base font point                     */
    char        adjust;                 /* point adjust to make "seem" right   */
+   int         spacer;
    char        glist       [LEN_LABEL];
    char        source      [LEN_STR  ];
 };
@@ -37,32 +38,34 @@ static      int         s_lines     = 0;
 static      int         s_curr      = 0;
 
 char         /*--> load the first config font ------------[ ------ [ ------ ]-*/
-yFONT__conf_head     (char *a_name, char *a_point, char *a_adjust, char *a_glist, char *a_source)
+yFONT__conf_head     (char *a_name, char *a_point, char *a_adjust, int *a_spacer, char *a_glist, char *a_source)
 {
    s_curr = 0;
    if (a_name   != NULL)  strlcpy (a_name  , s_font_info [s_curr].name  , LEN_LABEL);
    if (a_point  != NULL)  *a_point  = s_font_info [s_curr].point;
    if (a_adjust != NULL)  *a_adjust = s_font_info [s_curr].adjust;
+   if (a_spacer != NULL)  *a_spacer = s_font_info [s_curr].spacer;
    if (a_glist  != NULL)  strlcpy (a_glist , s_font_info [s_curr].glist , LEN_LABEL);
    if (a_source != NULL)  strlcpy (a_source, s_font_info [s_curr].source, LEN_STR  );
    return 0;
 }
 
 char         /*--> load the next config font -------------[ ------ [ ------ ]-*/
-yFONT__conf_next     (char *a_name, char *a_point, char *a_adjust, char *a_glist, char *a_source)
+yFONT__conf_next     (char *a_name, char *a_point, char *a_adjust, int *a_spacer, char *a_glist, char *a_source)
 {
    ++s_curr;
    if (s_curr >= s_nentry) return -1;
    if (a_name   != NULL)  strlcpy (a_name  , s_font_info [s_curr].name  , LEN_LABEL);
    if (a_point  != NULL)  *a_point  = s_font_info [s_curr].point;
    if (a_adjust != NULL)  *a_adjust = s_font_info [s_curr].adjust;
+   if (a_spacer != NULL)  *a_spacer = s_font_info [s_curr].spacer;
    if (a_glist  != NULL)  strlcpy (a_glist , s_font_info [s_curr].glist , LEN_LABEL);
    if (a_source != NULL)  strlcpy (a_source, s_font_info [s_curr].source, LEN_STR  );
    return 0;
 }
 
 char         /*--> load the header from configuration ----[ ------ [ ------ ]-*/
-yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, char *a_glist, char *a_source)
+yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, int *a_spacer, char *a_glist, char *a_source)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
@@ -92,6 +95,7 @@ yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, char *a_glist
       if (strcmp (a_name, s_font_info [i].name) != 0)      continue;
       if (a_point  != NULL)  *a_point  = s_font_info [i].point;
       if (a_adjust != NULL)  *a_adjust = s_font_info [i].adjust;
+      if (a_spacer != NULL)  *a_spacer = s_font_info [i].spacer;
       if (a_glist  != NULL)  strlcpy (a_glist , s_font_info [i].glist , LEN_LABEL);
       if (a_source != NULL)  strlcpy (a_source, s_font_info [i].source, LEN_STR  );
       x_entry = i;
@@ -144,9 +148,10 @@ yFONT__conf_list     (void)
    int i = 0;
    printf ("\nconfiguration file font list\n");
    for (i = 0; i < s_nentry; ++i) {
-      printf ("%3d  %-20.20s  %-20.20s  %2d  %2d  %-10.10s  %-50.50s\n", i,
+      printf ("%3d  %-20.20s  %-20.20s  %3d  %3d  %-7d  %-10.10s  %s\n", i,
             s_font_info [i].cat     , s_font_info [i].name    ,
             s_font_info [i].point   , s_font_info [i].adjust  ,
+            s_font_info [i].spacer  ,
             s_font_info [i].glist   , s_font_info [i].source  );
    }
    printf ("\n");
@@ -209,8 +214,9 @@ yFONT__conf_close    (void)
 #define     FIELD_NAME     1
 #define     FIELD_POINT    2
 #define     FIELD_ADJUST   3
-#define     FIELD_GLIST    4
-#define     FIELD_SOURCE   5
+#define     FIELD_SPACE    4
+#define     FIELD_GLIST    5
+#define     FIELD_SOURCE   6
 
 char         /*--> parse the configuration file ----------[ ------ [ ------ ]-*/
 yFONT__conf_parse    (void)
@@ -284,6 +290,10 @@ yFONT__conf_parse    (void)
          case  FIELD_ADJUST  :
             s_font_info [s_nentry].adjust  = atoi (p);
             DEBUG_YFONT_M  yLOG_value   ("adjust"    , s_font_info [s_nentry].adjust );
+            break;
+         case  FIELD_SPACE   :
+            s_font_info [s_nentry].spacer = atoi  (p);
+            DEBUG_YFONT_M  yLOG_value   ("spacer"    , s_font_info [s_nentry].spacer  );
             break;
          case  FIELD_GLIST   :
             strlcpy (s_font_info [s_nentry].glist , p, LEN_STR  );

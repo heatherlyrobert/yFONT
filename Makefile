@@ -11,12 +11,18 @@ UNIT    = ${BASE}_unit
 #*---(dirs and docs)------------------*#
 HDIR    = /home/system/yFONT.opengl_font_renderer
 IDIR    = /usr/local/sbin
+#*---(library documentation)----------*#
 MNUM    = 3
 MDIR    = /usr/share/man/man${MNUM}
 MBASE   = ${BASE}.${MNUM}
+#*---(file format)--------------------*#
 FNUM    = 5
 FDIR    = /usr/share/man/man${FNUM}
 FBASE   = ${BASE}.${FNUM}
+#*---(overview)-----------------------*#
+ONUM    = 0
+ODIR    = /usr/share/man/man${ONUM}
+OBASE   = ${BASE}.${ONUM}
 
 #===(compilier variables)===============================================================================================================================================#
 # must have "-x c" on gcc line so stripped files work with alternate extensions
@@ -47,8 +53,7 @@ STRIP   = @grep -v -e " DEBUG_" -e " yLOG_"
 
 
 #*---(executables)--------------------*#
-#all                : ${DEBUG} ${BASE} ${UNIT} txf_make txf_show
-all                : ${DEBUG} ${BASE} ${UNIT}  ${BASE}_make
+all                : ${DEBUG}  ${BASE}  ${UNIT}  ${BASE}_make  ${BASE}_show
 
 ${BASE}            : ${OBJS}
 	${LINK}  -shared -Wl,-soname,lib${BASE}.so.1   ${LIBS}  -o lib${BASE}.so.1.0   ${OBJS}
@@ -61,6 +66,10 @@ ${DEBUG}           : ${OBJD}
 ${BASE}_make       : ${BASE}_make.o   ${OBJD}
 	${LINK}  -o ${BASE}_make        ${OBJS} ${BASE}_make.os  ${LIBS}  -lfreetype
 	${LINK}  -o ${BASE}_make_debug  ${OBJD} ${BASE}_make.o   ${LIBD}  -lfreetype
+
+${BASE}_show       : ${BASE}_show.o   ${OBJD}
+	${LINK}  -o ${BASE}_show        ${OBJS} ${BASE}_show.os  ${LIBS}
+	${LINK}  -o ${BASE}_show_debug  ${OBJD} ${BASE}_show.o   ${LIBD}
 
 ${DEBUG}           : ${OBJD}
 
@@ -176,6 +185,21 @@ install            :
 	chown     root:root            ${IDIR}/${BASE}_make_debug
 	chmod     0755                 ${IDIR}/${BASE}_make_debug
 	@sha1sum  ${BASE}_make_debug
+	#---(production version)--------------#
+	${COPY}   ${BASE}_show         ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_show
+	chmod     0755                 ${IDIR}/${BASE}_show
+	@sha1sum  ${BASE}_show
+	#---(debug version)-------------------#
+	${COPY}   ${BASE}_show_debug   ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_show_debug
+	chmod     0755                 ${IDIR}/${BASE}_show_debug
+	@sha1sum  ${BASE}_show_debug
+	#---(overview)------------------------#
+	rm -f     ${MDIR}/${MBASE}.bz2
+	cp -f     ${MBASE}    ${MDIR}
+	bzip2     ${MDIR}/${MBASE}
+	chmod     0644  ${MDIR}/${MBASE}.bz2
 	#---(documentation)-------------------#
 	rm -f     ${MDIR}/${MBASE}.bz2
 	cp -f     ${MBASE}    ${MDIR}
@@ -186,6 +210,11 @@ install            :
 	cp -f     ${FBASE}    ${FDIR}
 	bzip2     ${FDIR}/${FBASE}
 	chmod     0644  ${FDIR}/${FBASE}.bz2
+	#---(overview)------------------------#
+	rm -f     ${ODIR}/${OBASE}.bz2
+	cp -f     ${OBASE}    ${ODIR}
+	bzip2     ${ODIR}/${OBASE}
+	chmod     0644  ${ODIR}/${OBASE}.bz2
 	#---(done)----------------------------#
 
 

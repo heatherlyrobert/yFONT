@@ -1,22 +1,3 @@
-." heatherly hand crafted (like a dope)
-."
-." sections, break up the document into pieces
-."   .SH <str>   begin a new section
-."   .SS <str>   begin a new sub-section
-."
-." paragraphs, if not special formatting is used, these are unnecessary
-."   .PP         before a set of contiguous lines will run them together into
-."               a single paragraph -- helps if macros separate by accident
-."   .RS <n>     start a paragraph indented by <n> characters (i use 3 mostly)
-."   .RE         end that relative paragraph
-."   .IP <str>   uses <str> as an outdent and the next line is indented
-."   .TP         tag paragraph which has a more controllable outdent than .IP
-."   .HP         start hanging paragraph where all following lines are indented
-."
-."
-."
-."
-."
 .TH yFONT 3 2010-Aug "linux" "heatherly custom programming manual"
 
 .SH NAME
@@ -25,229 +6,98 @@ yFONT \- fast, clean, aesthetic texture mapped fonts for opengl
 .nf
 .B #include  <yFONT.h>
 .sp
+.R  return a string with library versioning information
+.BI "yFONT_version  ( " "" " );"
+.sp
 .R  prepare a font for use
-.BI "int   " "fp" " = yFONT_load   ( char* " "font_file" " );"
+.BI "yFONT_load     ( " "a_name" " );"
 .sp
 .R  remove a font from memory when finished using
-.BI "char  " "rc" " = yFONT_free   ( int " "fp" " );"
+.BI "yFONT_free     ( " "a_ref" " );"
 .sp
 .R  print a normal string with some formatting control
-.BI "int   " "w " " = yFONT_print  ( int " "fp" ", int " "size" ", char " "align" ", char " "string" " );"
+.BI "yFONT_print    ( " "a_ref" ", " "a_size" ", " "a_align" ", " "a_text" " );"
 .sp
 .R  print a word-wrapped string with some formatting control
-.BI "int   " "w " " = yFONT_printw ( int " "fp" ", int " "size" ", char " "align" ", char " "string" ","
-.BI "                             int " "width" ", int " "height" ", float " "spacing" " );"
-
-.SH DESCRIPTION (short)
-yFONT is a heatherly-specific library and file format for placing readable text
-in three-dimentional opengl space.  it allows me to de-couple font rendering
-from executable programs allowing them to be leaner, meaner, and faster.
-
-.SH DESCRIPTION (backstory)
-there are many many answers to every requirement.
-
-.B situation (S)
-
-computer environments can present data in many formats
-
-any serious graphical programming effort requires readable, 3d manipulatable,
-and integratable text.  the text must move, twist, rotate, and zoom with the
-rest of the environment to be useful.
-
-computer 
-
-computer environments are made up of thousands of applications of all sizes
-and complexities.  hundreds of these applications are interactive and gather
-input through command-line arguments, question/answer dialog, textual user
-interfaces, graphical user interfaces, or other.  each interface has different
-purposes, ranges, and potentials and is therefore structured to match its
-focus and user skill set.  typical methods include menus, buttons, hotspots,
-shortcuts, pointing, key assignments, commands, command line arguments,
-plug-ins, scripts and macros, etc.
-
-.B complication (C)
-
-interface design is a non-standard, neglected, abused, and retarded dark art.
-each program's interface is often completely unique, developed from scratch,
-altered for each version, and targeted at the least common denominator
-(idiot).  the learning curve to use each application is typically painful
-and most users only ever learn the basics.  features are often limited to
-what can be shown in menus and simple options.  most apps quickly digress
-into gui picture buttons and simplistic mouse operation in order to keep it
-sufficiently chimpified.  the maxim goes, "gui's keep simple things simple
-and make hard things impossible."  HELLS NO.
-
-.B question (Q)
-
-how can we make using applications simplier, faster, more standard, and
-dramatically more powerful while easing access to advanced functions and
-keeping the on-going learning curve manageable ?
-
-.B answer (A)
-
-move to a nearly one-hundred percent keyboard interface based on a standardized
-and extended version of the successful modal vi/vim system.  done, fucking
-solved.  we will call it vi-keys.  don't care about the mouse-using chimps and
-touch-screen snot-gobblers :o
-
-.B benefits (b)
-   -- on-going learning curve is very low
-   -- fast context switching between applications
-   -- does not require switching back-and-forth to a mouse
-   -- makes common activities as fast and efficient as possible
-   -- enable powerful features in new contexts (macros, buffers, ... )
-
-.B challenges (c)
-   -- initial learning curve is very high
-   -- only standardized on my systems
-   -- takes a lot of time to define
-   -- takes a lot of willpower to stay with it
-
-.B objectives (o)
-   -- 1st level is basic two dimensional movement keys
-   -- 2nd level is 
-
-
-
-
-
-.SH DECISION
-
-.b situation.  
-any serious graphical programming effort requires readable, 3d manipulatable,
-and integratable text.  the text must move, twist, rotate, and zoom with the
-rest of the environment to be useful.
-
-.SH COMPLICATION
-but, opengl is focusing on drawing primatives, which it should be.  this means
-that using real 3d text requires big font rendering libraries or massive
-integrated tool kits.  too much.
-
-.SH OBJECTIVES
-   -- 
-
-.SH ALTERNATIVES
-what do i use
-   -- font library
-   -- integrated toolkit
-   -- freeware
-   -- custom-built
-
-.SH ANSWER
-i have chosen an old-school method to integrate beautiful fonts while
-de-coupling my graphics programming from font rendering.  it provides the
-basic capabilities i need without the overbuilt drama.
-
-.SH BRILLIANT IDEA SEED (credit where much credit is due)
-in 1997, mark kilgard developed and shared a method for making opengl
-font access cleaner, faster, and de-coupled from massive font libraries.
-he pre-rendered xwindows fonts into a intermediate texture format, which
-he called TXF, that could then be read and used within opengl programs.
-freaking brilliant and usable today.  there are other methods, i standardized
-on this base.  i have evolved and learned, but i am standing on his shoulders.
-
-.SH REALLY, WHAT'S THE POINT
-many, many libraries can do this better, faster, and would require zero work
-to use.  better yet, integrated toolkits like KDE, QT, GNOME, etc make this
-all invisible.  i am doing this so i can evolve and grow rather than live in a
-cage built by another.  better programmer, better designer, better architect.
-this beautiful format...
-   -- optimizes for opengl, not some kitchen-sink integrated toolkit
-   -- keeps my execution boxes smaller and cleaner (no font library)
-   -- taught me massive amounts about font usage
-   -- taught me massive amounts about binary file formats
-   -- taught me about maintenance as i am a voracious dogfooder
-
-.SH OVERVIEW
-yFONT is a simple and clean set of custom library functions to provide
-fast, flexible, and aesthetic display of 3D manipulatible text in
-opengl applications which is both hard and rare.  its purpose is to transform
-a troublesome, involved, and painful task into a simple, repeatable,
-and predicable one.
-
-the fonts used for yFONT are a special format particularly adapted to the
-strengths of opengl.  this library will use textures to store and display
-font glyphs which can then be rapidly manipulated in 2D and 3D to create
-stunning displays using hardware acceleration.  to aid performance, glyphs
-for a particular font are stored in a single texture as a texture atlas.
-
-a key design decision was to decouple texture creation and
-texture-mapped font usage enabling the opengl application to be independent
-of any font libraries or particular windowing system.
-
-to accomplish these features, yFONT is actually a group of tools...
-   - txf_make to create the "txf" font files from "ttf" fonts
-   - txf_show to inspect existing "txf" files
-   - txf_inst to automate the creation of common "txf" files
-   - yFONT to merge with c/opengl programs to display the actual text
-
-yFONT will specifically handle the following...
-   - load a prepared texture-mapped font
-   - display a c-string of letters at varying font sizes
-   - allow different alignments on the text (left, middle, ...)
-   - provide simple word wrapping ability
-   - unload a font
-
-yFONT will NOT handle specialty needs like that are less common...
-   - kerning specific letter pairs (its about speed, not accuracy)
-   - curved and fitted text (better handled by programs)
-   - alteration to bold, italic, underline, (separate files)
-   - extended and wide-characters beyond the basic 256 (who cares)
-
-AS ALWAYS, there are many stable, accepted, existing programs that have
-been built by better programmers and are likely superior in speed, size,
-capability, and reliability; BUT, i would not have learned nearly as much
-using them, so i follow the adage..
-
-TO TRULY LEARN> do not seek to follow in the footsteps of the men of old;
-seek what they sought ~ Matsuo Basho
-
-THE UNDERLYING IDEA is to use this build process to learn new programming
-capabilities and put additional pressure on me to improve my standards,
-maintenance, and coding environment.  just using programs and ideas does
-not lead to understanding -- so get in there and get messy ;)
+.BI "yFONT_printw   ( " "a_ref" ", " "a_size" ", " "a_align" ", " "a_text" ", " "a_wide" ", " "a_tall" ", " "a_space" " );"
+.sp
+.R  print an array of unicode characters
+.BI "yFONT_printu   ( " "a_ref" ", " "a_size" ", " "a_align" ", " "a_array" ", " "a_max" " );"
+.sp
+.B link with -L/usr/local/libs -lyFONT or -lyFONT_debug
 
 .SH DESCRIPTION
 
-the
-.B yFONT_load()
-library function reads a speccially formatted texture-mapped font file into
-texture memory as well as prepares for its use at a texture atlas
+.B yFONT_version ()
+returns a specially formatted version string for the yFONT library to be
+used in program log files.
 
-the
+.B yFONT_load ()
+reads a specially-formatted texture-mapped font file into texture memory as
+well as prepares the a texture atlas.
+
 .B yFONT_free()
-library function clears a previously loaded font file out of both texture and
-normal memory after its use is complete
+clears a previously loaded font file out of both texture and normal memory
+after its use is complete.
 
-the
-.B yFONT_print()
-library function takes a c-string and displays it to the current opengl position
-using three other arguments -- a font texture, a point size, and an alignment
+.B yFONT_print ()
+displays text to the current opengl position using three other arguments --
+a font, a point size, and an alignment.
 
-the
-.B yFONT_printw()
-library function builds on the yFONT_print() function and adds a basic word-
-wrapping ability within a given bounding box (w, h) and line spacing.
+.B yFONT_printw ()
+builds on the yFONT_print() function and adds a basic word-wrapping ability
+within a given bounding box and line spacing.
+
+.B yFONT_printu ()
+builds on the yFONT_print() function and adds a basic word-wrapping ability
+within a given bounding box and line spacing.
 
 .SH ARGUMENT DEFINITIONS
 
-.I fp
-is an integer that identifies a texture-mapped font to the library.  this
-integer is checked for validity before use
+.I a_ref (char)
+is an integer that identifies a texture-mapped font to the library.
+this integer is checked for validity before use.
 
-.I font_file
-is a c-string containing the name of the a texture mapped font file stored in
-the local shared font directory /usr/local/t_hyasdo/fonts
+.I a_name (char*)
+is a string containing the name of the a texture mapped font file stored in
+the local shared font directory.
 
-.I size
-is the specification of the font size in points.  while this may be any
-integer, it really can only reasonably range from about 6 point on the small
-side to something like 96 on the very large side.  8 is generally a reasonable
-working text, 10-12 tends to be a good header size, and 18 is a decent header
+.I a_size (char)
+is the point size relative to that stored in the font file, reasonable and
+allowed range is 6 to 99.
 
-.I align
-is the specification of the text alignment to the starting point and is a
-combination of both vertical and horizontal alignments using constants.
+.I a_align (char)
+is the vertical and horizontal alignment to the current position in opengl.
+see "ALIGNMENT" section below.
+
+.I a_text (char*)
+is a string containing the text to be printed to the screen.  any characters
+not in font file will be left out.
+
+.I a_wide (int)
+is an integer indicating the width of the bounding box for the text to word
+wrap in.
+
+.I a_tall (int)
+is an integer indicating the height of the bounding box for the text to word
+wrap in.
+
+.I a_spacing (float)
+is the line spacing percentage -- 1.0 means normal, < 1.0 mean closer than
+normal, > 1.0 means further.
+
+.I a_array (*int[])
+is a pointer to an int array filled with unicode characters.  all unused
+elements should be nulls.
+
+.I a_max (int)
+is an integer indicating how many unicode elements of a_array to access
+and print.
+
+.SH ALIGNMENT
+before printing, yFONT calculates the width of the resulting text.  it will
+then calculate an apporpiate printing position using the alighment given in
+the a_align argument.
 
 there are four vertical alignments...
    BOT  : very bottom of lowest possible decender, such as a 'g'
@@ -260,7 +110,8 @@ and there are three horizontal alignments...
    CEN  : placed so the center of the text is at the current position
    RIG  : placed so the end of the text is at the current position
 
-which are combined into constant names such as...
+all alignments are combinations of vertical and horizontal.  constants are
+included in the yFONT.h header with names such as...
 .RS 3
 .B YF_BASLEF,
 .R which means baseline and left-aligned
@@ -274,36 +125,20 @@ which are combined into constant names such as...
 .R which means the top is and text ends at origin
 .RE
 
-.I string
-is a c-string containing the text to be printed to the screen.  if any
-characters are requested that are not in the font texture, they will simply
-be excluded as if they were never there
-
-.I width
-is an integer indicating the width of the bounding box for the text to word
-wrap in.  this value is in units in the opengl context.
-
-.I height
-is an integer indicating the height of the bounding box for the text to word
-wrap in.  this value is in units in the opengl context.
-
-.I spacing
-is a float indicating the scaling factor for line spacing in the word
-wrapping, where 1.0 means use the normal spacing, < 1.0 means closer, and
-> 1.0 means the lines are further apart
-
 .SH RETURN VALUE
 
-.I fp
-is an integer that identifies a texture-mapped font to the library.  this
-integer is checked for validity before use
+.I rc (yFONT_load)
+should later be used as a_ref, an char integer that identifies a texture-mapped
+font to the library.
 
-.I rc
-is a simple return code that provides basic feedback to the calling program
+.I rc (all others)
+is a simple return code that provides basic feedback.  zero is normal,
+negative is a serious error.
 
-.I w
-is the width of the actually printed text to aid with the placement of other
-text.  this value is in units of the opengl context.
+.SH DEBUGGING
+yFONT integrates with yURG for urgent processing.  yFONT_make and yFONT_show
+are normal programs and process all urgents.  the yFONT library has specific
+urgents (yfont and YFONT) that display interal workings.
 
 .SH EXAMPLE
 
@@ -312,32 +147,32 @@ text.  this value is in units of the opengl context.
 /*---(globals)----------------------*/
 .nf
 char  *face_sm  = "verdana_sm";
-int    txf_sm;
+char   txf_sm;
 
 /*---(load font)--------------------*/
-txf_sm = yFONT_load(face_sm);
+txf_sm = yFONT_load (face_sm);
 if (txf_sm <  0) {
-   fprintf(stderr, "Problem loading %s\\n", face_sm);
-   exit(1);
+   fprintf (stderr, "Problem loading %s\\n", face_sm);
+   exit    (1);
 }
 
 ((opengl code to setup and draw))
 
 /*---(show text)--------------------*/
-glPushMatrix(); {
-   glColor4f (0.0, 0.0, 0.0, 1.0);
-   glTranslatef(   0.0, -290.0,  40.0);
+glPushMatrix    (); {
+   glColor4f    (0.0, 0.0, 0.0, 1.0);
+   glTranslatef (   0.0, -290.0,  40.0);
    yFONT_print  (txf_sm, 8, YF_BASCEN, "testing");
-} glPopMatrix();
+} glPopMatrix   ();
 
 ((opengl code flush and swap))
 
 /*---(free font)--------------------*/
-yFONT_free(txf_sm);
+yFONT_free (txf_sm);
 
 .SH FILES
 
-.I /usr/local/t_hyasdo/fonts/
+.I /usr/local/share/fonts/
 .RS 3
 this directory is where texture-mapped fonts should be stored and hence where
 the library expects to find them
@@ -360,10 +195,14 @@ will only work on an xwindows and opengl system and is probably not worth
 using without hardware acceleration
 
 .SH AUTHOR
-the_heatherlys
+rsheatherly
 
 .SH SEE ALSO
-.BR txf_make "(1), " txf_show "(1), " txf_inst "(9)"
+ yFONT (0)       overview, reasoning, and descision process
+ yFONT (3)       library usage and interface
+ yFONT (7)       file format
+ yFONT_make (1)  creating a new font file
+ yFONT_show (1)  reviewing an existing font file
 
 .SH COLOPHON
 this page is part of a documentation package mean to make our use of the

@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0i"
-#define     YFONT_VER_TXT   "draws texture map of font"
+#define     YFONT_VER_NUM   "2.0j"
+#define     YFONT_VER_TXT   "documentation is reasonalble"
 
 
 
@@ -100,6 +100,7 @@ struct      cFONT {
    char     max_descent;               /* greatest fall below baseline        */
    char     margin;                    /* glyph margin allowed                */
    /*---(working)-----------*/
+   int      spacer;                    /* unicode for size of space           */
    int      min_glyph;                 /* smallest unicode num in font        */
    int      max_glyph;                 /* smallest unicode num in font        */
    int      range;                     /* diff in min/max unicode numbers     */
@@ -164,7 +165,9 @@ struct      cVERT {
 /*===[[ PROTOTYPES ]]=========================================================*/
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
-char        yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, char *a_glist, char *a_source);
+char        yFONT__conf_head     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_next     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
 char       *yFONT__conf_font     (char a_entry);
 char        yFONT__conf_name     (char *a_name);
 char        yFONT__conf_list     (void);
@@ -210,16 +213,29 @@ char        yFONT__index_wide    (char  a_slot, int  a_entry);
 char        yFONT__index_dump    (char  a_slot);
 char        yFONT__index_who     (char  a_slot, int  a_entry, int *a_code, char *a_good);
 char        yFONT__index_coords  (char  a_slot, int  a_entry, short *a_xpos, short *a_ypos, char *a_wide, char *a_tall);
+char        yFONT__index_write   (char  a_slot);
+char        yFONT__index_lookup  (char  a_slot);
+int         yFONT__index_widthu  (tFONT *a_font, int  *a_array, int a_len);
+int         yFONT__index_width   (tFONT *a_font, char *a_text , int a_len);
 
-char        yFONT__glyph_alloc   (char a_slot);
+char        yFONT__map_alloc     (char  a_slot);
+char        yFONT__map_write     (char  a_slot);
+char        yFONT__map_read      (char  a_slot);
+char        yFONT__map_art       (char  a_slot, int  a_entry);
+char        yFONT__map_texart    (char  a_slot);
+char        yFONT__map_texture   (char  a_slot);
+char        yFONT__verts_alloc   (char  a_slot);
+char        yFONT__verts_load    (char  a_slot);
+tVERT*      yFONT__verts_find    (tFONT *a_font, int a_code);
+char        yFONT__map_glyph     (tFONT *a_font, int a_code);
 
-char        yFONT__verts       (tFONT *a_txf);
-char        yFONT__index       (tFONT *a_txf);
+char        yFONT__verts         (tFONT *a_txf);
+char        yFONT__index         (tFONT *a_txf);
 
-char*       yFONT__unit        (char *a_question, int a_num);
-char        yFONT__testquiet   (void);
-char        yFONT__testloud    (void);
-char        yFONT__testend     (void);
+char*       yFONT__unit          (char *a_question, int a_num);
+char        yFONT__testquiet     (void);
+char        yFONT__testloud      (void);
+char        yFONT__testend       (void);
 
 
 #endif
