@@ -15,11 +15,14 @@ main               (int argc, char *argv[])
    int         rc        = 0;                 /* generic return code            */
    char        x_name      [100]    = "arial";
    char        x_slot    = 0;
-   if (argc == 2) {
-      strncpy (x_name, argv [1], 90);
-   }
+   if (argc != 2)   return 0;
    /*---(read config)--------------------*/
    if (rc >= 0)  rc = yFONT__conf_parse  ();
+   if (strcmp ("--conf", argv [1]) == 0) {
+      yFONT__conf_list ();
+      return 0;
+   }
+   else strncpy (x_name, argv [1], 90);
    /*---(setup slot)---------------------*/
    if (rc >= 0)  rc = yFONT__slot_new    ();
    if (rc >= 0)  x_slot = rc;

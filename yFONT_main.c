@@ -107,7 +107,7 @@ yFONT_free           (char a_slot)
    return rc;
 }
 
-char               /* PURPOSE : print a string -------------------------------*/
+int                /* PURPOSE : print a string -------------------------------*/
 yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
 {
    /*---(locals)-------------------------*/
@@ -147,10 +147,10 @@ yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
       glBindTexture (GL_TEXTURE_2D, 0);
    } glPopMatrix();
    /*---(complete)-----------------------*/
-   return 0;
+   return w * x_scale;
 }
 
-char               /* PURPOSE : print a string with word wrapping             */
+int                /* PURPOSE : print a string with word wrapping             */
 yFONT_printw         (char a_slot, char a_point, char a_align, char *a_text, int a_width, int a_height, float a_spacing)
 {
    /*---(defense)-------------------------------*/
@@ -165,9 +165,9 @@ yFONT_printw         (char a_slot, char a_point, char a_align, char *a_text, int
    int       l         = 1;                 /* number of lines                */
    int       space     = 0;                 /* last breakable place in text   */
    char     *x_str     = strdup(a_text);     /* alterable string               */
-   float     scale     = (float) a_point / (float) x_font->point;
+   float     x_scale   = (float) a_point / (float) x_font->point;
    int       v         = 0;                 /* vertical spacing               */
-   v = (x_font->max_ascent - x_font->max_descent) * a_spacing * scale;
+   v = (x_font->max_ascent - x_font->max_descent) * a_spacing * x_scale;
    if (l * v > a_height) return -1;
    tVERT      *x_vert;
    for (i = 0; i < len; i++) {
@@ -177,7 +177,7 @@ yFONT_printw         (char a_slot, char a_point, char a_align, char *a_text, int
       }
       x_vert = yFONT__verts_find  (x_font, x_str[i]);
       if (x_vert == NULL) continue;
-      w += x_vert->a * scale;
+      w += x_vert->a * x_scale;
       if (w > a_width) {
          x_str[space] = '\0';
          yFONT_print (a_slot, a_point, a_align, &x_str[s]);
@@ -192,11 +192,10 @@ yFONT_printw         (char a_slot, char a_point, char a_align, char *a_text, int
    if (s != len - 1) {
       yFONT_print (a_slot, a_point, a_align, &x_str[s]);
    }
-   /*> return a_width;                                                                <*/
-   return 0;
+   return a_width;
 }
 
-char               /* PURPOSE : print a string -------------------------------*/
+int                /* PURPOSE : print a string -------------------------------*/
 yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int a_max)
 {
    /*---(defense)-------------------------------*/
@@ -206,7 +205,7 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
    /*---(locals)--------------------------------*/
    int       i         = 0;                 /* iterator -- character          */
    int       x_len     = 0;                  /* string length                  */
-   float     scale     = (float) a_point / (float) x_font->point;
+   float     x_scale   = (float) a_point / (float) x_font->point;
    int       w         = 0;
    float     x         = 0;
    float     y         = 0;
@@ -232,7 +231,7 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
    glPushMatrix(); {
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
       glBindTexture (GL_TEXTURE_2D, x_font->tex_ref);
-      glScalef      (scale, scale, scale);
+      glScalef      (x_scale, x_scale, x_scale);
       glTranslatef  (x, y, 0);
       for (i = 0; i < x_len; ++i) {
          yFONT__map_glyph  (x_font, a_array [i]);
@@ -240,8 +239,7 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
       glBindTexture(GL_TEXTURE_2D, 0);
    } glPopMatrix();
    /*---(complete)------------------------------*/
-   /*> return w * scale;                                                              <*/
-   return 0;
+   return w * x_scale;
 }
 
 /*> int                /+ PURPOSE : make a png image into a texture --------------+/                                                               <* 

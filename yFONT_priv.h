@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0j"
-#define     YFONT_VER_TXT   "documentation is reasonalble"
+#define     YFONT_VER_NUM   "2.0k"
+#define     YFONT_VER_TXT   "added yFONT_tick to display fonts in opengl"
 
 
 
@@ -165,9 +165,10 @@ struct      cVERT {
 /*===[[ PROTOTYPES ]]=========================================================*/
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012-*/
 
-char        yFONT__conf_head     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
-char        yFONT__conf_next     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
-char        yFONT__conf_info     (char *a_name, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_head     (char *a_name, char *a_type, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_next     (char *a_name, char *a_type, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_prev     (char *a_name, char *a_type, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
+char        yFONT__conf_info     (char *a_name, char *a_type, char *a_point, char *a_adjust, int *a_space, char *a_glist, char *a_source);
 char       *yFONT__conf_font     (char a_entry);
 char        yFONT__conf_name     (char *a_name);
 char        yFONT__conf_list     (void);

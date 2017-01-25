@@ -204,9 +204,9 @@ char     *yFONT_version      (void);
 char      yFONT_load         (char *a_name);
 char      yFONT_free         (char  a_slot);
 
-char      yFONT_print        (char  a_slot, char  a_point, char  a_align, char *a_text);
-char      yFONT_printw       (char  a_slot, char  a_point, char  a_align, char *a_text , int  a_wide, int  a_tall, float  a_spacing);
-char      yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *a_array, int  a_max);
+int       yFONT_print        (char  a_slot, char  a_point, char  a_align, char *a_text);
+int       yFONT_printw       (char  a_slot, char  a_point, char  a_align, char *a_text , int  a_wide, int  a_tall, float  a_spacing);
+int       yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *a_array, int  a_max);
 
 
 /*> int       yFONT_symload      (char *a_name);                                      <*/

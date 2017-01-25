@@ -128,6 +128,7 @@ struct  cACCESSOR {
    char        out_file   [LEN_STR];     /* name of output txf font file        */
    char        src_file   [LEN_STR];     /* name of source ttf font file        */
    /*---(characteristics)----------------*/
+   char        type       [LEN_LABEL];   /* type of source (font vs grid)       */
    char        point;                    /* point size of font                  */
    char        adjust;                   /* actual point size (for adjustment)  */
    int         spacer;                   /* unicode of space character          */
@@ -287,7 +288,7 @@ FONT__choose       (char a_slot)
       /*---(check for first)-------------*/
       if (strcmp (my.out_name, "") == 0) {
          DEBUG_YFONT  yLOG_note    ("first font to be chosen");
-         rc = yFONT__conf_head (my.out_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
+         rc = yFONT__conf_head (my.out_name, my.type, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
          DEBUG_YFONT  yLOG_value   ("rc"        , rc);
          if (rc < 0) {
             DEBUG_YFONT  yLOG_note    ("no fonts found in configuration");
@@ -298,7 +299,7 @@ FONT__choose       (char a_slot)
       /*---(check for next)--------------*/
       else {
          DEBUG_YFONT  yLOG_note    ("next font to be chosen");
-         rc = yFONT__conf_next (my.out_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
+         rc = yFONT__conf_next (my.out_name, my.type, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
          DEBUG_YFONT  yLOG_value   ("rc"        , rc);
          if (rc < 0) {
             DEBUG_YFONT  yLOG_note    ("no more fonts available");
@@ -316,7 +317,7 @@ FONT__choose       (char a_slot)
          DEBUG_YFONT  yLOG_exit    (__FUNCTION__);
          return rce;
       }
-      rc = yFONT__conf_info (my.font_name, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
+      rc = yFONT__conf_info (my.font_name, my.type, &my.point, &my.adjust, &my.spacer, my.glist, my.src_file);
       DEBUG_YFONT  yLOG_value   ("rc"        , rc);
       if (rc < 0) {
          DEBUG_YFONT  yLOG_note    ("font not found in configuration");

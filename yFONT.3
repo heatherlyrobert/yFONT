@@ -131,6 +131,10 @@ included in the yFONT.h header with names such as...
 should later be used as a_ref, an char integer that identifies a texture-mapped
 font to the library.
 
+.I rc (yFONT_print, yFONT_printw, yFONT_printu)
+returns the width of the text printed.  if there was an error, it will return
+a negative value.
+
 .I rc (all others)
 is a simple return code that provides basic feedback.  zero is normal,
 negative is a serious error.

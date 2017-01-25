@@ -40,8 +40,8 @@ LIBU    = ${LIBDIR}         -lX11             -lGL              -lm             
 #===(file lists)============================================================================================================================================================================#
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (5)--------------
 HEADS   = ${BASE}.h         ${BASE}_priv.h
-OBJS    = ${BASE}_main.os   ${BASE}_conf.os   ${BASE}_slot.os   ${BASE}_file.os   ${BASE}_head.os   ${BASE}_index.os  ${BASE}_map.os  
-OBJD    = ${BASE}_main.o    ${BASE}_conf.o    ${BASE}_slot.o    ${BASE}_file.o    ${BASE}_head.o    ${BASE}_index.o   ${BASE}_map.o   
+OBJS    = ${BASE}_main.os   ${BASE}_conf.os   ${BASE}_slot.os   ${BASE}_head.os   ${BASE}_index.os  ${BASE}_map.os  
+OBJD    = ${BASE}_main.o    ${BASE}_conf.o    ${BASE}_slot.o    ${BASE}_head.o    ${BASE}_index.o   ${BASE}_map.o   
 OBJU    = ${BASE}_unit.o    ${OBJD}
 
 #===(make variables)====================================================================================================================================================#
@@ -53,7 +53,7 @@ STRIP   = @grep -v -e " DEBUG_" -e " yLOG_"
 
 
 #*---(executables)--------------------*#
-all                : ${DEBUG}  ${BASE}  ${UNIT}  ${BASE}_make  ${BASE}_show
+all                : ${DEBUG}  ${BASE}  ${UNIT}  ${BASE}_make  ${BASE}_show  ${BASE}_tick
 
 ${BASE}            : ${OBJS}
 	${LINK}  -shared -Wl,-soname,lib${BASE}.so.1   ${LIBS}  -o lib${BASE}.so.1.0   ${OBJS}
@@ -70,6 +70,10 @@ ${BASE}_make       : ${BASE}_make.o   ${OBJD}
 ${BASE}_show       : ${BASE}_show.o   ${OBJD}
 	${LINK}  -o ${BASE}_show        ${OBJS} ${BASE}_show.os  ${LIBS}
 	${LINK}  -o ${BASE}_show_debug  ${OBJD} ${BASE}_show.o   ${LIBD}
+
+${BASE}_tick       : ${BASE}_tick.o   ${OBJD}
+	${LINK}  -o ${BASE}_tick        ${OBJS} ${BASE}_tick.os  ${LIBS}  -lyX11
+	${LINK}  -o ${BASE}_tick_debug  ${OBJD} ${BASE}_tick.o   ${LIBD}  -lyX11
 
 ${DEBUG}           : ${OBJD}
 
@@ -124,6 +128,11 @@ ${BASE}_show.o     : ${HEADS}       ${BASE}_show.c
 	${COMP}  -fPIC  ${BASE}_show.c                           ${INC}
 	${STRIP}        ${BASE}_show.c      > ${BASE}_show.cs
 	${COMP}  -fPIC  ${BASE}_show.cs    -o ${BASE}_show.os    ${INC}
+
+${BASE}_tick.o     : ${HEADS}       ${BASE}_tick.c        
+	${COMP}  -fPIC  ${BASE}_tick.c                           ${INC}
+	${STRIP}        ${BASE}_tick.c      > ${BASE}_tick.cs
+	${COMP}  -fPIC  ${BASE}_tick.cs    -o ${BASE}_tick.os    ${INC}
 
 ${UNIT}.o          : ${HEADS} ${BASE}.unit
 	koios    ${BASE}
@@ -195,6 +204,16 @@ install            :
 	chown     root:root            ${IDIR}/${BASE}_show_debug
 	chmod     0755                 ${IDIR}/${BASE}_show_debug
 	@sha1sum  ${BASE}_show_debug
+	#---(production version)--------------#
+	${COPY}   ${BASE}_tick         ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_tick
+	chmod     0755                 ${IDIR}/${BASE}_tick
+	@sha1sum  ${BASE}_tick
+	#---(debug version)-------------------#
+	${COPY}   ${BASE}_tick_debug   ${IDIR}/
+	chown     root:root            ${IDIR}/${BASE}_tick_debug
+	chmod     0755                 ${IDIR}/${BASE}_tick_debug
+	@sha1sum  ${BASE}_tick_debug
 	#---(overview)------------------------#
 	rm -f     ${MDIR}/${MBASE}.bz2
 	cp -f     ${MBASE}    ${MDIR}
