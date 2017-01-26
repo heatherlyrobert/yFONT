@@ -245,185 +245,11 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
 int                /* PURPOSE : make a png image into a texture --------------*/
 yFONT_symload      (char *a_filename)
 {
-   /*> yLOG_enter  (__FUNCTION__);                                                    <*/
-   /*---(locals)-----------+-----------+-*/
-   png_byte    header      [8];             /* png header                     */
-   png_structp png_ptr;
-   png_infop   info_ptr, end_info;
-   int         interlace_type;
-   int         rc          = 0;             /* simple return code             */
-   int         len         = 0;
-   FILE       *f           = NULL;          /* file pointer                   */
-   ulong       twidth, theight;
-   int         width, height;
-   int         bit_depth, color_type;
    /*---(defense)------------------------*/
    syms = 0;
-   if (a_filename == NULL) {
-      printf("   - FATAL, filename is null\n");
-      return  -1;
-   }
-   len = strlen (a_filename);
-   if (len < 5) {
-      printf("   - FATAL, file name too short (%d < 5)\n", len);
-      return  -2;
-   }
-   /*---(open png file)------------------*/
-   /*> yLOG_info   ("file"      , a_filename);                                        <*/
-   /*> printf ("\npng_load (%s)\n", a_filename);                                      <*/
-   f = fopen(a_filename, "rb");
-   if (f == NULL) {
-      printf("   - FATAL, can not find file\n");
-      return -3;
-   }
-   /*> yLOG_info   ("status"    , "file found");                                      <*/
-   /*> printf("   - file found\n");                                                   <*/
-   /*---(check the header)---------------*/
-   fread (header, 1, 8, f);
-   rc = png_sig_cmp(header, 0, 8);
-   if (rc != 0) {
-      fclose(f);
-      printf("   - FATAL, header not png\n");
-      return  -4;
-   }
-   /*> yLOG_info   ("format"    , "png");                                             <*/
-   /*> printf("   - header is png\n");                                                <*/
-   /*---(create read struct)-------------*/
-   png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-   if (png_ptr == NULL) {
-      fclose(f);
-      printf("   - FATAL, png_ptr error\n");
-      return  -5;
-   }
-   /*> yLOG_info   ("png_ptr"   , "pointer is good");                                 <*/
-   /*> printf("   - png pointer is good\n");                                          <*/
-   /*---(create info struct)-------------*/
-   info_ptr = png_create_info_struct (png_ptr);
-   if (info_ptr == NULL) {
-      fclose(f);
-      png_destroy_read_struct (&png_ptr, (png_infopp) NULL, (png_infopp) NULL);
-      printf("   - FATAL, info_ptr error\n");
-      return  -6;
-   }
-   /*> yLOG_info   ("info_ptr"  , "pointer is good");                                 <*/
-   /*> printf("   - info pointer is good\n");                                         <*/
-   /*---(create info struct)-------------*/
-   end_info = png_create_info_struct (png_ptr);
-   if (end_info == NULL) {
-      fclose(f);
-      png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp) NULL);
-      printf("   - FATAL, end_ptr error\n");
-      return  -7;
-   }
-   /*> yLOG_info   ("end_ptr"   , "pointer is good");                                 <*/
-   /*> printf("   - end pointer is good\n");                                          <*/
-   /*---(error stuff 1)------------------*/
-   if (setjmp (png_jmpbuf (png_ptr))) {
-      fclose(f);
-      png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-      printf("   - FATAL, error during init_io\n");
-      return  -8;
-   }
-   /*> yLOG_info   ("jump"      , "set jump is good");                                <*/
-   /*> printf("   - setjmp is good\n");                                               <*/
-   /*---(setup read)---------------------*/
-   png_init_io          (png_ptr, f);
-   png_set_sig_bytes    (png_ptr, 8);
-   png_read_info        (png_ptr, info_ptr);
-   /*---(get info)-----------------------*/
-   png_get_IHDR         (png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, NULL, NULL, NULL);
-   twidth  = width;
-   theight = height;
-   png_read_update_info (png_ptr, info_ptr);
-   if (color_type != PNG_COLOR_TYPE_RGBA) {
-      fclose(f);
-      png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-      printf("   - FATAL, color is NOT RGBA\n");
-      return  -9;
-   }
-   /*> yLOG_info   ("oolor"     , "RGBA is excellent");                               <*/
-   /*> printf("   - color is RGBA, excellent\n");                                     <*/
-   unsigned int rowbytes = png_get_rowbytes (png_ptr, info_ptr);
-   int channels = png_get_channels (png_ptr, info_ptr);
-   /*> yLOG_value  ("width"     , twidth);                                            <*/
-   /*> yLOG_value  ("height"    , theight);                                           <*/
-   /*> yLOG_value  ("row_bytes" , rowbytes);                                          <*/
-   /*> yLOG_value  ("bits"      , bit_depth);                                         <*/
-   /*> yLOG_value  ("channels"  , channels);                                          <*/
-   /*> yLOG_value  ("type"      , color_type);                                        <*/
-   /*> printf("   - size     w=%3d, h=%3d, r=%3d, d=%3d, c=%3d, t=%3d\n", twidth, theight, rowbytes, bit_depth, channels, color_type);   <*/
-   /*---(transform)----------------------*/
-   png_set_palette_to_rgb (png_ptr);        /* makes rgb                      */
-   /*> yLOG_info   ("palette"   , "good");                                            <*/
-   png_set_tRNS_to_alpha  (png_ptr);        /* expands out alpha              */
-   /*> yLOG_info   ("alpha"     , "good");                                            <*/
-   /*> printf("   - palette and alpha are good\n");                                   <*/
-   /*---(error stuff 2)------------------*/
-   if (setjmp(png_jmpbuf(png_ptr))) {
-      printf("   - FATAL, error during read image\n");
-      png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-      fclose(f);
-      return 0;
-   }
-   /*> yLOG_info   ("jump"      , "set jump is good");                                <*/
-   /*---(allocate image)-----------------*/
-   png_byte *image_data = (uchar*) malloc(sizeof(png_byte) * rowbytes * theight);
-   if (!image_data) {
-      fclose(f);
-      png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-      printf("image_data error\n");
-      return 0;
-   }
-   /*> yLOG_info   ("image"     , "data is good");                                    <*/
-   /*> printf("   - image data is good\n");                                           <*/
-   /*---(row pointers)-------------------*/
-   png_bytep *row_pointers = (png_bytepp)  malloc(sizeof(png_bytep) * theight);
-   if (row_pointers == NULL) {
-      printf("row_pointers error\n");
-      png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-      free (image_data);
-      fclose(f);
-      return 0;
-   }
-   /*> yLOG_info   ("row_ptr"   , "row pointers are good");                           <*/
-   /*> printf("   - row pointers are good\n");                                        <*/
-   int i;
-   for (i = 0; i < theight; ++i) {
-      row_pointers[theight - 1 - i] = image_data + (i * rowbytes);
-   }
-   /*---(read)---------------------------*/
-   /*> printf("   - pre read_image\n");                                               <*/
-   png_read_image(png_ptr, row_pointers);
-   /*> yLOG_info   ("read"      , "image is good");                                   <*/
-   /*> printf("   - read_image was good\n");                                          <*/
-   /*> uchar *bytey;                                                                  <* 
-    *> for (i = 0; i < rowbytes; ++i) {                                               <* 
-    *>    bytey = image_data + (50 * rowbytes) + i;                                   <* 
-    *>    *bytey = 0  ;                                                               <* 
-    *> }                                                                              <*/
-   /*---(make texture)-------------------*/
-   GLuint texture;
-   glGenTextures   (1, &texture);
-   glBindTexture   (GL_TEXTURE_2D, texture);
-   glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-   glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_S,     GL_REPEAT );
-   glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_T,     GL_REPEAT );
-   glTexParameteri (GL_TEXTURE_2D,  GL_GENERATE_MIPMAP,    GL_TRUE);
-   glTexEnvi       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,   GL_REPLACE);
-   /*> glHint          (GL_TEXTURE_COMPRESSION_HINT,           GL_NICEST);            <*/
-   /*> glTexImage2D    (GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, twidth, theight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);   <*/
-   glTexImage2D    (GL_TEXTURE_2D, 0, GL_RGBA, twidth, theight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-   glBindTexture (GL_TEXTURE_2D, 0);
-   /*---(clean)--------------------------*/
-   png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-   free(image_data);
-   free(row_pointers);
-   fclose(f);
+   syms  = yGLTEX_png2tex (a_filename);
    /*---(complete)-----------------------*/
-   syms  = texture;
-   /*> yLOG_exit   (__FUNCTION__);                                                    <*/
-   return texture;
+   return syms;
 }
 
 int
@@ -453,24 +279,35 @@ yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
    /*---(draw text)-----------------------------*/
    glPushMatrix(); {
       glScalef(a_scale, a_scale, a_scale);
-      switch (a_mod) {
-      case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break;
-      case  2  : glColor4f (0.7f, 0.3f, 0.0f, 0.2f); break;
-      case  3  : glColor4f (0.3f, 0.7f, 0.0f, 0.2f); break;
-      case  4  : glColor4f (0.0f, 0.1f, 0.0f, 0.2f); break;
-      case  5  : glColor4f (0.0f, 0.7f, 0.3f, 0.2f); break;
-      case  6  : glColor4f (0.0f, 0.3f, 0.7f, 0.2f); break;
-      case  7  : glColor4f (0.0f, 0.0f, 1.0f, 0.2f); break;
-      case  8  : glColor4f (0.3f, 0.0f, 0.7f, 0.2f); break;
-      case  9  : glColor4f (0.7f, 0.0f, 0.3f, 0.2f); break;
-      default  : glColor4f (0.5f, 0.5f, 0.5f, 0.2f); break;
+      /*> switch (a_mod) {                                                            <* 
+       *> case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break;                       <* 
+       *> case  2  : glColor4f (0.7f, 0.3f, 0.0f, 0.2f); break;                       <* 
+       *> case  3  : glColor4f (0.3f, 0.7f, 0.0f, 0.2f); break;                       <* 
+       *> case  4  : glColor4f (0.0f, 0.1f, 0.0f, 0.2f); break;                       <* 
+       *> case  5  : glColor4f (0.0f, 0.7f, 0.3f, 0.2f); break;                       <* 
+       *> case  6  : glColor4f (0.0f, 0.3f, 0.7f, 0.2f); break;                       <* 
+       *> case  7  : glColor4f (0.0f, 0.0f, 1.0f, 0.2f); break;                       <* 
+       *> case  8  : glColor4f (0.3f, 0.0f, 0.7f, 0.2f); break;                       <* 
+       *> case  9  : glColor4f (0.7f, 0.0f, 0.3f, 0.2f); break;                       <* 
+       *> default  : glColor4f (0.5f, 0.5f, 0.5f, 0.2f); break;                       <* 
+       *> }                                                                           <*/
+      if (a_mod != 0) {
+         switch (a_mod) {
+         case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break; /* a */
+         case  2  : glColor4f (0.8f, 0.8f, 0.0f, 0.2f); break; /* e */
+         case  3  : glColor4f (0.0f, 1.0f, 0.0f, 0.2f); break; /* f */
+         case  4  : glColor4f (0.0f, 0.8f, 0.8f, 0.2f); break; /* i */
+         case  5  : glColor4f (0.0f, 0.0f, 1.0f, 0.2f); break; /* o */
+         case  6  : glColor4f (0.8f, 0.0f, 0.8f, 0.2f); break; /* u */
+         default  : glColor4f (0.8f, 0.8f, 0.8f, 0.2f); break;
+         }
+         glBegin  (GL_POLYGON); {
+            glVertex3f   (    0.0, -20.0,   0.0);
+            glVertex3f   (   20.0, -20.0,   0.0);
+            glVertex3f   (   20.0,   0.0,   0.0);
+            glVertex3f   (    0.0,   0.0,   0.0);
+         } glEnd();
       }
-      glBegin  (GL_POLYGON); {
-         glVertex3f   (    0.0, -20.0,   0.0);
-         glVertex3f   (   20.0, -20.0,   0.0);
-         glVertex3f   (   20.0,   0.0,   0.0);
-         glVertex3f   (    0.0,   0.0,   0.0);
-      } glEnd();
       /*> glColor4f (0.0f, 0.0f, 0.0f, 0.2f);                                         <* 
        *> glLineWidth (1.5);                                                          <* 
        *> glBegin  (GL_LINE_STRIP); {                                                 <* 

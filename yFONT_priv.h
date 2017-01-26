@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0i"
-#define     YFONT_VER_TXT   "removed noice from yFONT_tick, added font arguement"
+#define     YFONT_VER_NUM   "2.0j"
+#define     YFONT_VER_TXT   "symbol load and display are working again"
 
 
 
@@ -36,6 +36,7 @@
 #include    <ySTR.h>         /* CUSTOM  heatherly string handling             */
 #include    <yVAR.h>         /* CUSTOM  heatherly variable testing            */
 #include    <yX11.h>         /* CUSTOM  heatherly xlib/glx setup/teardown     */
+#include    <yGLTEX.h>       /* CUSTOM  heatherly texture handling            */
 
 
 
