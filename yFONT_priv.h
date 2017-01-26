@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0k"
-#define     YFONT_VER_TXT   "added yFONT_tick to display fonts in opengl"
+#define     YFONT_VER_NUM   "2.0i"
+#define     YFONT_VER_TXT   "removed noice from yFONT_tick, added font arguement"
 
 
 

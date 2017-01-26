@@ -168,7 +168,7 @@ color_pairs          (char a_dir)
    char      x_fore      = -1;
    char      x_back      = -1;
    int       i           = -1;
-   printf ("color_pairs (%c)\n", a_dir);
+   /*> printf ("color_pairs (%c)\n", a_dir);                                          <*/
    if (a_dir == '0')                  s_pair = 0;
    if (a_dir == '+')                  ++s_pair;
    if (s_pair >= MAX_PAIRS)           s_pair = MAX_PAIRS - 1;
@@ -180,13 +180,13 @@ color_pairs          (char a_dir)
       x_fore = i;
    }
    if (x_fore < 0)  return -1;
-   printf ("fore color = %c @ %d\n", s_pairs [s_pair].fore, x_fore);
+   /*> printf ("fore color = %c @ %d\n", s_pairs [s_pair].fore, x_fore);              <*/
    for (i = 0; i < MAX_COLORS; ++i) {
       if (s_colors [i].abbr != s_pairs [s_pair].back)  continue;
       x_back = i;
    }
    if (x_back < 0)  return -1;
-   printf ("back color = %c @ %d\n", s_pairs [s_pair].back, x_back);
+   /*> printf ("back color = %c @ %d\n", s_pairs [s_pair].back, x_back);              <*/
    glColor4f    ( s_colors [x_fore].red, s_colors [x_fore].grn, s_colors [x_fore].blu, 1.00);
    glClearColor ( s_colors [x_back].red, s_colors [x_back].grn, s_colors [x_back].blu, 1.00);
    return 0;
@@ -488,7 +488,7 @@ prog_event    (void)
    /*---(event loop)----------------------------*/
    while (1) {
       XNextEvent(DISP, &EVNT);
-      printf ("loop %d\n", loop++);
+      /*> printf ("loop %d\n", loop++);                                               <*/
       /*---(start)----------------------------*/
       switch(EVNT.type) {
       case FocusIn:
@@ -500,11 +500,11 @@ prog_event    (void)
       case ConfigureNotify:
          break;
       case KeyPress:
-         printf ("key pressed\n");
+         /*> printf ("key pressed\n");                                                <*/
          key_event  = (XKeyEvent *) &EVNT;
          the_bytes = XLookupString((XKeyEvent *) &EVNT, the_key, 5, NULL, NULL);
          if (the_bytes < 1) break;
-         printf ("the key %d\n", the_key [0]);
+         /*> printf ("the key %d\n", the_key [0]);                                    <*/
          /*---(mode changes)-------*/
          switch (the_key[0]) {
          case 'Q' :
@@ -549,10 +549,24 @@ main               (int argc, char *argv[])
 {
    /*---(locals)-----------+-----------+-*/
    int         rc          = 0;
+   /*---(read config)--------------------*/
+   if (rc >= 0)  rc = yFONT__conf_parse  ();
+   if (strcmp ("--conf", argv [1]) == 0) {
+      yFONT__conf_list ();
+      return 0;
+   }
+   else strncpy (s_fontname, argv [1], 90);
    /*---(preparation)--------------------*/
    yXINIT_start ("yFONT_tick", win_w, win_h, YX_FOCUSABLE, YX_FIXED, YX_SILENT);
    yFONT__conf_parse  ();
-   yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
+   if (strcmp (s_fontname, "") != 0) rc = yFONT__conf_info   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
+   else                              rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
+   if (rc < 0)                       rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
+   if (strcmp (s_fontname, "") != 0) rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
+   if (strcmp ("norm", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
+   if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyowina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
+   if (strcmp ("mand", s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
+   if (strcmp ("test", s_glist) == 0)  strlcpy (s_text, "abcd   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
    font_load          ();
    color_pairs        ('0');
    draw_init          ();
@@ -561,10 +575,12 @@ main               (int argc, char *argv[])
    /*---(main loop)----------------------*/
    while (rc == 0) {
       rc = prog_event ();
-      printf ("switching to %s, %s\n", s_fontname, s_glist);
+      /*> printf ("switching to %s, %s\n", s_fontname, s_glist);                      <*/
       if (strcmp ("norm", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
       if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyowina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
       if (strcmp ("mand", s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
+      if (strcmp ("test", s_glist) == 0)  strlcpy (s_text, "   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
+      /*> printf ("test string is [%s]\n", s_text);                                   <*/
       texture_free ();
       font_delete  ();
       font_load    ();

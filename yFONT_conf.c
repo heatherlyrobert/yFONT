@@ -118,6 +118,7 @@ yFONT__conf_info     (char *a_name, char *a_type, char *a_point, char *a_adjust,
       if (a_glist  != NULL)  strlcpy (a_glist , s_font_info [i].glist , LEN_LABEL);
       if (a_source != NULL)  strlcpy (a_source, s_font_info [i].source, LEN_STR  );
       x_entry = i;
+      s_curr  = i;
       break;
    }
    --rce;  if (x_entry < 0) {
