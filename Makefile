@@ -215,10 +215,10 @@ install            :
 	chmod     0755                 ${IDIR}/${BASE}_tick_debug
 	@sha1sum  ${BASE}_tick_debug
 	#---(overview)------------------------#
-	rm -f     ${MDIR}/${MBASE}.bz2
-	cp -f     ${MBASE}    ${MDIR}
-	bzip2     ${MDIR}/${MBASE}
-	chmod     0644  ${MDIR}/${MBASE}.bz2
+	rm -f     ${ODIR}/${OBASE}.bz2
+	cp -f     ${OBASE}    ${ODIR}
+	bzip2     ${ODIR}/${OBASE}
+	chmod     0644  ${ODIR}/${OBASE}.bz2
 	#---(documentation)-------------------#
 	rm -f     ${MDIR}/${MBASE}.bz2
 	cp -f     ${MBASE}    ${MDIR}
@@ -229,11 +229,6 @@ install            :
 	cp -f     ${FBASE}    ${FDIR}
 	bzip2     ${FDIR}/${FBASE}
 	chmod     0644  ${FDIR}/${FBASE}.bz2
-	#---(overview)------------------------#
-	rm -f     ${ODIR}/${OBASE}.bz2
-	cp -f     ${OBASE}    ${ODIR}
-	bzip2     ${ODIR}/${OBASE}
-	chmod     0644  ${ODIR}/${OBASE}.bz2
 	#---(done)----------------------------#
 
 

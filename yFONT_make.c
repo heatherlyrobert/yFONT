@@ -817,7 +817,7 @@ TEX__glyph           (char a_slot, int a_entry, int a_texw)
          x_bitloc   = (x_row * x_wide) + x_col;
          x_value    = (uchar) my.face->glyph->bitmap.buffer[x_bitloc];
          x_texloc   = ((x_ypos + x_row) * a_texw) + (x_xpos + x_col);
-         g_font [a_slot]->tex_map [x_texloc] = x_value;
+         g_yfont [a_slot]->tex_map [x_texloc] = x_value;
          /*---(done with value)----------*/
       }
       /*---(done with col)---------------*/
@@ -866,7 +866,7 @@ TEX__crop            (char a_slot, int a_entry, int a_texw)
       for (x_row = x_ctop; x_row <= x_cbot; ++x_row) {
          for (x_col = x_clef; x_col < x_crig; ++x_col) {
             x_texloc   = ((x_ypos + x_row) * a_texw) + (x_xpos + x_col);
-            g_font [a_slot]->tex_map [x_texloc] = 0;
+            g_yfont [a_slot]->tex_map [x_texloc] = 0;
          }
       }
    }

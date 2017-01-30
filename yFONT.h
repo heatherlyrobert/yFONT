@@ -213,6 +213,7 @@ int       yFONT_symload      (char *a_name);
 int       yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod);
 
 
+
 #define    YF_NO_SLOTS         -1
 #define    YF_BAD_HEAD         -2
 #define    YF_MEM_FULL         -3

@@ -9,29 +9,17 @@ programming.  the yFONT library allows opengl programs to rapidly display
 text using one or more specific pre-rendered TXF font files.
 
 .SH CREATION
-TXF files are created by the txf_make utility using the freetype library,
+TXF files are created by the yFONT_make utility using the freetype library,
 a specific ttf font, some font settings, and a predetermined, limited
 character set.  the resulting TXF file contains a fast loading texture with
 all requested characters pre-rendered and ready to draw.  each TXF file is
 unique and contains a single font rendered at a requested point size.
 
-.SH ORIGIN
-the original txf font method was developed by mark kilgard in 1997 and
-remains a proven and effective technique.  it is an amazing way to de-couple
-opengl programs from massive, over-built font libraries.  while awesome, i
-have tweaked the format and methods as the original TXF format
-   -- was based on x-windows for font access (rough and hard)
-   -- produces non-antialiased images and so got chunky/broken up
-   -- was built for older, more memory limited graphics hardware
-   -- required textures to by in a power-of-2 format
-   -- used space saving algorithms that are quite complex
-   -- didn't like glyphs that have negative horizontal offsets
-   -- allowed quite a bit of user tweaking and options
-
 .SH FILE FORMAT
-   header
-   index
-   map
+a txf file has three sections...
+   header   with overall font charactersitics
+   index    with information on all included letters/glyphs
+   map      of all glyphs (binary image data)
 
 .SH HEADER
 
@@ -66,10 +54,6 @@ have tweaked the format and methods as the original TXF format
    char    1       x-offset         offset for placement in opengl
    char    1       y-offset         offset for placement in opengl
    char    1       advancement      advancement for next character
-
-.SH MAP
-
-
 
 .SH AUTHOR
 rsheatherly

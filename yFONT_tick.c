@@ -344,7 +344,7 @@ draw_font          (char a_font, char *a_fontname)
    glPushMatrix(); {
       glTranslatef( 40.0, -45.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font, 40, YF_BASLEF, "40p");
+         w = yFONT_print (a_font, 40, YF_BASLEF, "40");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font, 40, YF_BASLEF, s_text);
@@ -354,7 +354,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -35.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font, 24, YF_BASLEF, "24p");
+         w = yFONT_print (a_font, 24, YF_BASLEF, "24");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font, 24, YF_BASLEF, s_text);
@@ -364,7 +364,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -20.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font, 12, YF_BASLEF, "12p");
+         w = yFONT_print (a_font, 12, YF_BASLEF, "12");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font, 12, YF_BASLEF, s_text);
@@ -374,7 +374,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -15.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font, 10, YF_BASLEF, "10p");
+         w = yFONT_print (a_font, 10, YF_BASLEF, "10");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font, 10, YF_BASLEF, s_text);
@@ -384,7 +384,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -12.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font,  8, YF_BASLEF, "8p");
+         w = yFONT_print (a_font,  8, YF_BASLEF, "8");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font,  8, YF_BASLEF, s_text);
@@ -394,7 +394,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -10.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font,  7, YF_BASLEF, "7p");
+         w = yFONT_print (a_font,  7, YF_BASLEF, "7");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font,  7, YF_BASLEF, s_text);
@@ -404,7 +404,7 @@ draw_font          (char a_font, char *a_fontname)
       } glPopMatrix();
       glTranslatef(  0.0, -10.0,   0.0);
       glPushMatrix(); {
-         w = yFONT_print (a_font,  6, YF_BASLEF, "6p");
+         w = yFONT_print (a_font,  6, YF_BASLEF, "6");
          glTranslatef( w + 30.0,   0.0,   0.0);
          for (i = 0; i < 10; ++i) {
             w = yFONT_print (a_font,  6, YF_BASLEF, s_text);
@@ -550,12 +550,16 @@ main               (int argc, char *argv[])
    /*---(locals)-----------+-----------+-*/
    int         rc          = 0;
    /*---(read config)--------------------*/
+   strncpy (s_fontname, ""      , 90);
    if (rc >= 0)  rc = yFONT__conf_parse  ();
-   if (strcmp ("--conf", argv [1]) == 0) {
-      yFONT__conf_list ();
-      return 0;
+   if (argc >= 2) {
+      if (strcmp ("--conf", argv [1]) == 0) {
+         yFONT__conf_list ();
+         return 0;
+      } else {
+         strncpy (s_fontname, argv [1], 90);
+      }
    }
-   else strncpy (s_fontname, argv [1], 90);
    /*---(preparation)--------------------*/
    yXINIT_start ("yFONT_tick", win_w, win_h, YX_FOCUSABLE, YX_FIXED, YX_SILENT);
    yFONT__conf_parse  ();
@@ -577,7 +581,7 @@ main               (int argc, char *argv[])
       rc = prog_event ();
       /*> printf ("switching to %s, %s\n", s_fontname, s_glist);                      <*/
       if (strcmp ("norm", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
-      if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyowina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
+      if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyo wina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
       if (strcmp ("mand", s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
       if (strcmp ("test", s_glist) == 0)  strlcpy (s_text, "   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
       /*> printf ("test string is [%s]\n", s_text);                                   <*/

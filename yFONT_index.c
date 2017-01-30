@@ -19,12 +19,12 @@ yFONT__index_alloc   (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_note    ("allocating font table data structure");
    DEBUG_YFONT_M  yLOG_value   ("nglyph"    , x_font->num_glyph);
    --rce;  while (x_font->glyphs == NULL) {
@@ -53,18 +53,18 @@ yFONT__index_free    (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(defense)------------------------*/
-   DEBUG_YFONT_M  yLOG_point   ("g_font[.]" , g_font [a_slot]);
-   --rce;  if (g_font [a_slot] == NULL) {
+   DEBUG_YFONT_M  yLOG_point   ("g_yfont[.]" , g_yfont [a_slot]);
+   --rce;  if (g_yfont [a_slot] == NULL) {
       DEBUG_YFONT_M  yLOG_warn    ("font ptr"  , "already null pointer, nothing to do");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return 0;
    }
-   x_font  = g_font [a_slot];
+   x_font  = g_yfont [a_slot];
    /*---(free it up)----------------------------*/
    DEBUG_YFONT_M  yLOG_note    ("freeing glyph index");
    if (x_font->glyphs  != NULL)  free (x_font->glyphs);
@@ -78,8 +78,8 @@ yFONT__index_free    (char a_slot)
 char
 yFONT__index_init    (char  a_slot,  int a_entry)
 {
-   tFONT      *x_font      = NULL;
-   x_font = g_font [a_slot];
+   tYFONT      *x_font      = NULL;
+   x_font = g_yfont [a_slot];
    if (a_entry >= x_font->num_glyph)  return -1;
    x_font->glyphs[a_entry].code   =  -1;
    x_font->glyphs[a_entry].good   = '-';
@@ -96,8 +96,8 @@ yFONT__index_init    (char  a_slot,  int a_entry)
 char
 yFONT__index_wipe    (char  a_slot)
 {
-   tFONT      *x_font      = NULL;
-   x_font = g_font [a_slot];
+   tYFONT      *x_font      = NULL;
+   x_font = g_yfont [a_slot];
    if (x_font->glyphs == NULL)  return -1;
    int i = 0;
    for (i = 0; i < x_font->num_glyph; ++i) {
@@ -122,8 +122,8 @@ static void      o___SETTERS_________________o (void) {;}
 char
 yFONT__index_code       (char  a_slot,  int a_entry, int a_code, char a_good)
 {
-   g_font[a_slot]->glyphs[a_entry].code       = a_code;
-   g_font[a_slot]->glyphs[a_entry].good       = a_good;
+   g_yfont[a_slot]->glyphs[a_entry].code       = a_code;
+   g_yfont[a_slot]->glyphs[a_entry].good       = a_good;
    if (a_code > s_max_code   )  s_max_code    = a_code;
    if (a_code < s_min_code   )  s_min_code    = a_code;
    return 0;
@@ -132,8 +132,8 @@ yFONT__index_code       (char  a_slot,  int a_entry, int a_code, char a_good)
 char
 yFONT__index_size       (char  a_slot,  int a_entry, char a_wide, char a_tall)
 {
-   g_font[a_slot]->glyphs[a_entry].wide       = a_wide;
-   g_font[a_slot]->glyphs[a_entry].tall       = a_tall;
+   g_yfont[a_slot]->glyphs[a_entry].wide       = a_wide;
+   g_yfont[a_slot]->glyphs[a_entry].tall       = a_tall;
    if (a_wide > s_max_wide   )  s_max_wide    = a_wide;
    if (a_tall > s_max_tall   )  s_max_tall    = a_tall;
    return 0;
@@ -143,11 +143,11 @@ char
 yFONT__index_offset     (char  a_slot,  int a_entry, char a_xoff, char a_yoff, char a_adv)
 {
    char     x_descent   = 0;
-   g_font[a_slot]->glyphs[a_entry].xoff       = a_xoff;
-   g_font[a_slot]->glyphs[a_entry].yoff       = a_yoff;
-   g_font[a_slot]->glyphs[a_entry].adv        = a_adv;
+   g_yfont[a_slot]->glyphs[a_entry].xoff       = a_xoff;
+   g_yfont[a_slot]->glyphs[a_entry].yoff       = a_yoff;
+   g_yfont[a_slot]->glyphs[a_entry].adv        = a_adv;
    if (a_yoff > s_max_ascent )  s_max_ascent  = a_yoff;
-   x_descent = a_yoff - g_font[a_slot]->glyphs[a_entry].tall;
+   x_descent = a_yoff - g_yfont[a_slot]->glyphs[a_entry].tall;
    if (x_descent < s_max_descent)  s_max_descent = x_descent;
    return 0;
 }
@@ -155,8 +155,8 @@ yFONT__index_offset     (char  a_slot,  int a_entry, char a_xoff, char a_yoff, c
 char
 yFONT__index_pos        (char  a_slot,  int a_entry, short a_xpos, short a_ypos)
 {
-   g_font[a_slot]->glyphs[a_entry].xpos    = a_xpos;
-   g_font[a_slot]->glyphs[a_entry].ypos    = a_ypos;
+   g_yfont[a_slot]->glyphs[a_entry].xpos    = a_xpos;
+   g_yfont[a_slot]->glyphs[a_entry].ypos    = a_ypos;
    return 0;
 }
 
@@ -177,24 +177,24 @@ yFONT__index_maxes      (char  a_slot)
 char
 yFONT__index_wide       (char  a_slot, int  a_entry)
 {
-   return  g_font[a_slot]->glyphs[a_entry].wide;
+   return  g_yfont[a_slot]->glyphs[a_entry].wide;
 }
 
 char
 yFONT__index_who        (char  a_slot, int  a_entry, int *a_code, char *a_good)
 {
-   if (a_code   != NULL)  *a_code   = g_font[a_slot]->glyphs[a_entry].code;
-   if (a_good   != NULL)  *a_good   = g_font[a_slot]->glyphs[a_entry].good;
+   if (a_code   != NULL)  *a_code   = g_yfont[a_slot]->glyphs[a_entry].code;
+   if (a_good   != NULL)  *a_good   = g_yfont[a_slot]->glyphs[a_entry].good;
    return  0;
 }
 
 char
 yFONT__index_coords     (char  a_slot, int  a_entry, short *a_xpos, short *a_ypos, char *a_wide, char *a_tall)
 {
-   if (a_xpos   != NULL)  *a_xpos   = g_font[a_slot]->glyphs[a_entry].xpos;
-   if (a_ypos   != NULL)  *a_ypos   = g_font[a_slot]->glyphs[a_entry].ypos;
-   if (a_wide   != NULL)  *a_wide   = g_font[a_slot]->glyphs[a_entry].wide;
-   if (a_tall   != NULL)  *a_tall   = g_font[a_slot]->glyphs[a_entry].tall;
+   if (a_xpos   != NULL)  *a_xpos   = g_yfont[a_slot]->glyphs[a_entry].xpos;
+   if (a_ypos   != NULL)  *a_ypos   = g_yfont[a_slot]->glyphs[a_entry].ypos;
+   if (a_wide   != NULL)  *a_wide   = g_yfont[a_slot]->glyphs[a_entry].wide;
+   if (a_tall   != NULL)  *a_tall   = g_yfont[a_slot]->glyphs[a_entry].tall;
    return  0;
 }
 
@@ -210,8 +210,8 @@ yFONT__index_dump       (char  a_slot)
 {
    /*---(locals)-----------+-----------+-*/
    int         i           = 0;
-   tFONT      *x_font      = NULL;
-   x_font = g_font [a_slot];
+   tYFONT      *x_font      = NULL;
+   x_font = g_yfont [a_slot];
    printf ("\n");
    for (i = 0; i < x_font->num_glyph; ++i) {
       if (i % 5 == 0)  printf ("   order  unicode  c  xpos  ypos  wide  tall  xoff  yoff  adv  good\n");
@@ -238,13 +238,13 @@ yFONT__index_write   (char a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    int         i           = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(write map info)-----------------*/
    for (i = 0; i < x_font->num_glyph; ++i) {
       fwrite (&x_font->glyphs [i], sizeof (tGLYPH), 1, x_font->file);
@@ -260,13 +260,13 @@ yFONT__index_read       (char  a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    int         i           = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(write map info)-----------------*/
    for (i = 0; i < x_font->num_glyph; ++i) {
       fread  (&x_font->glyphs [i], sizeof (tGLYPH), 1, x_font->file);
@@ -288,19 +288,23 @@ yFONT__index_lookup  (char a_slot)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;               /* return code for errors         */
-   tFONT      *x_font      = NULL;              /* new font                       */
+   tYFONT      *x_font      = NULL;              /* new font                       */
    int         i           = 0;
-   uint        x_min       = 0;
-   uint        x_max       = 0;
-   uint        x_range     = 0;
+   int         x_min       = 0;
+   int         x_max       = 0;
+   int         x_range     = 0;
    char        x_tries     =   0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(set font pointer)---------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
+   DEBUG_YFONT_M  yLOG_point   ("x_font"    , x_font);
    /*---(initialize)---------------------*/
    x_min = x_font->glyphs[0].code;
    x_max = x_font->glyphs[0].code;
    /*---(identify range)-----------------*/
-   for (i = 1; i < x_font->num_glyph; i++) {
+   for (i = 0; i < x_font->num_glyph; i++) {
       if (x_font->glyphs[i].code < x_min) {
          x_min = x_font->glyphs[i].code;
       }
@@ -311,31 +315,40 @@ yFONT__index_lookup  (char a_slot)
    x_range           = x_max - x_min + 1;
    /*---(save values)--------------------*/
    x_font->min_glyph = x_min;
-   x_font->max_glyph = x_min;
+   x_font->max_glyph = x_max;
    x_font->range     = x_range;
+   DEBUG_YFONT_M  yLOG_value   ("min_glyph" , x_min);
+   DEBUG_YFONT_M  yLOG_value   ("max_glyph" , x_max);
+   DEBUG_YFONT_M  yLOG_value   ("range"     , x_range);
    /*---(create lookup table)------------*/
+   DEBUG_YFONT_M  yLOG_note    ("allocate lookup table");
    --rce;  while (x_font->lookup == NULL) {
       ++x_tries;
       x_font->lookup = (short  *) malloc (x_font->range * sizeof (short));
       if (x_font->lookup != NULL) {
+         DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
          break;
       }
       if (x_tries > 10) {
+         DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
          return rce;
       }
    }
    /*---(initialize lookup table)--------*/
+   DEBUG_YFONT_M  yLOG_note    ("initialize table");
    for (i = 0; i < x_font->range; i++)  x_font->lookup [i] = -1;
    /*---(load lookup table)--------------*/
+   DEBUG_YFONT_M  yLOG_note    ("load font values into table");
    for (i = 0; i < x_font->num_glyph; i++) {
       x_font->lookup [x_font->glyphs[i].code - x_font->min_glyph] = i;
    }
    /*---(complete)-----------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 int         /* PURPOSE : determine the width of a displayed string     */
-yFONT__index_widthu  (tFONT *a_font, int *a_array, int a_len)
+yFONT__index_widthu  (tYFONT *a_font, int *a_array, int a_len)
 {
    int         i           = 0;                 /* iterator -- character          */
    int         w           = 0;                 /* width                          */
@@ -349,15 +362,26 @@ yFONT__index_widthu  (tFONT *a_font, int *a_array, int a_len)
 }
 
 int         /* PURPOSE : determine the width of a displayed string     */
-yFONT__index_width   (tFONT *a_font, char *a_text, int a_len)
+yFONT__index_width   (tYFONT *a_font, char *a_text, int a_len)
 {
    int         i           = 0;                 /* iterator -- character          */
    int         w           = 0;                 /* width                          */
    tVERT      *x_vert;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_point   ("a_font"    , a_font);
+   DEBUG_YFONT_M  yLOG_point   ("a_text"    , a_text);
+   DEBUG_YFONT_M  yLOG_info    ("a_text"    , a_text);
+   DEBUG_YFONT_M  yLOG_value   ("a_len"     , a_len);
    for (i = 0; i < a_len; i++) {
+      DEBUG_YFONT_M  yLOG_value   ("a_text[i]" , a_text[i]);
       x_vert = yFONT__verts_find  (a_font, a_text[i]);
-      if (x_vert == NULL) continue;
+      DEBUG_YFONT_M  yLOG_point   ("x_ver"     , x_vert);
+      if (x_vert == NULL)  continue;
+      DEBUG_YFONT_M  yLOG_value   ("x_vert->a" , x_vert->a);
       w += x_vert->a;
+      DEBUG_YFONT_M  yLOG_value   ("w"         , w);
    }
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return w;
 }

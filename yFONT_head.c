@@ -16,7 +16,7 @@ yFONT__head_name   (char a_slot, char *a_name, char a_point)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
+   tYFONT      *x_font      = NULL;          /* new font                       */
    int         x_len       = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
@@ -59,7 +59,7 @@ yFONT__head_tex    (char a_slot, short a_texw, short a_texh)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
+   tYFONT      *x_font      = NULL;          /* new font                       */
    int         x_len       = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
@@ -94,7 +94,7 @@ yFONT__head_place  (char a_slot, char a_mascent, char a_mdescent)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
+   tYFONT      *x_font      = NULL;          /* new font                       */
    int         x_len       = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
@@ -129,7 +129,7 @@ yFONT__head_margin   (char a_slot, char a_margin)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
+   tYFONT      *x_font      = NULL;          /* new font                       */
    int         x_len       = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
@@ -157,7 +157,7 @@ yFONT__head_nglyph   (char a_slot, short a_nglyph)
 {
    /*---(locals)--------------------------------*/
    char        rce         = -10;           /* return code for errors         */
-   tFONT      *x_font      = NULL;          /* new font                       */
+   tYFONT      *x_font      = NULL;          /* new font                       */
    int         x_len       = 0;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
@@ -194,13 +194,13 @@ yFONT__file_open   (char a_slot, char a_mode)
    char        rce         = -10;           /* return code for errors         */
    char        x_name      [1000];
    FILE       *f           = NULL;
-   tFONT      *x_font      = NULL;              /* new font                       */
+   tYFONT      *x_font      = NULL;              /* new font                       */
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"   , a_slot);
    DEBUG_YFONT_M  yLOG_char    ("a_mode"   , a_mode);
    /*---(defense)------------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_point   ("file"      , x_font->file);
    --rce;  if (x_font->file != NULL) {
       DEBUG_YFONT_M  yLOG_warn    ("file"      , "pointer not null (already open)");
@@ -247,8 +247,8 @@ yFONT__file_open   (char a_slot, char a_mode)
 char         /*--> close an existing font file -----------[ ------ [ ------ ]-*/
 yFONT__file_close  (char  a_slot)
 {
-   tFONT      *x_font      = NULL;              /* new font                       */
-   x_font = g_font [a_slot];
+   tYFONT      *x_font      = NULL;              /* new font                       */
+   x_font = g_yfont [a_slot];
    if (x_font->file != NULL)  fclose (x_font->file);
    x_font->file == NULL;
    return 0;
@@ -260,7 +260,7 @@ yFONT__head_write  (char a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    char      x_text    [LEN_STR];
    int8_t    x_char    = 0;
    int16_t   x_short   = 0;
@@ -269,7 +269,7 @@ yFONT__head_write  (char a_slot)
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(write file info)----------------*/
    --rce;  if ( 1 != fwrite ("\377"                 , sizeof (char),  1, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("magic ID"  , "could not be written");
@@ -345,7 +345,7 @@ yFONT__head_read   (char a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    char      x_text    [LEN_STR];
    uchar     x_uchar   = 0;
    int8_t    x_char    = 0;
@@ -355,7 +355,7 @@ yFONT__head_read   (char a_slot)
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(check initial char)--------------------*/
    --rce;  if ( 1 != fread (&x_uchar, sizeof (char),  1, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("magic ID"  , "could not be read");
@@ -513,8 +513,8 @@ yFONT__head_title    (void)
 char
 yFONT__head_line     (char a_slot)
 {
-   tFONT    *x_font    = NULL;              /* new font                       */
-   x_font = g_font [a_slot];
+   tYFONT    *x_font    = NULL;              /* new font                       */
+   x_font = g_yfont [a_slot];
    printf ("%-20.20s  %4d  %4d  %4d  %4d  %4d  %4d  %4d\n",
          x_font->name       , x_font->point      ,
          x_font->tex_w      , x_font->tex_h      ,
@@ -526,8 +526,8 @@ yFONT__head_line     (char a_slot)
 char
 yFONT__head_dump     (char a_slot)
 {
-   tFONT    *x_font    = NULL;              /* new font                       */
-   x_font = g_font [a_slot];
+   tYFONT    *x_font    = NULL;              /* new font                       */
+   x_font = g_yfont [a_slot];
    printf ("\n");
    printf ("font header\n");
    printf ("   name         : %s\n" , x_font->name       );

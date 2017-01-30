@@ -9,10 +9,10 @@ char         /*--> clear a font map ----------------------[ ------ [ ------ ]-*/
 yFONT__map_clear     (char a_slot)
 {
    /*---(locals)-----------+-----------+-*/
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    int         x_max       =   0;           /* max byte in font map           */
    int         i           =   0;
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    x_max  = x_font->tex_w * x_font->tex_h;
    for (i = 0; i < x_max; ++i) {
       x_font->tex_map [i] = 0;
@@ -26,12 +26,12 @@ yFONT__map_alloc     (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_note    ("allocating font map texture");
    DEBUG_YFONT_M  yLOG_value   ("width"     , x_font->tex_w);
    DEBUG_YFONT_M  yLOG_value   ("height"    , x_font->tex_h);
@@ -62,12 +62,12 @@ yFONT__map_free      (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(free it up)----------------------------*/
-   x_font  = g_font [a_slot];
+   x_font  = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_note    ("freeing font map");
    if (x_font->tex_map != NULL)  free (x_font->tex_map);
    DEBUG_YFONT_M  yLOG_note    ("nulling slot entry");
@@ -83,12 +83,12 @@ yFONT__map_write     (char a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(write map info)-----------------*/
    fwrite (x_font->tex_map, x_font->tex_h * x_font->tex_w, 1, x_font->file);
    /*---(complete)-----------------------*/
@@ -102,12 +102,12 @@ yFONT__map_read      (char a_slot)
    /*---(locals)--------------------------------*/
    char      rce       = -10;               /* return code for errors         */
    int       rc        = 0;                 /* generic return code            */
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(check file type)-----------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(write map info)-----------------*/
    fread  (x_font->tex_map, x_font->tex_h * x_font->tex_w, 1, x_font->file);
    /*---(complete)-----------------------*/
@@ -119,7 +119,7 @@ char         /*--: show ascii version --------------------[ ------ [ ------ ]-*/
 yFONT__map_art     (char a_slot, int  a_entry)
 {
    /*---(locals)-----------+-----------+-*/
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    char        rc          =  0;
    int         x_code      =  0;
    char        x_good      =  0;
@@ -135,7 +135,7 @@ yFONT__map_art     (char a_slot, int  a_entry)
    short       x_cury      =  0;
    char        x_chars [20] = " -+:*172%98#@";   /* use symmetrical charaters    */
    /*---(coordinates)--------------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    rc = yFONT__index_who    (a_slot, a_entry, &x_code, &x_good);
    rc = yFONT__index_coords (a_slot, a_entry, &x_xpos, &x_ypos, &x_wide, &x_tall);
    if (rc < 0)  return rc;
@@ -166,9 +166,9 @@ char         /*--: show ascii version --------------------[ ------ [ ------ ]-*/
 yFONT__map_texart  (char a_slot)
 {
    /*---(locals)-----------+-----------+-*/
-   tFONT    *x_font    = NULL;              /* new font                       */
+   tYFONT    *x_font    = NULL;              /* new font                       */
    int       i         = 0;
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    for (i = 0; i < x_font->num_glyph; ++i) {
       yFONT__map_art (a_slot, i);
    }
@@ -181,12 +181,12 @@ yFONT__verts_alloc   (char a_slot)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    char        x_tries     =   0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_note    ("allocating font vertices");
    DEBUG_YFONT_M  yLOG_value   ("num_glyph" , x_font->num_glyph);
    --rce;  while (x_font->verts   == NULL) {
@@ -259,12 +259,12 @@ yFONT__verts_load    (char a_slot)
    double      x_lefr      = 0;
    short       x_riga      = 0;
    double      x_rigr      = 0;
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    /*---(read glyph verticies)-----------*/
    x_texw = x_font->tex_w;
    x_texh = x_font->tex_h;
@@ -316,6 +316,7 @@ yFONT__verts_load    (char a_slot)
       /*---(done)------------------------*/
    }
    /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -323,12 +324,12 @@ char               /* PURPOSE : set up a font texture                         */
 yFONT__map_texture   (char a_slot)
 {
    /*---(locals)-----------+-----------+-*/
-   tFONT      *x_font      = NULL;
+   tYFONT      *x_font      = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_YFONT   yLOG_value   ("a_slot"    , a_slot);
    /*---(allocate structure)-------------*/
-   x_font = g_font [a_slot];
+   x_font = g_yfont [a_slot];
    DEBUG_YFONT   yLOG_point   ("x_font"    , x_font);
    if (x_font->tex_ref == 0) {
       glGenTextures(1, &x_font->tex_ref);
@@ -362,16 +363,22 @@ yFONT__map_texture   (char a_slot)
 }
 
 tVERT*             /* PURPOSE : find a particular letter in the texture atlas */
-yFONT__verts_find    (tFONT *a_font, int a_code)
+yFONT__verts_find    (tYFONT *a_font, int a_code)
 {
    /*---(locals)-----------+-----------+-*/
    long        x_index     = -1;       /* found glyph index                   */
    tVERT      *x_vert      = NULL;     /* found glyph vertex pointer          */
-   uint        x_min       = 0;
-   uint        x_max       = 0;
+   int         x_min       = 0;
+   int         x_max       = 0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_point   ("a_font"    , a_font);
+   DEBUG_YFONT_M  yLOG_value   ("a_code"    , a_code);
    /*---(prepare)------------------------*/
    x_min   = a_font->min_glyph;
+   DEBUG_YFONT_M  yLOG_value   ("x_min"     , x_min);
    x_max   = a_font->min_glyph + a_font->range;
+   DEBUG_YFONT_M  yLOG_value   ("x_max"     , x_max);
    /*---(check range)--------------------*/
    if (a_code <  x_min) {
       return NULL;
@@ -381,17 +388,20 @@ yFONT__verts_find    (tFONT *a_font, int a_code)
    }
    /*---(find in index table)------------*/
    x_index = a_font->lookup [a_code - a_font->min_glyph];
+   DEBUG_YFONT_M  yLOG_value   ("x_index"   , x_index);
    if (x_index < 0) {
       return NULL;
    }
    /*---(translate to glyph)-------------*/
+   DEBUG_YFONT_M  yLOG_point   ("verts"     , a_font->verts);
    x_vert = a_font->verts + x_index;
+   DEBUG_YFONT_M  yLOG_point   ("x_vert"    , x_vert);
    /*---(complete)-----------------------*/
    return x_vert;
 }
 
 char               /* PURPOSE : draw a single glyph at the current location   */
-yFONT__map_glyph   (tFONT *a_font, int a_code)
+yFONT__map_glyph   (tYFONT *a_font, int a_code)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;

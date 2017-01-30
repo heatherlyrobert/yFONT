@@ -7,7 +7,7 @@
 #include    "yFONT.h"
 #include    "yFONT_priv.h"
 
-tFONT       s_font;
+tYFONT       s_font;
 
 int
 main               (int argc, char *argv[])
