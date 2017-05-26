@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0l"
-#define     YFONT_VER_TXT   "yFONT_tick segfaulted without arguements"
+#define     YFONT_VER_NUM   "2.0m"
+#define     YFONT_VER_TXT   "ported to new make_program to hugely simplify Makefile"
 
 
 

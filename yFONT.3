@@ -2,6 +2,7 @@
 
 .SH NAME
 yFONT \- fast, clean, aesthetic texture mapped fonts for opengl
+
 .SH SYNOPSIS
 .nf
 .B #include  <yFONT.h>
@@ -197,6 +198,158 @@ figure out a way to make this easier in the long run
 .SH RESOURCES
 will only work on an xwindows and opengl system and is probably not worth
 using without hardware acceleration
+
+.SH AUTHOR
+rsheatherly
+
+.SH SEE ALSO
+ yFONT (0)       overview, reasoning, and descision process
+ yFONT (3)       library usage and interface
+ yFONT (7)       file format
+ yFONT_make (1)  creating a new font file
+ yFONT_show (1)  reviewing an existing font file
+
+.SH COLOPHON
+this page is part of a documentation package mean to make our use of the
+heatherly libraries easier and faster
+
+
+.TH yFONT 0 2010-Aug "linux" "heatherly custom programming manual"
+
+.SH NAME
+yFONT \- fast, clean, aesthetic texture-mapped fonts for opengl
+
+.SH DESCRIPTION (short)
+yFONT is a heatherly library and file format for placing aesthetic text
+in 3D opengl space.  it allows me to de-couple font rendering from executable
+programs making them leaner, meaner, and faster.
+
+.SH OVERVIEW
+yFONT is a simple and clean set of custom library functions to provide
+fast, flexible, and aesthetic display of 3D manipulatible text in
+opengl applications which is both hard and rare.  its purpose is to transform
+a troublesome, involved, and painful task into a simple, repeatable,
+and predicable one.
+
+the fonts used for yFONT are a special format particularly adapted to the
+strengths of opengl.  this library will use textures to store and display
+font glyphs which can then be rapidly manipulated in 2D and 3D to create
+stunning displays using hardware acceleration.  to aid performance, glyphs
+for a particular font are stored in a single texture as a texture atlas.
+
+a key design decision was to decouple texture creation and
+texture-mapped font usage enabling the opengl application to be independent
+of any font libraries or particular windowing system.
+
+to accomplish these features, yFONT is actually a group of tools...
+   - yFONT_make to create the "txf" font files from "ttf" fonts
+   - yFONT_show to inspect existing "txf" files
+   - yFONT to merge with c/opengl programs to display the actual text
+
+yFONT will specifically handle the following...
+   - hide all underlying data structures and file formats
+   - keep interface/function calls very simple
+   - load a prepared texture-mapped font
+   - display a c-string of letters at varying font sizes
+   - allow different alignments on the text (left, middle, ...)
+   - provide simple word wrapping ability
+   - unload a font from memory
+
+yFONT will NOT handle specialty needs like that are less common...
+   - kerning specific letter pairs (its about speed, not accuracy)
+   - curved and fitted text (better handled by programs)
+   - alteration to bold, italic, underline, (separate files)
+   - extended and wide-characters beyond the basic 256 (who cares)
+
+AS ALWAYS, there are many stable, accepted, existing programs that have
+been built by better programmers and are likely superior in speed, size,
+capability, and reliability; BUT, i would not have learned nearly as much
+using them, so i follow the adage..
+
+TO TRULY LEARN> do not seek to follow in the footsteps of the men of old;
+seek what they sought ~ Matsuo Basho
+
+THE UNDERLYING IDEA is to use this build process to learn new programming
+capabilities and put additional pressure on me to improve my standards,
+maintenance, and coding environment.  just using programs and ideas does
+not lead to understanding -- so get in there and get messy ;)
+
+.SH DECISION PROCESS
+
+.B situation (S).  
+any serious graphical programming effort requires readable, 3D manipulatable,
+and integratable text.  the resulting text must move, twist, rotate, and zoom
+with the rest of the environment.
+
+.B complication (C).  
+but, opengl is focused on drawing primatives, which it absolutely should be.
+this means that using real 3D text requires big font rendering libraries or
+massive integrated tool kits.  jesus.
+
+.B problem statement (P).  
+i needed to find a consistent method for integrating beautiful text into
+opengl graphics.  i want to do it the same way everytime, not have to vary
+my methods from project-to-project.
+
+.B answer (A).  
+i have chosen an old-school method to integrate beautiful fonts while
+de-coupling my graphics programming from font rendering.  it provides the
+basic capabilities i need without the overbuilt drama.
+
+.B benefits (b)...
+ -- extremely fast display -- opengl loves textures
+ -- aesthetic as opengl blends textures very well
+ -- light execution library given the intermediate text format
+ -- can run on boxes without font-libraries at all
+ -- i learn a ton about opengl, fonts, and libraries
+
+.B drawbacks (d)...
+ -- i must build and maintain it myself
+ -- its a lot to learn
+
+.B objectives (o).  
+ a) strong support for linux, opengl, and c (do not care about others)
+ b) clean, simple, stable interface; few function calls
+ c) hidden data structures; no crazy pointers
+ d) just text; don't make me use a whole framework
+ e) fast, fast, fast; did i mention fast; oh, and quick
+ f) no weird extras like artistic text, curved, hollow fonts, etc
+ g) for my needs only, no extra pair-kerning or top-end beautifying ;)
+ h) no specific internationalization
+ i) small library size
+ j) leverage exising trure-type (ttf) format; don't reinvent
+ k) aestetic, but not shooting for perfect
+
+.B alternatives (a).  
+ 1) draw the individual pixels
+ 2) draw with lines
+ 3) draw with triangles and rectangles
+ 4) draw using 3d meshes
+ 5) draw with bezier curves
+ 6) draw from a texture map
+ 7) use a font library (cairo, pango, graphite, quartz)
+ 8) use a toolkit (qt, gnome)
+
+.SH REALLY, WHAT'S THE POINT
+many, many libraries can do this better, faster, and would require zero work
+to use.  better yet, integrated toolkits like KDE, QT, GNOME, etc make this
+all invisible.  i am doing this so i can evolve and grow rather than live in a
+cage built by another.  better programmer, better designer, better architect.
+this beautiful format...
+   -- optimizes for opengl, not some kitchen-sink integrated toolkit
+   -- keeps my execution boxes smaller and cleaner (no font library)
+   -- taught me massive amounts about font usage
+   -- taught me massive amounts about binary file formats
+   -- taught me about maintenance as i am a voracious dogfooder
+
+
+.SH BRILLIANT IDEA SEED (credit where much credit is due)
+in 1997, mark kilgard developed and shared a method for making opengl
+font access cleaner, faster, and de-coupled from massive font libraries.
+he pre-rendered xwindows fonts into a intermediate texture format, which
+he called TXF, that could then be read and used within opengl programs.
+freaking brilliant and usable today.  there are other methods, i standardized
+on this base.  i have evolved and learned, but i am standing on his shoulders.
 
 .SH AUTHOR
 rsheatherly
