@@ -15,8 +15,11 @@
 
 
 
-int     nfont     =  0;
-GLuint  syms      =  0;
+int     nfont     =   0;
+GLuint  syms      =   0;
+float   s_rows    =   0;
+float   s_cols    =   0;
+char    s_type    = '-';
 
 
 
@@ -278,17 +281,20 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
 }
 
 int                /* PURPOSE : make a png image into a texture --------------*/
-yFONT_symload      (char *a_filename)
+yFONT_symload      (char *a_filename, int a_col, int a_row, char a_type)
 {
    /*---(defense)------------------------*/
-   syms = 0;
-   syms  = yGLTEX_png2tex (a_filename);
+   syms   = 0;
+   syms   = yGLTEX_png2tex (a_filename);
+   s_cols = a_col;
+   s_rows = a_row;
+   s_type = a_type;
    /*---(complete)-----------------------*/
    return syms;
 }
 
 int
-yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
+yFONT_symbol       (float a_scale, int a_row, int a_col, int a_mod)
 {
    if (syms == 0)  return -1;
    float    x_row [25] = {
@@ -298,34 +304,32 @@ yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
       0.1935, 0.1322, 0.0700, 0.0080,
    };
    float    x_col [25] = {
-      0.0032, 0.0508, 0.0982,
-      0.1450, 0.1920, 0.2390,
-      0.2870, 0.3340, 0.3810,
-      0.4280, 0.4760, 0.5225,
-      0.5702, 0.6170, 0.6645,
-      0.7110, 0.7585, 0.8060,
-      0.8530, 0.9000, 0.9475,
+      0.0032, 0.0508, 0.0982, 0.1450,
+      0.1920, 0.2390, 0.2870, 0.3340,
+      0.3810, 0.4280, 0.4760, 0.5225,
+      0.5702, 0.6170, 0.6645, 0.7110,
+      0.7585, 0.8060, 0.8530, 0.9000,
+      0.9475,
    };
-   float    x_width    = 0.0460 - 0.0040;
-   float    x_height   = 0.0547 - 0.0040;
-   float    x          = x_col [a_col] + 0.0020;
-   float    y          = x_row [a_row] + 0.0020;
-   /*> printf ("r=%8.3f, c=%8.3f\n", y, x);                                           <*/
+   float    x_width    = 0;
+   float    x_height   = 0;
+   float    x          = 0;
+   float    y          = 0;
+   if (s_type == 't') {
+      x_width    = 0.0460 - 0.0040;
+      x_height   = 0.0547 - 0.0040;
+      x          = x_col [a_col] + 0.0020;
+      y          = x_row [a_row] + 0.0020;
+   } else {
+      x_width    = 1.00 / s_cols;
+      x_height   = 1.00 / s_rows;
+      x          = a_col * x_width;
+      y          = 1.00 - (a_row * x_height);
+   }
+   /*> printf ("r=%2d, c=%2d, x=%8.3f, y=%8.3f, w=%8.3f, h=%8.3f\n", a_row, a_col, x, y, x_width, x_height);   <*/
    /*---(draw text)-----------------------------*/
    glPushMatrix(); {
-      glScalef(a_scale, a_scale, a_scale);
-      /*> switch (a_mod) {                                                            <* 
-       *> case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break;                       <* 
-       *> case  2  : glColor4f (0.7f, 0.3f, 0.0f, 0.2f); break;                       <* 
-       *> case  3  : glColor4f (0.3f, 0.7f, 0.0f, 0.2f); break;                       <* 
-       *> case  4  : glColor4f (0.0f, 0.1f, 0.0f, 0.2f); break;                       <* 
-       *> case  5  : glColor4f (0.0f, 0.7f, 0.3f, 0.2f); break;                       <* 
-       *> case  6  : glColor4f (0.0f, 0.3f, 0.7f, 0.2f); break;                       <* 
-       *> case  7  : glColor4f (0.0f, 0.0f, 1.0f, 0.2f); break;                       <* 
-       *> case  8  : glColor4f (0.3f, 0.0f, 0.7f, 0.2f); break;                       <* 
-       *> case  9  : glColor4f (0.7f, 0.0f, 0.3f, 0.2f); break;                       <* 
-       *> default  : glColor4f (0.5f, 0.5f, 0.5f, 0.2f); break;                       <* 
-       *> }                                                                           <*/
+      glScalef (a_scale, a_scale, a_scale);
       if (a_mod != 0) {
          switch (a_mod) {
          case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break; /* a */
@@ -343,32 +347,18 @@ yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod)
             glVertex3f   (    0.0,   0.0,   0.0);
          } glEnd();
       }
-      /*> glColor4f (0.0f, 0.0f, 0.0f, 0.2f);                                         <* 
-       *> glLineWidth (1.5);                                                          <* 
-       *> glBegin  (GL_LINE_STRIP); {                                                 <* 
-       *>    glVertex3f   (   -1.0, -21.0,   5.0);                                    <* 
-       *>    glVertex3f   (   21.0, -21.0,   5.0);                                    <* 
-       *>    glVertex3f   (   21.0,   1.0,   5.0);                                    <* 
-       *>    glVertex3f   (   -1.0,   1.0,   5.0);                                    <* 
-       *>    glVertex3f   (   -1.0, -21.0,   5.0);                                    <* 
-       *> } glEnd();                                                                  <*/
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
       glBindTexture(GL_TEXTURE_2D, syms);
       glColor4f (1.0f, 1.0f, 1.0f, 1.0f);
       glBegin  (GL_POLYGON); {
-
          glTexCoord2f ( x          , y);
          glVertex3f   (    0.0, -20.0,   0.0);
-
          glTexCoord2f ( x + x_width, y);
          glVertex3f   (   20.0, -20.0,   0.0);
-
          glTexCoord2f ( x + x_width, y + x_height);
          glVertex3f   (   20.0,   0.0,   0.0);
-
          glTexCoord2f ( x          , y + x_height);
          glVertex3f   (    0.0,   0.0,   0.0);
-
       } glEnd();
       glBindTexture(GL_TEXTURE_2D, 0);
    } glPopMatrix();

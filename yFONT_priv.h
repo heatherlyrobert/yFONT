@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.0m"
-#define     YFONT_VER_TXT   "ported to new make_program to hugely simplify Makefile"
+#define     YFONT_VER_NUM   "2.1a"
+#define     YFONT_VER_TXT   "updated symload/symbols so i could load my icon set"
 
 
 

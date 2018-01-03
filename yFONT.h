@@ -209,7 +209,8 @@ int       yFONT_printw       (char  a_slot, char  a_point, char  a_align, char *
 int       yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *a_array, int  a_max);
 
 
-int       yFONT_symload      (char *a_name);
+
+int       yFONT_symload      (char *a_filename, int a_col, int a_row, char a_type);
 int       yFONT_symbol       (float a_scale, int  a_row, int a_col, int a_mod);
 
 

@@ -19,11 +19,27 @@ INST_DIR   = /usr/local/sbin
 INC_MINE   = -I/usr/include/freetype2
 # utilities generated, separate from main program
 NAME_UTIL  = yFONT_make yFONT_show yFONT_tick
+# libraries only for the utilities
+LIB_UTIL   = -lfreetype
+
+
+
+#===(post-processing)======================================#
+# create a rule for...
+#install_prep       :
+#remove_prep        :
 
 
 
 #===(master template)======================================#
 include /usr/local/sbin/make_program
+
+
+
+#===(post-processing)======================================#
+# create a rule for...
+#install_post       :
+#remove_post        :
 
 
 
