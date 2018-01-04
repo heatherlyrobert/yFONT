@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1a"
-#define     YFONT_VER_TXT   "updated symload/symbols so i could load my icon set"
+#define     YFONT_VER_NUM   "2.1b"
+#define     YFONT_VER_TXT   "fixed symload/symbols to show icons cleanly"
 
 
 

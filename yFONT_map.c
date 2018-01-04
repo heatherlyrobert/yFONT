@@ -381,15 +381,18 @@ yFONT__verts_find    (tYFONT *a_font, int a_code)
    DEBUG_YFONT_M  yLOG_value   ("x_max"     , x_max);
    /*---(check range)--------------------*/
    if (a_code <  x_min) {
+      DEBUG_YFONT_M      yLOG_exit    (__FUNCTION__);
       return NULL;
    }
    if (a_code >= x_max) {
+      DEBUG_YFONT_M      yLOG_exit    (__FUNCTION__);
       return NULL;
    }
    /*---(find in index table)------------*/
    x_index = a_font->lookup [a_code - a_font->min_glyph];
    DEBUG_YFONT_M  yLOG_value   ("x_index"   , x_index);
    if (x_index < 0) {
+      DEBUG_YFONT_M      yLOG_exit    (__FUNCTION__);
       return NULL;
    }
    /*---(translate to glyph)-------------*/
@@ -397,6 +400,7 @@ yFONT__verts_find    (tYFONT *a_font, int a_code)
    x_vert = a_font->verts + x_index;
    DEBUG_YFONT_M  yLOG_point   ("x_vert"    , x_vert);
    /*---(complete)-----------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return x_vert;
 }
 

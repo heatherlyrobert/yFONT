@@ -17,8 +17,8 @@
 
 int     nfont     =   0;
 GLuint  syms      =   0;
-float   s_rows    =   0;
-float   s_cols    =   0;
+float   s_nrow    =   0;
+float   s_ncol    =   0;
 char    s_type    = '-';
 
 
@@ -281,21 +281,26 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
 }
 
 int                /* PURPOSE : make a png image into a texture --------------*/
-yFONT_symload      (char *a_filename, int a_col, int a_row, char a_type)
+yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_type)
 {
    /*---(defense)------------------------*/
    syms   = 0;
    syms   = yGLTEX_png2tex (a_filename);
-   s_cols = a_col;
-   s_rows = a_row;
+   s_ncol = a_ncol;
+   s_nrow = a_nrow;
    s_type = a_type;
    /*---(complete)-----------------------*/
    return syms;
 }
 
 int
-yFONT_symbol       (float a_scale, int a_row, int a_col, int a_mod)
+yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
 {
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_scale"   , a_scale);
+   DEBUG_YFONT_M  yLOG_value   ("a_col"     , a_col);
+   DEBUG_YFONT_M  yLOG_value   ("a_row"     , a_row);
+   DEBUG_YFONT_M  yLOG_value   ("a_mod"     , a_mod);
    if (syms == 0)  return -1;
    float    x_row [25] = {
       0.9354, 0.8740, 0.8115, 0.7500,
@@ -321,11 +326,15 @@ yFONT_symbol       (float a_scale, int a_row, int a_col, int a_mod)
       x          = x_col [a_col] + 0.0020;
       y          = x_row [a_row] + 0.0020;
    } else {
-      x_width    = 1.00 / s_cols;
-      x_height   = 1.00 / s_rows;
+      x_width    = 1.00 / s_ncol;
+      x_height   = 1.00 / s_nrow;
       x          = a_col * x_width;
-      y          = 1.00 - (a_row * x_height);
+      y          = (s_nrow - a_row - 1) * x_height;
    }
+   DEBUG_YFONT_M  yLOG_double  ("x_width"   , x_width);
+   DEBUG_YFONT_M  yLOG_double  ("x_height"  , x_height);
+   DEBUG_YFONT_M  yLOG_double  ("x"         , x);
+   DEBUG_YFONT_M  yLOG_double  ("y"         , y);
    /*> printf ("r=%2d, c=%2d, x=%8.3f, y=%8.3f, w=%8.3f, h=%8.3f\n", a_row, a_col, x, y, x_width, x_height);   <*/
    /*---(draw text)-----------------------------*/
    glPushMatrix(); {
@@ -363,6 +372,7 @@ yFONT_symbol       (float a_scale, int a_row, int a_col, int a_mod)
       glBindTexture(GL_TEXTURE_2D, 0);
    } glPopMatrix();
    /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
