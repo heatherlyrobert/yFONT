@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1b"
-#define     YFONT_VER_TXT   "fixed symload/symbols to show icons cleanly"
+#define     YFONT_VER_NUM   "2.1c"
+#define     YFONT_VER_TXT   "half of new icons are indexed properly and working"
 
 
 
@@ -39,6 +39,8 @@
 #include    <yGLTEX.h>       /* CUSTOM  heatherly texture handling            */
 
 
+
+#define     ICON_SET  "/usr/local/share/fonts/outline_icons.png"
 
 
 /*===[[ RATIONAL LIMITS ]]====================================================*/

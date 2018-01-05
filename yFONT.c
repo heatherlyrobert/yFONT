@@ -23,7 +23,490 @@ char    s_type    = '-';
 
 
 
-/*---(prototypes)-------------------------------*/
+/*---(icons)------------------------------------*/
+#define     MAX_CATS       50
+struct cCAT {
+   char          cat       [10];
+   char          desc      [50];
+   int           start;
+   int           count;
+} s_cats [MAX_CATS] = {
+   { "align"   ,  ""                             ,   0,  0 },
+   { "comm"    ,  ""                             ,   0,  0 },
+   { "data"    ,  ""                             ,   0,  0 },
+   { "draw"    ,  ""                             ,   0,  0 },
+   { "games"   ,  ""                             ,   0,  0 },
+   { "map"     ,  ""                             ,   0,  0 },
+   { "money"   ,  ""                             ,   0,  0 },
+   { "play"    ,  ""                             ,   0,  0 },
+   { "power"   ,  ""                             ,   0,  0 },
+   { "sci"     ,  ""                             ,   0,  0 },
+   { "sec"     ,  ""                             ,   0,  0 },
+   { "talk"    ,  ""                             ,   0,  0 },
+   { "tech"    ,  ""                             ,   0,  0 },
+   { "tools"   ,  ""                             ,   0,  0 },
+   { "touch"   ,  ""                             ,   0,  0 },
+   { ""        ,  ""                             ,   0,  0 },
+};
+
+#define     MAX_ICONS    1000
+struct cICON {
+   char          cat       [10];
+   int           catno;
+   char          abbr      [10];
+   char          desc      [50];
+} s_icons [MAX_ICONS] = {
+   /*---(align)--------------------------*/
+   { "align"    , 0, "top"            , "" },
+   { "align"    , 0, "bottom"         , "" },
+   { "align"    , 0, "middle"         , "" },
+   { "align"    , 0, "horz"           , "" },
+   { "align"    , 0, "left"           , "" },
+   { "align"    , 0, "right"          , "" },
+   { "align"    , 0, "center"         , "" },
+   { "align"    , 0, "vert"           , "" },
+   { "align"    , 0, "front"          , "" },
+   { "align"    , 0, "forward"        , "" },
+   { "align"    , 0, "backward"       , "" },
+   { "align"    , 0, "back"           , "" },
+   { "align"    , 0, "fliphorz"       , "" },
+   { "align"    , 0, "flipvert"       , "" },
+   { "align"    , 0, "rotleft"        , "" },
+   { "align"    , 0, "rotright"       , "" },
+   { "align"    , 0, "rotleft2"       , "" },
+   { "align"    , 0, "rotright2"      , "" },
+   { "align"    , 0, "group"          , "" },
+   { "align"    , 0, "ungroup"        , "" },
+   { "align"    , 0, "select"         , "" },
+   { "align"    , 0, "layers"         , "" },
+   { "align"    , 0, "chevleft"       , "" },
+   { "align"    , 0, "chevright"      , "" },
+   { "align"    , 0, "chevup"         , "" },
+   { "align"    , 0, "chevdown"       , "" },
+   /*---(comm)---------------------------*/
+   { "comm"     , 0, "wifi_on"        , "" },
+   { "comm"     , 0, "wifi_lock"      , "" },
+   { "comm"     , 0, "wifi_off"       , "" },
+   { "comm"     , 0, "gps_on"         , "" },
+   { "comm"     , 0, "gps_off"        , "" },
+   { "comm"     , 0, "gps_talk"       , "" },
+   { "comm"     , 0, "orbit"          , "" },
+   { "comm"     , 0, "sat"            , "" },
+   { "comm"     , 0, "sat_loc"        , "" },
+   { "comm"     , 0, "sat_on"         , "" },
+   { "comm"     , 0, "cable_on"       , "" },
+   { "comm"     , 0, "cable_off"      , "" },
+   { "comm"     , 0, "data_none"      , "" },
+   { "comm"     , 0, "data_in"        , "" },
+   { "comm"     , 0, "data_out"       , "" },
+   { "comm"     , 0, "data_both"      , "" },
+   { "comm"     , 0, "phone"          , "" },
+   { "comm"     , 0, "phone_miss"     , "" },
+   { "comm"     , 0, "phone_callback" , "" },
+   { "comm"     , 0, "phone_transfer" , "" },
+   { "comm"     , 0, "phone_on"       , "" },
+   { "comm"     , 0, "phone_end"      , "" },
+   { "comm"     , 0, "radio"          , "" },
+   { "comm"     , 0, "cell"           , "" },
+   { "comm"     , 0, "bluetooth"      , "" },
+   { "comm"     , 0, "rfid"           , "" },
+   { "comm"     , 0, "mesh"           , "" },
+   { "comm"     , 0, "usb"            , "" },
+   { "comm"     , 0, "rs232"          , "" },
+   { "comm"     , 0, "eth"            , "" },
+   { "comm"     , 0, "snail"          , "" },
+   { "comm"     , 0, "sign"           , "" },
+   { "comm"     , 0, "qr"             , "" },
+   { "comm"     , 0, "block"          , "" },
+   { "comm"     , 0, "matrix"         , "" },
+   { "comm"     , 0, "chat"           , "" },
+   { "comm"     , 0, "comment"        , "" },
+   { "comm"     , 0, "speech"         , "" },
+   { "comm"     , 0, "thought"        , "" },
+   { "comm"     , 0, "dialog"         , "" },
+   { "comm"     , 0, "download"       , "" },
+   { "comm"     , 0, "upload"         , "" },
+   { "comm"     , 0, "clouddown"      , "" },
+   { "comm"     , 0, "cloudup"        , "" },
+   { "comm"     , 0, "updates"        , "" },
+   { "comm"     , 0, "install"        , "" },
+   { "comm"     , 0, "sync"           , "" },
+   { "comm"     , 0, "voice"          , "" },
+   { "comm"     , 0, "mailbox"        , "" },
+   { "comm"     , 0, "reload"         , "" },
+   { "comm"     , 0, "rollback"       , "" },
+   { "comm"     , 0, "restore"        , "" },
+   { "comm"     , 0, "progress"       , "" },
+   { "comm"     , 0, "indox"          , "" },
+   { "comm"     , 0, "outbox"         , "" },
+   /*---(data)--------------------------*/
+   { "data"     , 0, "sort"           , "" },
+   { "data"     , 0, "ascend"         , "" },
+   { "data"     , 0, "descend"        , "" },
+   { "data"     , 0, "shuffle"        , "" },
+   { "data"     , 0, "sheet"          , "" },
+   { "data"     , 0, "reorder"        , "" },
+   { "data"     , 0, "checklist"      , "" },
+   { "data"     , 0, "htree"          , "" },
+   { "data"     , 0, "vtree"          , "" },
+   { "data"     , 0, "task"           , "" },
+   { "data"     , 0, "flow"           , "" },
+   { "data"     , 0, "insight"        , "" },
+   { "data"     , 0, "mindmap"        , "" },
+   { "data"     , 0, "org"            , "" },
+   { "data"     , 0, "workflow"       , "" },
+   { "data"     , 0, "vertical"       , "" },
+   { "data"     , 0, "network"        , "" },
+   { "data"     , 0, "scatter"        , "" },
+   { "data"     , 0, "multi"          , "" },
+   { "data"     , 0, "pipeline"       , "" },
+   { "data"     , 0, "cat"            , "" },
+   { "data"     , 0, "audio"          , "" },
+   { "data"     , 0, "audio2"         , "" },
+   { "data"     , 0, "puzzle"         , "" },
+   { "data"     , 0, "smooth"         , "" },
+   { "data"     , 0, "barbedwire"     , "" },
+   { "data"     , 0, "unit"           , "" },
+   { "data"     , 0, "storage"        , "" },
+   { "data"     , 0, "tourn"          , "" },
+   { "data"     , 0, "connect"        , "" },
+   { "data"     , 0, "defrag"         , "" },
+   { "data"     , 0, "timeline"       , "" },
+   { "data"     , 0, "tune"           , "" },
+   { "data"     , 0, "stacked"        , "" },
+   { "data"     , 0, "thumbnail"      , "" },
+   { "data"     , 0, "filter"         , "" },
+   { "data"     , 0, "divider"        , "" },
+   { "data"     , 0, "split"          , "" },
+   { "data"     , 0, "vmerge"         , "" },
+   { "data"     , 0, "hmerge"         , "" },
+   { "data"     , 0, "parallel"       , "" },
+   { "data"     , 0, "point"          , "" },
+   { "data"     , 0, "path"           , "" },
+   { "data"     , 0, "merge"          , "" },
+   { "data"     , 0, "fork"           , "" },
+   { "data"     , 0, "find"           , "" },
+   { "data"     , 0, "link"           , "" },
+   { "data"     , 0, "bookmark"       , "" },
+   { "data"     , 0, "star"           , "" },
+   { "data"     , 0, "unstart"        , "" },
+   { "data"     , 0, "toggle_off"     , "" },
+   { "data"     , 0, "toggle_on"      , "" },
+   { "data"     , 0, "versions"       , "" },
+   { "data"     , 0, "save"           , "" },
+   { "data"     , 0, "folder"         , "" },
+   { "data"     , 0, "box"            , "" },
+   { "data"     , 0, "openbox"        , "" },
+   { "data"     , 0, "cabinet"        , "" },
+   { "data"     , 0, "trash_empty"    , "" },
+   { "data"     , 0, "trash_full"     , "" },
+   { "data"     , 0, "infomatics"     , "" },
+   { "data"     , 0, "database"       , "" },
+   { "data"     , 0, "heatmap"        , "" },
+   { "data"     , 0, "candlestick"    , "" },
+   { "data"     , 0, "donut"          , "" },
+   { "data"     , 0, "plot"           , "" },
+   { "data"     , 0, "gantt"          , "" },
+   { "data"     , 0, "scatter"        , "" },
+   { "data"     , 0, "bar"            , "" },
+   { "data"     , 0, "polyline"       , "" },
+   { "data"     , 0, "line"           , "" },
+   { "data"     , 0, "pie"            , "" },
+   { "data"     , 0, "hist"           , "" },
+   { "data"     , 0, "combo"          , "" },
+   { "data"     , 0, "graph"          , "" },
+   { "data"     , 0, "deviation"      , "" },
+   { "data"     , 0, "diversity"      , "" },
+   { "data"     , 0, "variation"      , "" },
+   { "data"     , 0, "cols"           , "" },
+   { "data"     , 0, "rows"           , "" },
+   { "data"     , 0, "table"          , "" },
+   { "data"     , 0, "bell"           , "" },
+   { "data"     , 0, "normal"         , "" },
+   { "data"     , 0, "sine"           , "" },
+   /*---(draw)--------------------------*/
+   { "draw"     , 0, "pen"            , "" },
+   { "draw"     , 0, "calligraphy"    , "" },
+   { "draw"     , 0, "chisel"         , "" },
+   { "draw"     , 0, "crayon"         , "" },
+   { "draw"     , 0, "dropper"        , "" },
+   { "draw"     , 0, "cosmetic"       , "" },
+   { "draw"     , 0, "illustrator"    , "" },
+   { "draw"     , 0, "eraser"         , "" },
+   { "draw"     , 0, "brush"          , "" },
+   { "draw"     , 0, "tube"           , "" },
+   { "draw"     , 0, "roller"         , "" },
+   { "draw"     , 0, "quill"          , "" },
+   { "draw"     , 0, "pencil"         , "" },
+   { "draw"     , 0, "fill"           , "" },
+   { "draw"     , 0, "design"         , "" },
+   { "draw"     , 0, "compass"        , "" },
+   { "draw"     , 0, "pallette"       , "" },
+   { "draw"     , 0, "clipboard"      , "" },
+   { "draw"     , 0, "copy"           , "" },
+   { "draw"     , 0, "paste"          , "" },
+   { "draw"     , 0, "cut"            , "" },
+   { "draw"     , 0, "crop"           , "" },
+   { "draw"     , 0, "width"          , "" },
+   { "draw"     , 0, "height"         , "" },
+   { "draw"     , 0, "depth"          , "" },
+   { "draw"     , 0, "triangle"       , "" },
+   { "draw"     , 0, "square"         , "" },
+   { "draw"     , 0, "pentagon"       , "" },
+   { "draw"     , 0, "hexagon"        , "" },
+   { "draw"     , 0, "octagon"        , "" },
+   { "draw"     , 0, "polygon"        , "" },
+   { "draw"     , 0, "oval"           , "" },
+   { "draw"     , 0, "corner"         , "" },
+   { "draw"     , 0, "full"           , "" },
+   { "draw"     , 0, "drag"           , "" },
+   { "draw"     , 0, "collapse"       , "" },
+   { "draw"     , 0, "collage"        , "" },
+   { "draw"     , 0, "image"          , "" },
+   { "draw"     , 0, "invisible"      , "" },
+   { "draw"     , 0, "invert"         , "" },
+   { "draw"     , 0, "coordinate"     , "" },
+   { "draw"     , 0, "cube"           , "" },
+   { "draw"     , 0, "front"          , "" },
+   { "draw"     , 0, "side"           , "" },
+   { "draw"     , 0, "top"            , "" },
+   { "draw"     , 0, "3d"             , "" },
+   { "draw"     , 0, "rotate"         , "" },
+   { "draw"     , 0, "globe"          , "" },
+   { "draw"     , 0, "resize"         , "" },
+   { "draw"     , 0, "replace"        , "" },
+   { "draw"     , 0, "return"         , "" },
+   { "draw"     , 0, "tangent"        , "" },
+   { "draw"     , 0, "vector"         , "" },
+   { "draw"     , 0, "opacity"        , "" },
+   { "draw"     , 0, "undo"           , "" },
+   { "draw"     , 0, "redo"           , "" },
+   { "draw"     , 0, "sphere"         , "" },
+   { "draw"     , 0, "refresh"        , "" },
+   { "draw"     , 0, "reset"          , "" },
+   { "draw"     , 0, "grid"           , "" },
+   { "draw"     , 0, "resolution"     , "" },
+   { "draw"     , 0, "full_screen"    , "" },
+   { "draw"     , 0, "line_size"      , "" },
+   { "draw"     , 0, "metamorphose"   , "" },
+   { "draw"     , 0, "editor"         , "" },
+   /*---(games)-------------------------*/
+   { "games"    , 0, "kingw"          , "" },
+   { "games"    , 0, "queenw"         , "" },
+   { "games"    , 0, "bishopw"        , "" },
+   { "games"    , 0, "knightw"        , "" },
+   { "games"    , 0, "rookw"          , "" },
+   { "games"    , 0, "pawnw"          , "" },
+   { "games"    , 0, "kingb"          , "" },
+   { "games"    , 0, "queenb"         , "" },
+   { "games"    , 0, "bishopb"        , "" },
+   { "games"    , 0, "knightb"        , "" },
+   { "games"    , 0, "rookb"          , "" },
+   { "games"    , 0, "pawnb"          , "" },
+   { "games"    , 0, "8die"           , "" },
+   { "games"    , 0, "10die"          , "" },
+   { "games"    , 0, "12die"          , "" },
+   { "games"    , 0, "20die"          , "" },
+   { "games"    , 0, "ball"           , "" },
+   { "games"    , 0, "rubic"          , "" },
+   { "games"    , 0, "strategy"       , "" },
+   /*---(map)---------------------------*/
+   { "map"      , 0, "map"            , "" },
+   { "map"      , 0, "flag"           , "" },
+   { "map"      , 0, "sm_flag"        , "" },
+   { "map"      , 0, "finish"         , "" },
+   { "map"      , 0, "gps"            , "" },
+   { "map"      , 0, "waypoints"      , "" },
+   { "map"      , 0, "marker"         , "" },
+   { "map"      , 0, "region"         , "" },
+   { "map"      , 0, "map_marker"     , "" },
+   { "map"      , 0, "signpost"       , "" },
+   { "map"      , 0, "obelisk"        , "" },
+   { "map"      , 0, "cone"           , "" },
+   { "map"      , 0, "lighthouse"     , "" },
+   { "map"      , 0, "place"          , "" },
+   { "map"      , 0, "windrose"       , "" },
+   { "map"      , 0, "lat"            , "" },
+   { "map"      , 0, "long"           , "" },
+   { "map"      , 0, "left"           , "" },
+   { "map"      , 0, "right"          , "" },
+   { "map"      , 0, "treasure"       , "" },
+   { "map"      , 0, "scenic"         , "" },
+   { "map"      , 0, "fireworks"      , "" },
+   { "map"      , 0, "streetview"     , "" },
+   { "map"      , 0, "enter"          , "" },
+   { "map"      , 0, "target"         , "" },
+   { "map"      , 0, "leave"          , "" },
+   { "map"      , 0, "north"          , "" },
+   { "map"      , 0, "south"          , "" },
+   { "map"      , 0, "west"           , "" },
+   { "map"      , 0, "east"           , "" },
+   { "map"      , 0, "floorplan"      , "" },
+   { "map"      , 0, "stop"           , "" },
+   { "map"      , 0, "warning"        , "" },
+   { "map"      , 0, "building"       , "" },
+   { "map"      , 0, "cathedral"      , "" },
+   { "map"      , 0, "factory"        , "" },
+   { "map"      , 0, "govt"           , "" },
+   { "map"      , 0, "home"           , "" },
+   { "map"      , 0, "depot"          , "" },
+   { "map"      , 0, "gas"            , "" },
+   { "map"      , 0, "light"          , "" },
+   { "map"      , 0, "cars"           , "" },
+   { "map"      , 0, "tardis"         , "" },
+   { "map"      , 0, "cloud"          , "" },
+   { "map"      , 0, "clouds"         , "" },
+   { "map"      , 0, "windy"          , "" },
+   { "map"      , 0, "air"            , "" },
+   { "map"      , 0, "rain"           , "" },
+   { "map"      , 0, "partly"         , "" },
+   { "map"      , 0, "wet"            , "" },
+   { "map"      , 0, "water"          , "" },
+   { "map"      , 0, "drop"           , "" },
+   { "map"      , 0, "snow"           , "" },
+   { "map"      , 0, "summer"         , "" },
+   { "map"      , 0, "sun"            , "" },
+   { "map"      , 0, "earth"          , "" },
+   { "map"      , 0, "pyramids"       , "" },
+   { "map"      , 0, "fire"           , "" },
+   /*---(money)-------------------------*/
+   { "money"    , 0, "chip"           , "" },
+   { "money"    , 0, "dollars"        , "" },
+   { "money"    , 0, "stack"          , "" },
+   { "money"    , 0, "coins"          , "" },
+   { "money"    , 0, "credit"         , "" },
+   { "money"    , 0, "magstrip"       , "" },
+   { "money"    , 0, "cards"          , "" },
+   { "money"    , 0, "dimsum"         , "" },
+   { "money"    , 0, "briefcase"      , "" },
+   { "money"    , 0, "piggybank"      , "" },
+   { "money"    , 0, "calendar"       , "" },
+   { "money"    , 0, "sand_empty"     , "" },
+   { "money"    , 0, "sand_bottom"    , "" },
+   { "money"    , 0, "sand_top"       , "" },
+   { "money"    , 0, "stopwatch"      , "" },
+   { "money"    , 0, "timer"          , "" },
+   { "money"    , 0, "past"           , "" },
+   { "money"    , 0, "present"        , "" },
+   { "money"    , 0, "future"         , "" },
+   { "money"    , 0, "span"           , "" },
+   { "money"    , 0, "transaction"    , "" },
+   { "money"    , 0, "ticket"         , "" },
+   { "money"    , 0, "dashboard"      , "" },
+   { "money"    , 0, "scales"         , "" },
+   { "money"    , 0, "exchange"       , "" },
+   { "money"    , 0, "accounting"     , "" },
+   { "money"    , 0, "ledger"         , "" },
+   { "money"    , 0, "bill"           , "" },
+   { "money"    , 0, "invoice"        , "" },
+   { "money"    , 0, "paycheck"       , "" },
+   { "money"    , 0, "list"           , "" },
+   { "money"    , 0, "cashbook"       , "" },
+   /*---(player)------------------------*/
+   { "play"     , 0, "first"          , "" },
+   { "play"     , 0, "prev"           , "" },
+   { "play"     , 0, "next"           , "" },
+   { "play"     , 0, "last"           , "" },
+   { "play"     , 0, "rewind"         , "" },
+   { "play"     , 0, "fastforward"    , "" },
+   { "play"     , 0, "slower"         , "" },
+   { "play"     , 0, "normal"         , "" },
+   { "play"     , 0, "faster"         , "" },
+   { "play"     , 0, "play"           , "" },
+   { "play"     , 0, "pause"          , "" },
+   { "play"     , 0, "stop"           , "" },
+   { "play"     , 0, "record"         , "" },
+   { "play"     , 0, "resume"         , "" },
+   { "play"     , 0, "enter"          , "" },
+   { "play"     , 0, "exit"           , "" },
+   { "play"     , 0, "jump"           , "" },
+   { "play"     , 0, "stepnext"       , "" },
+   { "play"     , 0, "stepprev"       , "" },
+   { "play"     , 0, "load"           , "" },
+   { "play"     , 0, "eject"          , "" },
+   { "play"     , 0, "skipback"       , "" },
+   { "play"     , 0, "skipfore"       , "" },
+   { "play"     , 0, "repeat"         , "" },
+   /*---(player)------------------------*/
+   { "power"    , 0, "empty"          , "" },
+   { "power"    , 0, "low"            , "" },
+   { "power"    , 0, "half"           , "" },
+   { "power"    , 0, "high"           , "" },
+   { "power"    , 0, "full"           , "" },
+   { "power"    , 0, "charge"         , "" },
+   { "power"    , 0, "none"           , "" },
+   { "power"    , 0, "lightning"      , "" },
+   { "power"    , 0, "tornado"        , "" },
+   { "power"    , 0, "volcano"        , "" },
+   { "power"    , 0, "windmill"       , "" },
+   { "power"    , 0, "dam"            , "" },
+   { "power"    , 0, "plug"           , "" },
+   { "power"    , 0, "socket"         , "" },
+   { "power"    , 0, "tower"          , "" },
+   { "power"    , 0, "meter"          , "" },
+   { "power"    , 0, "geoplant"       , "" },
+   { "power"    , 0, "hydro"          , "" },
+   { "power"    , 0, "nuclear"        , "" },
+   { "power"    , 0, "oil"            , "" },
+   { "power"    , 0, "power"          , "" },
+   { "power"    , 0, "solar"          , "" },
+   { "power"    , 0, "storage"        , "" },
+   { "power"    , 0, "watertower"     , "" },
+   { "power"    , 0, "compressor"     , "" },
+   { "power"    , 0, "pump"           , "" },
+   { "power"    , 0, "vessel"         , "" },
+   { "power"    , 0, "waterfall"      , "" },
+   { "power"    , 0, "pipe"           , "" },
+   { "power"    , 0, "ship"           , "" },
+   { "power"    , 0, "bomb"           , "" },
+   { "power"    , 0, "missile"        , "" },
+   { "power"    , 0, "rocket"         , "" },
+   { "power"    , 0, "truck"          , "" },
+   { "power"    , 0, "train"          , "" },
+   /*---(player)------------------------*/
+   { "power"    , 0, "empty"          , "" },
+
+
+
+
+
+
+
+   { "sound"    , 0, "mute"           , "" },
+   { "sound"    , 0, "low"            , "" },
+   { "sound"    , 0, "med"            , "" },
+   { "sound"    , 0, "high"           , "" },
+   { "sound"    , 0, "none"           , "" },
+
+   { "touch"    , 0, "left"           , "" },
+   { "touch"    , 0, "right"          , "" },
+   { "touch"    , 0, "up"             , "" },
+   { "touch"    , 0, "down"           , "" },
+   { "touch"    , 0, "tap"            , "" },
+   { "touch"    , 0, "dtap"           , "" },
+   { "touch"    , 0, "dleft"          , "" },
+   { "touch"    , 0, "dright"         , "" },
+   { "touch"    , 0, "dup"            , "" },
+   { "touch"    , 0, "ddown"          , "" },
+   { "touch"    , 0, "pinch"          , "" },
+   { "touch"    , 0, "spread"         , "" },
+   { "touch"    , 0, "twotap"         , "" },
+   { "touch"    , 0, "twodtap"        , "" },
+   { "touch"    , 0, "cursor"         , "" },
+   { "touch"    , 0, "hand"           , "" },
+   { "touch"    , 0, "mouse"          , "" },
+   { "touch"    , 0, "lclick"         , "" },
+   { "touch"    , 0, "rclick"         , "" },
+   { "touch"    , 0, "scroll"         , "" },
+   { "touch"    , 0, "wacom"          , "" },
+   { "touch"    , 0, "keypad"         , "" },
+   { "touch"    , 0, "keyboard"       , "" },
+   { "touch"    , 0, "phonepad"       , "" },
+
+
+   { ""         , 0, ""               , "" },
+
+};
 
 
 
@@ -280,6 +763,81 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
    return w * x_scale;
 }
 
+int
+yFONT_iconload     (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   int         x_cat       =    0;
+   int         x_icon      =    0;
+   /*---(header)-------------------------*/
+   DEBUG_YFONT    yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT    yLOG_value   ("MAX_CATS"  , MAX_CATS);
+   /*---(initialize values)--------------*/
+   for (x_cat = 0; x_cat < MAX_CATS; ++x_cat) {
+      DEBUG_YFONT    yLOG_value   ("x_cat"     , x_cat);
+      if (s_cats[x_cat].cat[0]   == 0)                                break;
+      DEBUG_YFONT    yLOG_info    ("cat"       , s_cats[x_cat].cat);
+      for (x_icon = 0; x_icon < MAX_ICONS; ++x_icon) {
+         if (s_icons[x_icon].cat[0] == 0)                             break;
+         if (s_icons[x_icon].cat[0] != s_cats[x_cat].cat[0])          continue;
+         if (strcmp (s_icons[x_icon].cat, s_cats[x_cat].cat) != 0)    continue;
+         DEBUG_YFONT    yLOG_info    ("icon"      , s_icons[x_icon].abbr);
+         if (s_cats[x_cat].count == 0)  s_cats[x_cat].start = x_icon;
+         ++(s_cats[x_cat].count);
+         s_icons[x_icon].catno = x_cat;
+      }
+      DEBUG_YFONT    yLOG_value   ("start"     , s_cats[x_cat].start);
+      DEBUG_YFONT    yLOG_value   ("count"     , s_cats[x_cat].count);
+   }
+   /*---(load texture)-------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return yFONT_symload (ICON_SET, 20, 38, 'i');
+}
+
+int
+yFONT_icon         (char *a_cat, char *a_name, int a_side)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   int         i           =    0;
+   int         x_cat       =   -1;
+   int         x_off       =   -1;
+   int         x_icon      =   -1;
+   float       x_scale     =  1.0;
+   int         x_col       =    0;
+   int         x_row       =    0;
+   /*---(defence)------------------------*/
+   --rce;  if (a_cat  == NULL)  return rce;
+   --rce;  if (a_name == NULL)  return rce;
+   --rce;  if (a_side <  10  )  return rce;
+   --rce;  if (a_side >  50  )  return rce;
+   /*---(find cat)-----------------------*/
+   for (i = 0; i < MAX_CATS; ++i) {
+      if (s_cats[i].cat    == NULL)             break;
+      if (s_cats[i].cat[0] == NULL)             break;
+      if (strcmp (s_cats[i].cat, a_cat) != 0)   continue;
+      x_cat = i;
+      break;
+   }
+   --rce;  if (x_cat < 0)       return rce;
+   x_off = s_cats[x_cat].start;
+   /*---(find icon)----------------------*/
+   for (i = x_off; i < MAX_ICONS; ++i) {
+      if (s_icons[i].cat     == NULL)              break;
+      if (s_icons[i].catno   != x_cat)             break;
+      if (s_icons[i].abbr[0] != a_name[0])         continue;
+      if (strcmp (s_icons[i].abbr, a_name) != 0)   continue;
+      x_icon = i;
+      break;
+   }
+   --rce;  if (x_icon < 0)       return -6;
+   /*---(request)------------------------*/
+   x_scale = a_side / 20.0;
+   x_row   = x_icon / 20;
+   x_col   = x_icon - (x_row * 20);
+   return yFONT_symbol (x_scale, x_col, x_row, 0);
+}
+
 int                /* PURPOSE : make a png image into a texture --------------*/
 yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_type)
 {
@@ -328,8 +886,10 @@ yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
    } else {
       x_width    = 1.00 / s_ncol;
       x_height   = 1.00 / s_nrow;
-      x          = a_col * x_width;
-      y          = (s_nrow - a_row - 1) * x_height;
+      x          = a_col * x_width + (x_width * 0.05);
+      y          = ((s_nrow - a_row - 1) * x_height) + (x_height * 0.05);
+      x_width   *= 0.9000;
+      x_height  *= 0.9000;
    }
    DEBUG_YFONT_M  yLOG_double  ("x_width"   , x_width);
    DEBUG_YFONT_M  yLOG_double  ("x_height"  , x_height);

@@ -211,6 +211,9 @@ int       yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *
 int       yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_type);
 int       yFONT_symbol       (float a_scale   , int a_col , int a_row , int a_mod);
 
+int       yFONT_iconload     (void);
+int       yFONT_icon         (char *a_cat, char *a_name, int a_side);
+
 
 
 #define    YF_NO_SLOTS         -1
