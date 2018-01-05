@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1c"
-#define     YFONT_VER_TXT   "half of new icons are indexed properly and working"
+#define     YFONT_VER_NUM   "2.1d"
+#define     YFONT_VER_TXT   "all icons in place, test sample work properly"
 
 
 
