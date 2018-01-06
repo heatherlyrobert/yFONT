@@ -49,11 +49,11 @@ struct cCAT {
    { ""        ,  ""                             ,   0,  0 },
 };
 
-#define     MAX_ICONS    1000
+#define     MAX_ICONS    2000
 struct cICON {
    char          cat       [10];
    int           catno;
-   char          abbr      [10];
+   char          abbr      [20];
    char          desc      [50];
 } s_icons [MAX_ICONS] = {
    /*---(align)--------------------------*/
@@ -104,6 +104,7 @@ struct cICON {
    { "comm"     , 0, "phone_miss"     , "" },
    { "comm"     , 0, "phone_callback" , "" },
    { "comm"     , 0, "phone_transfer" , "" },
+   { "comm"     , 0, "phone_msg"      , "" },
    { "comm"     , 0, "phone_on"       , "" },
    { "comm"     , 0, "phone_end"      , "" },
    { "comm"     , 0, "radio"          , "" },
@@ -224,6 +225,7 @@ struct cICON {
    { "data"     , 0, "bell"           , "" },
    { "data"     , 0, "normal"         , "" },
    { "data"     , 0, "sine"           , "" },
+   { "data"     , 0, "swap"           , "" },
    /*---(draw)--------------------------*/
    { "draw"     , 0, "pen"            , "" },
    { "draw"     , 0, "calligraphy"    , "" },
@@ -290,6 +292,15 @@ struct cICON {
    { "draw"     , 0, "line_size"      , "" },
    { "draw"     , 0, "metamorphose"   , "" },
    { "draw"     , 0, "editor"         , "" },
+   { "draw"     , 0, "select"         , "" },
+   { "draw"     , 0, "invert-color"   , "" },
+   { "draw"     , 0, "lighting"       , "" },
+   { "draw"     , 0, "bucket"         , "" },
+   { "draw"     , 0, "video-edit"     , "" },
+   { "draw"     , 0, "video-trim"     , "" },
+   { "draw"     , 0, "spray"          , "" },
+   { "draw"     , 0, "type"           , "" },
+   { "draw"     , 0, "pic_in_pic"     , "" },
    /*---(games)-------------------------*/
    { "games"    , 0, "kingw"          , "" },
    { "games"    , 0, "queenw"         , "" },
@@ -325,6 +336,7 @@ struct cICON {
    { "map"      , 0, "cone"           , "" },
    { "map"      , 0, "lighthouse"     , "" },
    { "map"      , 0, "place"          , "" },
+   { "map"      , 0, "adventure"      , "" },
    { "map"      , 0, "windrose"       , "" },
    { "map"      , 0, "lat"            , "" },
    { "map"      , 0, "long"           , "" },
@@ -369,6 +381,15 @@ struct cICON {
    { "map"      , 0, "earth"          , "" },
    { "map"      , 0, "pyramids"       , "" },
    { "map"      , 0, "fire"           , "" },
+   { "map"      , 0, "tree"           , "" },
+   { "map"      , 0, "escalator"      , "" },
+   { "map"      , 0, "up"             , "" },
+   { "map"      , 0, "down"           , "" },
+   { "map"      , 0, "visit"          , "" },
+   { "map"      , 0, "tracking"       , "" },
+   { "map"      , 0, "tri"            , "" },
+   { "map"      , 0, "well"           , "" },
+   { "map"      , 0, "oragami"        , "" },
    /*---(money)-------------------------*/
    { "money"    , 0, "chip"           , "" },
    { "money"    , 0, "dollars"        , "" },
@@ -384,6 +405,7 @@ struct cICON {
    { "money"    , 0, "sand_empty"     , "" },
    { "money"    , 0, "sand_bottom"    , "" },
    { "money"    , 0, "sand_top"       , "" },
+   { "money"    , 0, "clock"          , "" },
    { "money"    , 0, "stopwatch"      , "" },
    { "money"    , 0, "timer"          , "" },
    { "money"    , 0, "past"           , "" },
@@ -402,6 +424,19 @@ struct cICON {
    { "money"    , 0, "paycheck"       , "" },
    { "money"    , 0, "list"           , "" },
    { "money"    , 0, "cashbook"       , "" },
+   { "money"    , 0, "day"            , "" },
+   { "money"    , 0, "week"           , "" },
+   { "money"    , 0, "month"          , "" },
+   { "money"    , 0, "timeslider"     , "" },
+   { "money"    , 0, "cart"           , "" },
+   { "money"    , 0, "cart_full"      , "" },
+   { "money"    , 0, "buy"            , "" },
+   { "money"    , 0, "checkout"       , "" },
+   { "money"    , 0, "return"         , "" },
+   { "money"    , 0, "reserve"        , "" },
+   { "money"    , 0, "pricetag"       , "" },
+   { "money"    , 0, "purse"          , "" },
+   { "money"    , 0, "metronome"      , "" },
    /*---(player)------------------------*/
    { "play"     , 0, "first"          , "" },
    { "play"     , 0, "prev"           , "" },
@@ -533,6 +568,9 @@ struct cICON {
    { "sci"      , 0, "plasmid"        , "" },
    { "sci"      , 0, "infinity"       , "" },
    { "sci"      , 0, "unknown"        , "" },
+   { "sci"      , 0, "infusion"       , "" },
+   { "sci"      , 0, "coronavirus"    , "" },
+   { "sci"      , 0, "saucer"         , "" },
    /*---(security)----------------------*/
    { "sec"      , 0, "key"            , "" },
    { "sec"      , 0, "lock"           , "" },
@@ -547,6 +585,7 @@ struct cICON {
    { "sec"      , 0, "fingerscan"     , "" },
    { "sec"      , 0, "palmscan"       , "" },
    { "sec"      , 0, "irisscan"       , "" },
+   { "sec"      , 0, "facescan"       , "" },
    { "sec"      , 0, "voicescan"      , "" },
    { "sec"      , 0, "pinpad"         , "" },
    { "sec"      , 0, "bodyscan"       , "" },
@@ -595,7 +634,11 @@ struct cICON {
    { "sec"      , 0, "skimask"        , "" },
    { "sec"      , 0, "spy"            , "" },
    { "sec"      , 0, "anonymous"      , "" },
-   /*---(security)----------------------*/
+   { "sec"      , 0, "search"         , "" },
+   { "sec"      , 0, "spot"           , "" },
+   { "sec"      , 0, "hanglight"      , "" },
+   { "sec"      , 0, "sheild"         , "" },
+   /*---(talk)--------------------------*/
    { "talk"     , 0, "mute"           , "" },
    { "talk"     , 0, "low"            , "" },
    { "talk"     , 0, "med"            , "" },
@@ -656,6 +699,25 @@ struct cICON {
    { "talk"     , 0, "news"           , "" },
    { "talk"     , 0, "typewriter"     , "" },
    { "talk"     , 0, "report"         , "" },
+   { "talk"     , 0, "video_call"     , "" },
+   { "talk"     , 0, "presentation"   , "" },
+   { "talk"     , 0, "hamradio"       , "" },
+   { "talk"     , 0, "video_cam"      , "" },
+   { "talk"     , 0, "balloon"        , "" },
+   { "talk"     , 0, "ribbon"         , "" },
+   { "talk"     , 0, "balloons"       , "" },
+   { "talk"     , 0, "megaphone"      , "" },
+   { "talk"     , 0, "gopro"          , "" },
+   { "talk"     , 0, "clapboard"      , "" },
+   { "talk"     , 0, "film"           , "" },
+   { "talk"     , 0, "gift"           , "" },
+   { "talk"     , 0, "doorhanger"     , "" },
+   { "talk"     , 0, "discussion"     , "" },
+   { "talk"     , 0, "wallpaper"      , "" },
+   { "talk"     , 0, "postits"        , "" },
+   { "talk"     , 0, "walker"         , "" },
+   { "talk"     , 0, "doa"            , "" },
+   { "talk"     , 0, "speaker"        , "" },
    /*---(tech)--------------------------*/
    { "tech"     , 0, "desktop"        , "" },
    { "tech"     , 0, "workstation"    , "" },
@@ -700,6 +762,20 @@ struct cICON {
    { "tech"     , 0, "galaxy"         , "" },
    { "tech"     , 0, "astroid"        , "" },
    { "tech"     , 0, "comet"          , "" },
+   { "tech"     , 0, "initial_state"  , "" },
+   { "tech"     , 0, "active_state"   , "" },
+   { "tech"     , 0, "inactive_state" , "" },
+   { "tech"     , 0, "states"         , "" },
+   { "tech"     , 0, "final_state"    , "" },
+   { "tech"     , 0, "connection"     , "" },
+   { "tech"     , 0, "home_button"    , "" },
+   { "tech"     , 0, "wifi_router"    , "" },
+   { "tech"     , 0, "web_cam"        , "" },
+   { "tech"     , 0, "hub"            , "" },
+   { "tech"     , 0, "switch"         , "" },
+   { "tech"     , 0, "router"         , "" },
+   { "tech"     , 0, "joystick"       , "" },
+   { "tech"     , 0, "stack"          , "" },
    /*---(tools)-------------------------*/
    { "tools"    , 0, "chainsaw"       , "" },
    { "tools"    , 0, "drill"          , "" },
@@ -787,6 +863,35 @@ struct cICON {
    { "tools"    , 0, "towel"          , "" },
    { "tools"    , 0, "tracks"         , "" },
    { "tools"    , 0, "bottle"         , "" },
+   { "tools"    , 0, "airgun"         , "" },
+   { "tools"    , 0, "machinegun"     , "" },
+   { "tools"    , 0, "piston"         , "" },
+   { "tools"    , 0, "paintball"      , "" },
+   { "tools"    , 0, "pallet"         , "" },
+   { "tools"    , 0, "mortar"         , "" },
+   { "tools"    , 0, "nightvision"    , "" },
+   { "tools"    , 0, "seamine"        , "" },
+   { "tools"    , 0, "paperplane"     , "" },
+   { "tools"    , 0, "mirror"         , "" },
+   { "tools"    , 0, "monocle"        , "" },
+   { "tools"    , 0, "landmine"       , "" },
+   { "tools"    , 0, "blender"        , "" },
+   { "tools"    , 0, "clip"           , "" },
+   { "tools"    , 0, "beer"           , "" },
+   { "tools"    , 0, "bobbin"         , "" },
+   { "tools"    , 0, "dozer"          , "" },
+   { "tools"    , 0, "bulletvest"     , "" },
+   { "tools"    , 0, "candle"         , "" },
+   { "tools"    , 0, "cannon"         , "" },
+   { "tools"    , 0, "cleaver"        , "" },
+   { "tools"    , 0, "crane"          , "" },
+   { "tools"    , 0, "digger"         , "" },
+   { "tools"    , 0, "engine"         , "" },
+   { "tools"    , 0, "elevator"       , "" },
+   { "tools"    , 0, "handgrenade"    , "" },
+   { "tools"    , 0, "handgun"        , "" },
+   { "tools"    , 0, "hairdryer"      , "" },
+   { "tools"    , 0, "shredder"       , "" },
    /*---(touch)-------------------------*/
    { "touch"    , 0, "left"           , "" },
    { "touch"    , 0, "right"          , "" },
@@ -1099,7 +1204,7 @@ yFONT_iconload     (void)
    }
    /*---(load texture)-------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-   return yFONT_symload (ICON_SET, 20, 38, 'i');
+   return yFONT_symload (ICON_SET, 20, 43, 'i');
 }
 
 int
