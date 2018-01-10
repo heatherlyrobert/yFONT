@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1f"
-#define     YFONT_VER_TXT   "couple more useful icons"
+#define     YFONT_VER_NUM   "2.1g"
+#define     YFONT_VER_TXT   "sneaking more icons in"
 
 
 

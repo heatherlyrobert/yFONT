@@ -306,6 +306,10 @@ struct cICON {
    { "draw"     , 0, "picasso"        , "" },
    { "draw"     , 0, "sketch"         , "" },
    { "draw"     , 0, "brushes"        , "" },
+   { "draw"     , 0, "resize"         , "" },
+   { "draw"     , 0, "axis"           , "" },
+   { "draw"     , 0, "layout"         , "" },
+   { "draw"     , 0, "texteditor"     , "" },
    /*---(games)-------------------------*/
    { "games"    , 0, "kingw"          , "" },
    { "games"    , 0, "queenw"         , "" },
@@ -588,6 +592,8 @@ struct cICON {
    { "sci"      , 0, "three_tubes"    , "" },
    { "sci"      , 0, "sonogram"       , "" },
    { "sci"      , 0, "voltmeter"      , "" },
+   { "sci"      , 0, "flasks"         , "" },
+   { "sci"      , 0, "molecule"       , "" },
    /*---(security)----------------------*/
    { "sec"      , 0, "key"            , "" },
    { "sec"      , 0, "lock"           , "" },
@@ -674,6 +680,8 @@ struct cICON {
    { "sec"      , 0, "secpass"        , "" },
    { "sec"      , 0, "whistle"        , "" },
    { "sec"      , 0, "yellowcard"     , "" },
+   { "sec"      , 0, "strongbox"      , "" },
+   { "sec"      , 0, "door"           , "" },
    /*---(talk)--------------------------*/
    { "talk"     , 0, "mute"           , "" },
    { "talk"     , 0, "low"            , "" },
@@ -754,6 +762,8 @@ struct cICON {
    { "talk"     , 0, "walker"         , "" },
    { "talk"     , 0, "doa"            , "" },
    { "talk"     , 0, "speaker"        , "" },
+   { "talk"     , 0, "brainstorm"     , "" },
+   { "talk"     , 0, "qna"            , "" },
    /*---(tech)--------------------------*/
    { "tech"     , 0, "desktop"        , "" },
    { "tech"     , 0, "workstation"    , "" },
@@ -814,6 +824,11 @@ struct cICON {
    { "tech"     , 0, "joystick"       , "" },
    { "tech"     , 0, "stack"          , "" },
    { "tech"     , 0, "settings"       , "" },
+   { "tech"     , 0, "drone"          , "" },
+   { "tech"     , 0, "glove"          , "" },
+   { "tech"     , 0, "ai"             , "" },
+   { "tech"     , 0, "hardware"       , "" },
+   { "tech"     , 0, "solar_system"   , "" },
    /*---(tools)-------------------------*/
    { "tools"    , 0, "chainsaw"       , "" },
    { "tools"    , 0, "drill"          , "" },
@@ -1246,7 +1261,7 @@ yFONT_iconload     (void)
    }
    /*---(load texture)-------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-   return yFONT_symload (ICON_SET, 20, 45, 'i');
+   return yFONT_symload (ICON_SET, 20, 46, 'i');
 }
 
 int
