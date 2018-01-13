@@ -10,7 +10,8 @@ char        s_point;                    /* point size of font                  *
 char        s_adjust;                   /* actual point size (for adjustment)  */
 int         s_spacer;                   /* unicode of space character          */
 char        s_glist      [LEN_LABEL];   /* type of source (font vs grid)       */
-char        s_text       [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
+uchar       s_text       [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
+uchar       s_text1      [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  £ ¤ ¥ ¦ § ¨ © ª « Ή €‚ƒ„…†‡‰‹‘’“”•–—™›.  θικλμνξοπρςστυφχψωϊϋόύώÿ.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
 /*---(sizes)-----------------------------*/
 int       win_w = 1600;                     /* window width                   */
 int       win_h =  170;                     /* window height                  */
@@ -335,7 +336,6 @@ draw_font          (char a_font, char *a_fontname)
    /*---(locals)-------------------------*/
    int       i;                             /* loop iterator -- word          */
    int       w       = 0;
-   char      x_text  [LEN_STR];
    glPushMatrix(); {
       glTranslatef( 20.0, -75.0,   0.0);
       glRotatef  ( 90.0, 0.0f, 0.0f, 1.0f);
@@ -556,8 +556,8 @@ main               (int argc, char *argv[])
       if (strcmp ("--conf", argv [1]) == 0) {
          yFONT__conf_list ();
          return 0;
-      } else {
-         strncpy (s_fontname, argv [1], 90);
+      } else if (strcmp ("--font", argv [1]) == 0) {
+         strncpy (s_fontname, argv [2], 90);
       }
    }
    /*---(preparation)--------------------*/
@@ -566,11 +566,12 @@ main               (int argc, char *argv[])
    if (strcmp (s_fontname, "") != 0) rc = yFONT__conf_info   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
    else                              rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
    if (rc < 0)                       rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
-   if (strcmp (s_fontname, "") != 0) rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
-   if (strcmp ("norm", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
-   if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyowina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
-   if (strcmp ("mand", s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
-   if (strcmp ("test", s_glist) == 0)  strlcpy (s_text, "abcd   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
+   if (strcmp ("norm"   , s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
+   if (strcmp ("tsae"   , s_glist) == 0)  strlcpy (s_text, "siyowina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
+   if (strcmp ("mand"   , s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
+   if (strcmp ("test"   , s_glist) == 0)  strlcpy (s_text, "abcd   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
+   if (strcmp ("code"   , s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  £ ¤ ¥ ¦ § ¨ © ª « Ή  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ", LEN_STR);
+   if (strcmp ("serious", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  £ ¤ ¥ ¦ § ¨ © ª « Ή €‚ƒ„…†‡‰‹‘’“”•–—.  θικλμνξοπρςστυφχψωϊϋόύώÿ.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ", LEN_STR);
    font_load          ();
    color_pairs        ('0');
    draw_init          ();
@@ -579,12 +580,14 @@ main               (int argc, char *argv[])
    /*---(main loop)----------------------*/
    while (rc == 0) {
       rc = prog_event ();
-      /*> printf ("switching to %s, %s\n", s_fontname, s_glist);                      <*/
-      if (strcmp ("norm", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
-      if (strcmp ("tsae", s_glist) == 0)  strlcpy (s_text, "siyo wina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
-      if (strcmp ("mand", s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
-      if (strcmp ("test", s_glist) == 0)  strlcpy (s_text, "   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
-      /*> printf ("test string is [%s]\n", s_text);                                   <*/
+      printf ("switching to %s, %s\n", s_fontname, s_glist);
+      if (strcmp ("norm"   , s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~.  ", LEN_STR);
+      if (strcmp ("tsae"   , s_glist) == 0)  strlcpy (s_text, "siyo wina qaze nihi gaya geyv zuda siyv gohv wenv saqu goya sida tanu wagv kuwa guqe nasu zuqa naqu disv  ", LEN_STR);
+      if (strcmp ("mand"   , s_glist) == 0)  strlcpy (s_text, "siyo'wina.  DGKNQTcdghklmnpqstwxyzaefiouvrj0123456789!@#$%^&,:\"\'()-.  ", LEN_STR);
+      if (strcmp ("test"   , s_glist) == 0)  strlcpy (s_text, "   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z   ", LEN_STR);
+      if (strcmp ("code"   , s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  £ ¤ ¥ ¦ § ¨ © ª « Ή  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ", LEN_STR);
+      if (strcmp ("serious", s_glist) == 0)  strlcpy (s_text, "the quick brown fox jumped over the lazy dog.  £ ¤ ¥ ¦ § ¨ © ª « Ή €‚ƒ„…†‡‰‹‘’“”•–—.  θικλμνξοπρςστυφχψωϊϋόύώÿ.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ", LEN_STR);
+      printf ("test string is [%s]\n", s_text);
       texture_free ();
       font_delete  ();
       font_load    ();

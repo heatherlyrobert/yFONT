@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1g"
-#define     YFONT_VER_TXT   "sneaking more icons in"
+#define     YFONT_VER_NUM   "2.1h"
+#define     YFONT_VER_TXT   "updated to handle greek letters and control chars"
 
 
 
@@ -43,6 +43,9 @@
 #define     ICON_SET  "/usr/local/share/fonts/outline_icons.png"
 
 
+
+
+
 /*===[[ RATIONAL LIMITS ]]====================================================*/
 /*   LEN_ is a length or size of something
  *   MIN_ is a minimum count
@@ -52,8 +55,9 @@
  */
 /*3456789012+123456789012+123456789012+123456789012+123456789012+123456789012*/
 /*---(string length)------------------*/
+#define     LEN_HUGE     10000
 #define     LEN_RECD     2000
-#define     LEN_STR      200
+#define     LEN_STR      500
 #define     LEN_LABEL    20
 /*---(fonts)--------------------------*/
 #define     MAX_FONT     10

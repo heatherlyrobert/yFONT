@@ -226,6 +226,11 @@ struct cICON {
    { "data"     , 0, "normal"         , "" },
    { "data"     , 0, "sine"           , "" },
    { "data"     , 0, "swap"           , "" },
+   { "data"     , 0, "algorithm"      , "" },
+   { "data"     , 0, "analyses"       , "" },
+   { "data"     , 0, "network"        , "" },
+   { "data"     , 0, "structure"      , "" },
+   { "data"     , 0, "accountant"     , "" },
    /*---(draw)--------------------------*/
    { "draw"     , 0, "pen"            , "" },
    { "draw"     , 0, "calligraphy"    , "" },
@@ -310,6 +315,9 @@ struct cICON {
    { "draw"     , 0, "axis"           , "" },
    { "draw"     , 0, "layout"         , "" },
    { "draw"     , 0, "texteditor"     , "" },
+   { "draw"     , 0, "set_square"     , "" },
+   { "draw"     , 0, "pencil_case"    , "" },
+   { "draw"     , 0, "shapes"         , "" },
    /*---(games)-------------------------*/
    { "games"    , 0, "kingw"          , "" },
    { "games"    , 0, "queenw"         , "" },
@@ -446,6 +454,7 @@ struct cICON {
    { "money"    , 0, "pricetag"       , "" },
    { "money"    , 0, "purse"          , "" },
    { "money"    , 0, "metronome"      , "" },
+   { "money"    , 0, "organizer"      , "" },
    /*---(player)------------------------*/
    { "play"     , 0, "first"          , "" },
    { "play"     , 0, "prev"           , "" },
@@ -764,6 +773,7 @@ struct cICON {
    { "talk"     , 0, "speaker"        , "" },
    { "talk"     , 0, "brainstorm"     , "" },
    { "talk"     , 0, "qna"            , "" },
+   { "talk"     , 0, "user"           , "" },
    /*---(tech)--------------------------*/
    { "tech"     , 0, "desktop"        , "" },
    { "tech"     , 0, "workstation"    , "" },
@@ -829,6 +839,11 @@ struct cICON {
    { "tech"     , 0, "ai"             , "" },
    { "tech"     , 0, "hardware"       , "" },
    { "tech"     , 0, "solar_system"   , "" },
+   { "tech"     , 0, "windows"        , "" },
+   { "tech"     , 0, "vision"         , "" },
+   { "tech"     , 0, "menu"           , "" },
+   { "tech"     , 0, "dial1"          , "" },
+   { "tech"     , 0, "dial2"          , "" },
    /*---(tools)-------------------------*/
    { "tools"    , 0, "chainsaw"       , "" },
    { "tools"    , 0, "drill"          , "" },
@@ -949,6 +964,8 @@ struct cICON {
    { "tools"    , 0, "caulk"          , "" },
    { "tools"    , 0, "vise"           , "" },
    { "tools"    , 0, "magnet"         , "" },
+   { "tools"    , 0, "washing_machine", "" },
+   { "tools"    , 0, "plumber"        , "" },
    /*---(touch)-------------------------*/
    { "touch"    , 0, "left"           , "" },
    { "touch"    , 0, "right"          , "" },
@@ -1010,7 +1027,7 @@ yFONT__list        (void)
 {
    int i = 0;
    for (i = 0; i < MAX_FONT; ++i) {
-      if (g_yfont [i] == NULL)  printf ("%02d  NULL        empty\n", i);
+      if (g_yfont [i] == NULL) printf ("%02d  NULL        empty\n", i);
       else                     printf ("%02d  %10p  %s\n", i, g_yfont [i], g_yfont[i]->name);
    }
 }
@@ -1072,7 +1089,7 @@ yFONT_free           (char a_slot)
 }
 
 int                /* PURPOSE : print a string -------------------------------*/
-yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
+yFONT_print          (char a_slot, char a_size, char a_align, uchar *a_text)
 {
    /*---(locals)-------------------------*/
    char      rce       = -10;
@@ -1106,7 +1123,7 @@ yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
       return rce;
    }
    DEBUG_YFONT_M  yLOG_info    ("a_text"    , a_text);
-   x_len     = strllen(a_text, LEN_STR);
+   x_len     = strllen(a_text, LEN_HUGE);
    DEBUG_YFONT_M  yLOG_value   ("x_len"     , x_len);
    /*---(place start)--------------------*/
    w = yFONT__index_width  (x_font, a_text, x_len);
@@ -1132,7 +1149,8 @@ yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
       glBindTexture (GL_TEXTURE_2D, x_font->tex_ref);
       glTranslatef  (x, y, 0);
       for (i = 0; i < x_len; ++i) {
-         yFONT__map_glyph  (x_font, a_text[i]);
+         /*> printf ("a_text [%02d] = %d\n", i, (uchar) a_text [i]);                  <*/
+         yFONT__map_glyph  (x_font, (uchar) a_text[i]);
       }
       glBindTexture (GL_TEXTURE_2D, 0);
    } glPopMatrix();
@@ -1142,7 +1160,7 @@ yFONT_print          (char a_slot, char a_size, char a_align, char *a_text)
 }
 
 int                /* PURPOSE : print a string with word wrapping             */
-yFONT_printw         (char a_slot, char a_point, char a_align, char *a_text, int a_width, int a_height, float a_spacing)
+yFONT_printw         (char a_slot, char a_point, char a_align, uchar *a_text, int a_width, int a_height, float a_spacing)
 {
    /*---(defense)-------------------------------*/
    if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;

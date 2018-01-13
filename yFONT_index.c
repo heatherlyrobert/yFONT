@@ -124,8 +124,8 @@ yFONT__index_code       (char  a_slot,  int a_entry, int a_code, char a_good)
 {
    g_yfont[a_slot]->glyphs[a_entry].code       = a_code;
    g_yfont[a_slot]->glyphs[a_entry].good       = a_good;
-   if (a_code > s_max_code   )  s_max_code    = a_code;
-   if (a_code < s_min_code   )  s_min_code    = a_code;
+   if (a_code > s_max_code   )  s_max_code     = a_code;
+   if (a_code < s_min_code   )  s_min_code     = a_code;
    return 0;
 }
 
@@ -134,8 +134,8 @@ yFONT__index_size       (char  a_slot,  int a_entry, char a_wide, char a_tall)
 {
    g_yfont[a_slot]->glyphs[a_entry].wide       = a_wide;
    g_yfont[a_slot]->glyphs[a_entry].tall       = a_tall;
-   if (a_wide > s_max_wide   )  s_max_wide    = a_wide;
-   if (a_tall > s_max_tall   )  s_max_tall    = a_tall;
+   if (a_wide > s_max_wide   )  s_max_wide     = a_wide;
+   if (a_tall > s_max_tall   )  s_max_tall     = a_tall;
    return 0;
 }
 
@@ -146,7 +146,7 @@ yFONT__index_offset     (char  a_slot,  int a_entry, char a_xoff, char a_yoff, c
    g_yfont[a_slot]->glyphs[a_entry].xoff       = a_xoff;
    g_yfont[a_slot]->glyphs[a_entry].yoff       = a_yoff;
    g_yfont[a_slot]->glyphs[a_entry].adv        = a_adv;
-   if (a_yoff > s_max_ascent )  s_max_ascent  = a_yoff;
+   if (a_yoff > s_max_ascent )  s_max_ascent   = a_yoff;
    x_descent = a_yoff - g_yfont[a_slot]->glyphs[a_entry].tall;
    if (x_descent < s_max_descent)  s_max_descent = x_descent;
    return 0;
@@ -155,8 +155,8 @@ yFONT__index_offset     (char  a_slot,  int a_entry, char a_xoff, char a_yoff, c
 char
 yFONT__index_pos        (char  a_slot,  int a_entry, short a_xpos, short a_ypos)
 {
-   g_yfont[a_slot]->glyphs[a_entry].xpos    = a_xpos;
-   g_yfont[a_slot]->glyphs[a_entry].ypos    = a_ypos;
+   g_yfont[a_slot]->glyphs[a_entry].xpos       = a_xpos;
+   g_yfont[a_slot]->glyphs[a_entry].ypos       = a_ypos;
    return 0;
 }
 
@@ -223,6 +223,7 @@ yFONT__index_dump       (char  a_slot)
             x_font->glyphs[i].xoff , x_font->glyphs[i].yoff ,
             x_font->glyphs[i].adv  , x_font->glyphs[i].good );
    }
+   return 0;
 }
 
 

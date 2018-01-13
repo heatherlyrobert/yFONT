@@ -168,6 +168,7 @@
 #define YFONT loaded
 
 
+typedef unsigned char uchar;
 /*
  * alignment macros... which are all relative to the current position...
  *
@@ -204,9 +205,9 @@ char     *yFONT_version      (void);
 char      yFONT_load         (char *a_name);
 char      yFONT_free         (char  a_slot);
 
-int       yFONT_print        (char  a_slot, char  a_point, char  a_align, char *a_text);
-int       yFONT_printw       (char  a_slot, char  a_point, char  a_align, char *a_text , int  a_wide, int  a_tall, float  a_spacing);
-int       yFONT_printu       (char  a_slot, char  a_point, char  a_align, int  *a_array, int  a_max);
+int       yFONT_print        (char  a_slot, char  a_point, char  a_align, uchar *a_text);
+int       yFONT_printw       (char  a_slot, char  a_point, char  a_align, uchar *a_text , int  a_wide, int  a_tall, float  a_spacing);
+int       yFONT_printu       (char  a_slot, char  a_point, char  a_align, int   *a_array, int  a_max);
 
 int       yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_type);
 int       yFONT_symbol       (float a_scale   , int a_col , int a_row , int a_mod);
