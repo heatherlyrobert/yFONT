@@ -561,7 +561,7 @@ main               (int argc, char *argv[])
       }
    }
    /*---(preparation)--------------------*/
-   yXINIT_start ("yFONT_tick", win_w, win_h, YX_FOCUSABLE, YX_FIXED, YX_SILENT);
+   yX11_start ("yFONT_tick", win_w, win_h, YX_FOCUSABLE, YX_FIXED, YX_SILENT);
    yFONT__conf_parse  ();
    if (strcmp (s_fontname, "") != 0) rc = yFONT__conf_info   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);
    else                              rc = yFONT__conf_head   (s_fontname, s_type, &s_point, &s_adjust, &s_spacer, s_glist, NULL);

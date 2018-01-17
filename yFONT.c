@@ -21,6 +21,10 @@ float   s_nrow    =   0;
 float   s_ncol    =   0;
 char    s_type    = '-';
 
+int     s_iconcol  =  45;
+int     s_iconrow  =  21;
+int     s_iconside =  20;
+
 
 
 /*---(icons)------------------------------------*/
@@ -1279,12 +1283,18 @@ yFONT_iconload     (void)
    }
    /*---(load texture)-------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
-   return yFONT_symload (ICON_SET, 20, 46, 'i');
+   return yFONT_symload (ICON_SET, s_iconcol, s_iconrow, 'i');
 }
 
 int
 yFONT_icon         (char *a_cat, char *a_name, int a_side)
 {
+   /*---(design notes)-------------------*/
+   /*
+    *  calling with a negative side size will act as a find/lookup only to
+    *  verify the existance of the icon and return its number.
+    *
+    */
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    int         i           =    0;
@@ -1297,7 +1307,7 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side)
    /*---(defence)------------------------*/
    --rce;  if (a_cat  == NULL)  return rce;
    --rce;  if (a_name == NULL)  return rce;
-   --rce;  if (a_side <  10  )  return rce;
+   --rce;  if (a_side >= 0 && a_side <  10  )  return rce;
    --rce;  if (a_side >  50  )  return rce;
    /*---(find cat)-----------------------*/
    for (i = 0; i < MAX_CATS; ++i) {
@@ -1319,10 +1329,28 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side)
       break;
    }
    --rce;  if (x_icon < 0)       return -6;
+   /*---(check for find-only)------------*/
+   if (a_side < 0)  return x_icon;
    /*---(request)------------------------*/
-   x_scale = a_side / 20.0;
-   x_row   = x_icon / 20;
-   x_col   = x_icon - (x_row * 20);
+   x_scale = a_side / (float) s_iconside;
+   x_row   = x_icon / s_iconcol;
+   x_col   = x_icon - (x_row * s_iconcol);
+   /*---(complete)-----------------------*/
+   return yFONT_symbol (x_scale, x_col, x_row, 0);
+}
+
+int
+yFONT_iconno       (int a_icon, int a_side)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   float       x_scale     =  1.0;
+   int         x_col       =    0;
+   int         x_row       =    0;
+   /*---(calc)---------------------------*/
+   x_scale = a_side / (float) s_iconside;
+   x_row   = a_icon / s_iconcol;
+   x_col   = a_icon - (x_row * s_iconcol);
+   /*---(complete)-----------------------*/
    return yFONT_symbol (x_scale, x_col, x_row, 0);
 }
 

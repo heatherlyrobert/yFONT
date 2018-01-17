@@ -214,6 +214,7 @@ int       yFONT_symbol       (float a_scale   , int a_col , int a_row , int a_mo
 
 int       yFONT_iconload     (void);
 int       yFONT_icon         (char *a_cat, char *a_name, int a_side);
+int       yFONT_iconno       (int a_icon, int a_side);
 
 
 
