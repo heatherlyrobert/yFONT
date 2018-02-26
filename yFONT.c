@@ -1163,6 +1163,37 @@ yFONT_print          (char a_slot, char a_size, char a_align, uchar *a_text)
    return w * x_scale;
 }
 
+int
+yFONT_width          (char a_slot, char a_point)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char       *x_test      = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"\'/@#$%^&()_<>{}[]+-=\\|`~";
+   tYFONT     *x_font      = NULL;
+   tVERT      *x_vert      = NULL;
+   float       x_scale     =  0.0;
+   int         x_len       =    0;
+   int         i           =    0;                 /* iterator -- character          */
+   float       cw          =    0;                 /* cum width                      */
+   int         rc          =    0;
+   /*---(defense)-------------------------------*/
+   if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
+   x_font = g_yfont [a_slot];
+   if (x_font == NULL)                     return YF_BAD_SLOT;
+   x_scale   = (float) a_point / (float) x_font->point;
+   x_len     = strllen (x_test, 1000);
+   printf ("%2d %2d   %-10p %2d   %5.2f  %3d\n", a_slot, a_point, x_font, x_font->point, x_scale, x_len);
+   for (i = 0; i < x_len; i++) {
+      if (x_test [i] == '\0') break;
+      x_vert = yFONT__verts_find  (x_font, x_test [i]);
+      if (x_vert == NULL) continue;
+      cw += x_vert->a * x_scale;
+      printf ("%2d   %3d %c   %-10p %3d   %5.2f %5.2f %7.2f\n", i, x_test [i], x_test [i], x_vert, x_vert->a, x_scale, x_vert->a * x_scale, cw);
+   }
+   rc = (cw / (float) x_len) * 100;
+   printf ("%7.2f  %3d  %8.2f  %4d\n", cw, x_len, cw / x_len, rc);
+   return rc;
+}
+
 int                /* PURPOSE : print a string with word wrapping             */
 yFONT_printw         (char a_slot, char a_point, char a_align, uchar *a_text, int a_width, int a_height, float a_spacing)
 {

@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1i"
-#define     YFONT_VER_TXT   "fixed yFONT_tick to review fonts better"
+#define     YFONT_VER_NUM   "2.1j"
+#define     YFONT_VER_TXT   "added a yFONT_width to generate sizing without printing"
 
 
 
