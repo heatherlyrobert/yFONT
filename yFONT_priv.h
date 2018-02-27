@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1j"
-#define     YFONT_VER_TXT   "added a yFONT_width to generate sizing without printing"
+#define     YFONT_VER_NUM   "2.1k"
+#define     YFONT_VER_TXT   "adjusted yFONT_width to a single character scaling"
 
 
 
