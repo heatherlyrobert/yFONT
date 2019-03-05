@@ -402,7 +402,7 @@ PROG_init          (void)
 {
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(flags)--------------------------*/
    DEBUG_TOPS   yLOG_note    ("intialize program status flags");
    /*---(fonts and files)----------------*/
@@ -423,7 +423,7 @@ char         /*--: argument processing -------------------[ ------ [ ------ ]-*/
 PROG_args     (int argc, char *argv[])
 {
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)--------------------------------*/
    char     *a         = NULL;               /* current argument              */
    int       i         = 0;                  /* loop iterator                 */
@@ -455,7 +455,7 @@ static void      o___FONTS___________________o (void) {;}
 char
 FONT__init         (void)
 {
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    strlcpy (my.font_name , "", LEN_LABEL);
    strlcpy (my.out_name  , "", LEN_LABEL);
    strlcpy (my.out_file  , "", LEN_LABEL);
@@ -472,7 +472,7 @@ FONT__choose       (char a_slot)
    char       *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YFONT  yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    DEBUG_YFONT  yLOG_info    ("font_name" , my.font_name);
    /*---(check for all fonts)------------*/
    if      (strcmp (my.font_name, "all") == 0) {
@@ -543,7 +543,7 @@ GLIST__clear         (void)
    int         i           =   0;
    int         j           =   0;
    /*---(null list)----------------------*/
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    for (i = 0; i < MAX_GLYPHS; ++i) {
       s_glist [i].mycode  = -1;
       s_glist [i].unicode = -1;
@@ -564,7 +564,7 @@ GLIST__normal        (char *a_list)
    int         j           =   0;
    char        x_col       =   0;
    /*---(defense)------------------------*/
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    if (a_list == NULL)  return -1;
    /*---(load)---------------------------*/
    for (i = 0; i < MAX_CHARS; ++i) {
@@ -603,7 +603,7 @@ GLIST__mandarin    (char *a_list)
    char       *x_coords    = NULL;          /* strtok pointer                 */
    char       *q           = "\x1F";        /* strtok delimiter               */
    /*---(mandarin)-----------------------*/
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    if (strcmp ("mand" , a_list) != 0) {
       return -1;
    }
@@ -667,7 +667,7 @@ GLIST__load        (char a_slot, char *a_list)
 {
    /*---(locals)-----------+-----------+-*/
    char        rc          = 0;
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    if (rc == 0)  rc = GLIST__clear       ();
    if (rc == 0)  rc = GLIST__normal      (a_list);
    if (rc <  0)  rc = GLIST__mandarin    (a_list);
@@ -690,7 +690,7 @@ FREETYPE__setup      (char *a_font, int a_point)
     */
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
    char        rce         = -10;      /* generic return code for errors      */
@@ -699,7 +699,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    rc = FT_Init_FreeType (&my.lib);
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_fatal   ("freetype2"      , "library could not be openned");
+      DEBUG_INPT   yLOG_fatal   ("freetype2 library could not be openned");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -707,7 +707,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    /*---(set up font)---------------------------*/
    DEBUG_INPT   yLOG_note    ("load the source font");
    --rce;  if (a_font == NULL) {
-      DEBUG_INPT   yLOG_fatal   ("font"           , "font name string argument is null");
+      DEBUG_INPT   yLOG_fatal   ("font font name string argument is null");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -715,7 +715,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    rc = FT_New_Face (my.lib, a_font, 0, &my.face);
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not find font");
+      DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not find font");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -726,7 +726,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    rc = FT_Set_Char_Size (my.face, 0, a_point * 64, 96, 96); /* in 1/64pt units    */
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not set pixel size");
+      DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not set pixel size");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -744,7 +744,7 @@ FREETYPE__shutdown   (void)
     */
    /*---(begin)--------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
    char        rce         = -10;      /* generic return code for errors      */
@@ -753,7 +753,7 @@ FREETYPE__shutdown   (void)
    rc = FT_Done_Face  (my.face);
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_fatal   ("font"           , "freetype2 library could not close font");
+      DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not close font");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -763,7 +763,7 @@ FREETYPE__shutdown   (void)
    rc = FT_Done_FreeType (my.lib);
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_fatal   ("freetype2"      , "library could not be closed");
+      DEBUG_INPT   yLOG_fatal   ("freetype2 library could not be closed");
       DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -790,7 +790,7 @@ FREE__find         (uint a_char)
    rc = FT_Get_Char_Index (my.face, a_char);
    DEBUG_INPT   yLOG_sint    (rc);
    --rce;  if (rc == 0) {
-      DEBUG_INPT   yLOG_warn    ("glyph"          , "freetype2 could not find the glyph");
+      DEBUG_INPT   yLOG_warn    ("glyph freetype2 could not find the glyph");
       return rce;
    }
    /*---(pull the glyph)-----------------*/
@@ -798,7 +798,7 @@ FREE__find         (uint a_char)
    rc = FT_Load_Glyph (my.face, rc, FT_LOAD_DEFAULT);
    DEBUG_INPT   yLOG_sint    (rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_warn    ("glyph"          , "freetype2 could not load the glyph");
+      DEBUG_INPT   yLOG_warn    ("glyph freetype2 could not load the glyph");
       return rce;
    }
    /*---(draw the glyph)-----------------*/
@@ -806,7 +806,7 @@ FREE__find         (uint a_char)
    rc = FT_Render_Glyph (my.face->glyph, FT_RENDER_MODE_NORMAL);
    DEBUG_INPT   yLOG_sint    (rc);
    --rce;  if (rc != 0) {
-      DEBUG_INPT   yLOG_warn    ("glyph"          , "freetype2 could not render the glyph");
+      DEBUG_INPT   yLOG_warn    ("glyph freetype2 could not render the glyph");
       return rce;
    }
    /*---(complete)-----------------------*/
@@ -886,7 +886,7 @@ INDEX__load        (char a_slot)
    char        x_good      =    '-';   /* good vs bad                         */
    /*---(header)-------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(measure all glyphs)-------------*/
    for (i = 0; i < s_nglist; ++i) {
       x_good = '-';
@@ -944,7 +944,7 @@ INDEX__layout      (char a_slot)
    int         x_cumh      =      0;   /* current height                      */
    /*---(header)-------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(initialize)---------------------*/
    x_tall  = yFONT__index_maxes  (a_slot);
    x_cumw  = my.margin + 1;
@@ -1087,7 +1087,7 @@ TEX__draw            (char a_slot)
    char        x_good      = '-';
    /*---(header)-------------------------*/
    DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
-   URG_VERB     printf       ("%s\n", __FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(allocate texture)---------------*/
    DEBUG_TOPS   yLOG_value   ("rc"        , rc);
    if (rc < 0) {
@@ -1143,7 +1143,7 @@ main               (int argc, char *argv[])
       rc = 0;
       if (rc >= 0)  rc = yFONT__slot_new      ();
       if (rc >= 0)  x_slot = rc;
-      URG_VERB   printf ("current slot : %d\n", x_slot);
+      DEBUG_VIEW   printf ("current slot : %d\n", x_slot);
       if (rc >= 0)  rc = FONT__choose         (x_slot);
       if (rc <  0)  break;
       if (rc >= 0)  rc = FREETYPE__setup      (my.src_file, my.point + my.adjust);

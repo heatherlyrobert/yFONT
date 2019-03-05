@@ -1,23 +1,5 @@
 /*============================----end-of-source---============================*/
 
-/*===[[ HEADER ]]=============================================================*/
-
-/*   category      : lib         (library)
- *   focus         : vis         desktop and visualization
- *   application   : yFONT
- *   purpose       : fast, clean, and aesthetic texture-mapped fonts for opengl
- *
- *   base_system   : gnu/linux   (powerful, ubiquitous, technical, and hackable)
- *   lang_name     : ansi-c      (wicked, limitless, universal, and everlasting)
- *   dependencies  : none
- *   size          : small       (less than 2,000 slocL)
- * 
- *   author        : rsheatherly
- *   created       : 2010-08
- *   priorities    : direct, simple, brief, vigorous, and lucid (h.w. fowler)
- *   end goal      : loosely coupled, strict interface, maintainable, portable
- * 
- */
 
 /*===[[ DESCRIPTION ]]========================================================*/
 

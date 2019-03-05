@@ -1,15 +1,44 @@
 /*============================----beg-of-source---============================*/
-
-#include "yFONT.h"
-
 /*===[[ HEADER GUARD ]]=======================================================*/
 #ifndef YFONT_private
 #define YFONT_private loaded
 
 
+#include "yFONT.h"
+
+
+
+/*===[[ BEG_HEADER ]]=========================================================*/
+/*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-12345678901-12345678901-*/
+
+/*===[[ ONE_LINERS ]]=========================================================*/
+
+#define     P_FOCUS     "RS (run-time support)"
+#define     P_NICHE     "vs (desktop and visualization)"
+#define     P_PURPOSE   "fast, clean, and aesthetic texture-mapped fonts for opengl"
+
+#define     P_NAMESAKE  "zephyros-anemoi (winds)"
+#define     P_HERITAGE  "one of eight wind gods, representing the gentle, spring west wind"
+#define     P_IMAGERY   "handsome, winged youth with a crown of flowers"
+
+#define     P_SYSTEM    "gnu/linux   (powerful, ubiquitous, technical, and hackable)"
+#define     P_LANGUAGE  "ansi-c      (wicked, limitless, universal, and everlasting)"
+#define     P_CODESIZE  "large       (appoximately 10,000 slocl)"
+
+#define     P_AUTHOR    "heatherlyrobert"
+#define     P_CREATED   "2010-08"
+#define     P_DEPENDS   "none"
+
+#define     P_VERNUM    "2.1l"
+#define     P_VERTXT    "adapted to address changes in yLOG"
+
+#define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
+#define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
+#define     P_REMINDER  "there are many better options, but i *own* every byte of this one"
+
+/*===[[ END_HEADER ]]=========================================================*/
+
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YFONT_VER_NUM   "2.1k"
-#define     YFONT_VER_TXT   "adjusted yFONT_width to a single character scaling"
 
 
 

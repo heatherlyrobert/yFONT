@@ -1022,7 +1022,7 @@ yFONT_version      (void)
 #else
    strncpy (t, "[unknown    ]", 15);
 #endif
-   snprintf (yFONT_ver, 100, "%s   %s : %s", t, YFONT_VER_NUM, YFONT_VER_TXT);
+   snprintf (yFONT_ver, 100, "%s   %s : %s", t, P_VERNUM, P_VERTXT);
    return yFONT_ver;
 }
 
@@ -1109,20 +1109,20 @@ yFONT_print          (char a_slot, char a_size, char a_align, uchar *a_text)
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    --rce;  if (a_slot < 0 || a_slot >= MAX_FONT) {
-      DEBUG_YFONT_M  yLOG_warn    ("a_slot"    , "out of accepable range (0 to MAX_FONT)");
+      DEBUG_YFONT_M  yLOG_warn    ("a_slot out of accepable range (0 to MAX_FONT)");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
    x_font    = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_point   ("x_font"    , x_font);
    --rce;  if (x_font == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("x_font"    , "slot can not be null");
+      DEBUG_YFONT_M  yLOG_warn    ("x_font slot can not be null");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_YFONT_M  yLOG_point   ("*a_text"   , a_text);
    --rce;  if (a_text == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("text"      , "can not be null");
+      DEBUG_YFONT_M  yLOG_warn    ("text can not be null");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -1543,7 +1543,7 @@ yFONT__testloud     (void)
 char       /*----: set up program urgents/debugging --------------------------*/
 yFONT__testend      (void)
 {
-   DEBUG_TOPS   yLOG_end     ();
+   DEBUG_TOPS   yLOGS_end     ();
    return 0;
 }
 

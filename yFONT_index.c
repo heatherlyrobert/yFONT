@@ -37,7 +37,7 @@ yFONT__index_alloc   (char a_slot)
          break;
       }
       if (x_tries > 10) {
-         DEBUG_YFONT_M  yLOG_warn    ("malloc"    , "could not allocate a new font in 10 tries");
+         DEBUG_YFONT_M  yLOG_warn    ("malloc could not allocate a new font in 10 tries");
          DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
          return rce;
       }
@@ -60,7 +60,7 @@ yFONT__index_free    (char a_slot)
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_point   ("g_yfont[.]" , g_yfont [a_slot]);
    --rce;  if (g_yfont [a_slot] == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("font ptr"  , "already null pointer, nothing to do");
+      DEBUG_YFONT_M  yLOG_warn    ("font ptr already null pointer, nothing to do");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return 0;
    }

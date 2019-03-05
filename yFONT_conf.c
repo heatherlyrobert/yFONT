@@ -95,7 +95,7 @@ yFONT__conf_info     (char *a_name, char *a_type, char *a_point, char *a_adjust,
    /*---(defense : content)--------------*/
    DEBUG_YFONT_M  yLOG_point   ("*a_name"   , a_name);
    --rce;  if (a_name == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("name"      , "can not be null");
+      DEBUG_YFONT_M  yLOG_warn    ("name can not be null");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -103,7 +103,7 @@ yFONT__conf_info     (char *a_name, char *a_type, char *a_point, char *a_adjust,
    x_len = strllen (a_name, LEN_LABEL);
    DEBUG_YFONT_M  yLOG_value   ("x_len"     , x_len);
    --rce;  if (x_len <= 0 || x_len >= LEN_LABEL) {
-      DEBUG_YFONT_M  yLOG_warn    ("name"      , "length not in required range (0 - LEN_LABEL)");
+      DEBUG_YFONT_M  yLOG_warn    ("name length not in required range (0 - LEN_LABEL)");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -122,7 +122,7 @@ yFONT__conf_info     (char *a_name, char *a_type, char *a_point, char *a_adjust,
       break;
    }
    --rce;  if (x_entry < 0) {
-      DEBUG_YFONT_M  yLOG_warn    ("font"      , "font name not found");
+      DEBUG_YFONT_M  yLOG_warn    ("font name not found");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -198,7 +198,7 @@ yFONT__conf_open     (void)
    s_conf = fopen (s_confname, "r");
    DEBUG_YFONT_M  yLOG_point   ("s_conf"    , s_conf);
    --rce;  if (s_conf == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("conf file" , "could not be openned");
+      DEBUG_YFONT_M  yLOG_warn    ("conf file could not be openned");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -216,14 +216,14 @@ yFONT__conf_close    (void)
    /*---(header)-------------------------*/
    DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
    if (s_conf == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("conf file" , "already closed");
+      DEBUG_YFONT_M  yLOG_warn    ("conf file already closed");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return 0;
    }
    rc = fclose (s_conf);
    DEBUG_YFONT_M  yLOG_point   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_YFONT_M  yLOG_warn    ("conf file" , "could not be closed");
+      DEBUG_YFONT_M  yLOG_warn    ("conf file could not be closed");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }

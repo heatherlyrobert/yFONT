@@ -50,7 +50,7 @@ yFONT__slot_next   (void)
       break;
    }
    if (x_slot <  0) {
-      DEBUG_YFONT_M  yLOG_warn    ("font slot" , "no slots available");
+      DEBUG_YFONT_M  yLOG_warn    ("font slot no slots available");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -72,7 +72,7 @@ yFONT__slot_alloc  (char a_slot)
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_point   ("g_yfont[.]" , g_yfont [a_slot]);
    --rce;  if (g_yfont [a_slot] != NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("font ptr"  , "pointer must start as null");
+      DEBUG_YFONT_M  yLOG_warn    ("font ptr pointer must start as null");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
@@ -82,7 +82,7 @@ yFONT__slot_alloc  (char a_slot)
       ++x_tries;
       x_font = (tYFONT *) malloc (sizeof (tYFONT));
       if (x_tries > 10) {
-         DEBUG_YFONT_M  yLOG_warn    ("malloc"    , "could not allocate a new font in 10 tries");
+         DEBUG_YFONT_M  yLOG_warn    ("malloc could not allocate a new font in 10 tries");
          DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
          return rce;
       }
@@ -161,7 +161,7 @@ yFONT__slot_free   (char a_slot)
    /*---(defense)------------------------*/
    DEBUG_YFONT_M  yLOG_point   ("g_yfont[.]" , g_yfont [a_slot]);
    --rce;  if (g_yfont [a_slot] == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("font ptr"  , "already null pointer, nothing to do");
+      DEBUG_YFONT_M  yLOG_warn    ("font ptr already null pointer, nothing to do");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return 0;
    }
@@ -192,14 +192,14 @@ yFONT__slot_font   (char a_slot)
    /*---(defense : font)------------------------*/
    DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
    if (a_slot < 0 || a_slot >= MAX_FONT) {
-      DEBUG_YFONT_M  yLOG_warn    ("slot"      , "not in required range (0 - MAX_FONT)");
+      DEBUG_YFONT_M  yLOG_warn    ("slot not in required range (0 - MAX_FONT)");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return NULL;
    }
    x_font = g_yfont [a_slot];
    DEBUG_YFONT_M  yLOG_point   ("x_font"    , x_font);
    if (x_font == NULL) {
-      DEBUG_YFONT_M  yLOG_warn    ("name"      , "can not be null");
+      DEBUG_YFONT_M  yLOG_warn    ("name can not be null");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return NULL;
    }
