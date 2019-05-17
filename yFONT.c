@@ -1132,16 +1132,16 @@ yFONT_print          (char a_slot, char a_size, char a_align, uchar *a_text)
    /*---(place start)--------------------*/
    w = yFONT__index_width  (x_font, a_text, x_len);
    DEBUG_YFONT_M  yLOG_value   ("w"         , w);
-   switch (a_align / 3) {
-   case  0:  y =  0;                      break;
-   case  1:  y = -x_font->max_ascent / 2;  break;
-   case  2:  y = -x_font->max_ascent;      break;
-   case  3:  y = -x_font->max_descent;     break;
+   switch (a_align) {
+   /* top */ case  7 : case  8 : case  9 :  y = -x_font->max_ascent;      break;
+   /* mid */ case  4 : case  5 : case  6 :  y = -x_font->max_ascent / 2;  break;
+   /* bot */ case  1 : case  2 : case  3 :  y =  0;                       break;
+   /* bas */ case 10 : case 11 : case 12 :  y = -x_font->max_descent;     break;
    }
-   switch (a_align % 3) {
-   case  0:  x =  0;                      break;
-   case  1:  x = -w / 2;                  break;
-   case  2:  x = -w;                      break;
+   switch (a_align) {
+   /* lef */ case  1 : case  4 : case  7 : case 10 :  x =  0;             break;
+   /* cen */ case  2 : case  5 : case  8 : case 11 :  x = -w / 2;         break;
+   /* cen */ case  3 : case  6 : case  9 : case 12 :  x = -w;             break;
    }
    /*---(draw text)----------------------*/
    x_scale   = (float) a_size / (float) x_font->point;
@@ -1260,16 +1260,16 @@ yFONT_printu       (char a_slot, char a_point, char a_align, int  *a_array, int 
    }
    /*---(place start)---------------------------*/
    w = yFONT__index_widthu (x_font, a_array, x_len);
-   switch (a_align / 3) {
-   case  0:  y =  0;                      break;
-   case  1:  y = -x_font->max_ascent / 2;  break;
-   case  2:  y = -x_font->max_ascent;      break;
-   case  3:  y = -x_font->max_descent;     break;
+   switch (a_align) {
+   /* top */ case  7 : case  8 : case  9 :  y = -x_font->max_ascent;      break;
+   /* mid */ case  4 : case  5 : case  6 :  y = -x_font->max_ascent / 2;  break;
+   /* bot */ case  1 : case  2 : case  3 :  y =  0;                       break;
+   /* bas */ case 10 : case 11 : case 12 :  y = -x_font->max_descent;     break;
    }
-   switch (a_align % 3) {
-   case  0:  x =  0;                      break;
-   case  1:  x = -w / 2;                  break;
-   case  2:  x = -w;                      break;
+   switch (a_align) {
+   /* lef */ case  1 : case  4 : case  7 : case 10 :  x =  0;             break;
+   /* cen */ case  2 : case  5 : case  8 : case 11 :  x = -w / 2;         break;
+   /* cen */ case  3 : case  6 : case  9 : case 12 :  x = -w;             break;
    }
    /*---(draw text)-----------------------------*/
    glPushMatrix(); {

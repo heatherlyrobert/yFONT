@@ -29,8 +29,8 @@
 #define     P_CREATED   "2010-08"
 #define     P_DEPENDS   "none"
 
-#define     P_VERNUM    "2.1l"
-#define     P_VERTXT    "adapted to address changes in yLOG"
+#define     P_VERNUM    "2.1m"
+#define     P_VERTXT    "updated alignment constants and calculations to make more clear"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"

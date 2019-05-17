@@ -281,7 +281,7 @@ yFONT__head_write  (char a_slot)
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;
    }
-   --rce;  if ( 5 != fwrite (YFONT_VER_NUM          , sizeof (char),  5, x_font->file)) {
+   --rce;  if ( 5 != fwrite (P_VERNUM          , sizeof (char),  5, x_font->file)) {
       DEBUG_YFONT_M  yLOG_warn    ("version could not be written");
       DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
       return rce;

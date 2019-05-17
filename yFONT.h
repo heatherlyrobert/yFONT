@@ -164,20 +164,26 @@ typedef unsigned char uchar;
  *    LEF : left
  *    CEN : centered
  *    RIG : right
+ *
+ *
+ *     7   8   9
+ *     4   5   6
+ *     1   2   3
+ *    10  11  12
  */
 
-#define    YF_BASLEF         0
-#define    YF_BASCEN         1
-#define    YF_BASRIG         2
-#define    YF_MIDLEF         3
-#define    YF_MIDCEN         4
-#define    YF_MIDRIG         5
-#define    YF_TOPLEF         6
-#define    YF_TOPCEN         7
-#define    YF_TOPRIG         8
-#define    YF_BOTLEF         9
-#define    YF_BOTCEN        10
-#define    YF_BOTRIG        11
+#define    YF_BASLEF         1
+#define    YF_BASCEN         2
+#define    YF_BASRIG         3
+#define    YF_MIDLEF         4
+#define    YF_MIDCEN         5
+#define    YF_MIDRIG         6
+#define    YF_TOPLEF         7
+#define    YF_TOPCEN         8
+#define    YF_TOPRIG         9
+#define    YF_BOTLEF        10
+#define    YF_BOTCEN        11
+#define    YF_BOTRIG        12
 
 
 /*===[[ PROTOTYPES ]]=========================================================*/
