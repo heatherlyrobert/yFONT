@@ -495,6 +495,54 @@ yFONT__head_read   (char a_slot)
    return 0;
 }
 
+char
+yFONT_head_force        (char *a_slot, char *a_name, char a_point, short a_wide, short a_tall, short a_ascent, short a_descent, char a_margin, short a_glyphs)
+{
+   /*---(locals)--------------------------------*/
+   char      rce       = -10;               /* return code for errors         */
+   int       rc        = 0;                 /* generic return code            */
+   char      x_slot    =  0;
+   tYFONT    *x_font    = NULL;              /* new font                       */
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   /*---(check file type)-----------------------*/
+   x_slot = yFONT__slot_new      ();
+   DEBUG_YFONT_M  yLOG_value   ("x_slot"    , x_slot);
+   if (a_slot != NULL)  *a_slot = x_slot;
+   x_font = g_yfont [x_slot];
+   /*---(read name)-----------------------------*/
+   strlcpy (x_font->name, a_name, LEN_LABEL);
+   DEBUG_YFONT_M  yLOG_info    ("name"      , x_font->name);
+   /*---(point)---------------------------------*/
+   x_font->point  = a_point;
+   DEBUG_YFONT_M  yLOG_value   ("point"     , x_font->point);
+   /*---(texture width)-------------------------*/
+   x_font->tex_w  = a_wide;
+   DEBUG_YFONT_M  yLOG_value   ("tex_w"     , x_font->tex_w);
+   /*---(texture height)------------------------*/
+   x_font->tex_h  = a_tall;
+   DEBUG_YFONT_M  yLOG_value   ("tex_h"     , x_font->tex_h);
+   /*---(max ascent)----------------------------*/
+   x_font->max_ascent  = a_ascent;
+   DEBUG_YFONT_M  yLOG_value   ("ascent"    , x_font->max_ascent);
+   /*---(max descent)---------------------------*/
+   x_font->max_descent = a_descent;
+   DEBUG_YFONT_M  yLOG_value   ("descent"   , x_font->max_descent);
+   /*---(margin)--------------------------------*/
+   x_font->margin      = a_margin;
+   DEBUG_YFONT_M  yLOG_value   ("margin"    , x_font->margin);
+   /*---(margin)--------------------------------*/
+   x_font->num_glyph   = a_glyphs;;
+   DEBUG_YFONT_M  yLOG_value   ("glyphs"    , x_font->num_glyph);
+   /*---(open the file)-------------------------*/
+   rc = yFONT__file_open   (x_slot, 'w');
+   /*---(write to file)-------------------------*/
+   rc = yFONT__head_write  (x_slot);
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
 
 
 /*====================------------------------------------====================*/

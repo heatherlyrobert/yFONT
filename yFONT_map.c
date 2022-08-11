@@ -268,13 +268,13 @@ yFONT__verts_load    (char a_slot)
    /*---(read glyph verticies)-----------*/
    x_texw = x_font->tex_w;
    x_texh = x_font->tex_h;
-   DEBUG_VIEW   printf ("\n");
+   /*> DEBUG_VIEW   printf ("\n");                                                    <*/
    for (i = 0; i < x_font->num_glyph; i++) {
       /*---(point to glyph)--------------*/
       x_glyph = &x_font->glyphs[i];
       /*> printf ("%7d %c ", x_glyph->code, (x_glyph->code < 128) ? x_glyph->code : '-');   <*/
-      DEBUG_VIEW   printf ("%6d  ", x_glyph->code);
-      DEBUG_VIEW   printf ("--  top- --pct-- rel  bot- --pct-- rel  lef- --pct-- rel  rig- --pct-- rel\n");
+      /*> DEBUG_VIEW   printf ("%6d  ", x_glyph->code);                               <*/
+      /*> DEBUG_VIEW   printf ("--  top- --pct-- rel  bot- --pct-- rel  lef- --pct-- rel  rig- --pct-- rel\n");   <*/
       /*---(absolute coordinates)--------*/
       /* flip top and bottom for opengl */
       x_topa   = x_glyph->ypos - 1;
@@ -292,25 +292,25 @@ yFONT__verts_load    (char a_slot)
       x_font->verts[i].TL.rel_y  = x_glyph->yoff + 2;
       x_font->verts[i].TL.tex_x  = x_lefr;
       x_font->verts[i].TL.tex_y  = x_topr;
-      DEBUG_VIEW   yFONT__verts_line (1, x_topa, x_topr, x_font->verts[i].TL.rel_y, x_lefa, x_lefr, x_font->verts[i].TL.rel_x);
+      /*> DEBUG_VIEW   yFONT__verts_line (1, x_topa, x_topr, x_font->verts[i].TL.rel_y, x_lefa, x_lefr, x_font->verts[i].TL.rel_x);   <*/
       /*---(top-right)-------------------*/
       x_font->verts[i].TR.rel_x  = x_glyph->xoff + x_glyph->wide + 2;
       x_font->verts[i].TR.rel_y  = x_glyph->yoff + 2;
       x_font->verts[i].TR.tex_x  = x_rigr;
       x_font->verts[i].TR.tex_y  = x_topr;
-      DEBUG_VIEW   yFONT__verts_line (2, x_topa, x_topr, x_font->verts[i].TR.rel_y, x_riga, x_rigr, x_font->verts[i].TR.rel_x);
+      /*> DEBUG_VIEW   yFONT__verts_line (2, x_topa, x_topr, x_font->verts[i].TR.rel_y, x_riga, x_rigr, x_font->verts[i].TR.rel_x);   <*/
       /*---(bottom-right)----------------*/
       x_font->verts[i].BR.rel_x  = x_glyph->xoff + x_glyph->wide + 2;
       x_font->verts[i].BR.rel_y  = x_glyph->yoff - x_glyph->tall - 2;
       x_font->verts[i].BR.tex_x  = x_rigr;
       x_font->verts[i].BR.tex_y  = x_botr;
-      DEBUG_VIEW   yFONT__verts_line (3, x_bota, x_botr, x_font->verts[i].BR.rel_y, x_riga, x_rigr, x_font->verts[i].BR.rel_x);
+      /*> DEBUG_VIEW   yFONT__verts_line (3, x_bota, x_botr, x_font->verts[i].BR.rel_y, x_riga, x_rigr, x_font->verts[i].BR.rel_x);   <*/
       /*---(bottom-left)-----------------*/
       x_font->verts[i].BL.rel_x  = x_glyph->xoff - 2;
       x_font->verts[i].BL.rel_y  = x_glyph->yoff - x_glyph->tall - 2;
       x_font->verts[i].BL.tex_x  = x_lefr;
       x_font->verts[i].BL.tex_y  = x_botr;
-      DEBUG_VIEW   yFONT__verts_line (4, x_bota, x_botr, x_font->verts[i].BL.rel_y, x_lefa, x_lefr, x_font->verts[i].BL.rel_x);
+      /*> DEBUG_VIEW   yFONT__verts_line (4, x_bota, x_botr, x_font->verts[i].BL.rel_y, x_lefa, x_lefr, x_font->verts[i].BL.rel_x);   <*/
       /*---(advance)---------------------*/
       x_font->verts[i].a         = x_glyph->adv;
       /*---(done)------------------------*/
@@ -453,4 +453,31 @@ yFONT__map_glyph   (tYFONT *a_font, int a_code)
    return 0;
 }
 
+uchar*
+yFONT_map_force         (char a_slot)
+{
+   /*---(locals)-----------+-----------+-*/
+   tYFONT      *x_font      = NULL;
+   int         x_max       =   0;           /* max byte in font map           */
+   int         i           =   0;
+   char        rc          =    0;
+   rc = yFONT__map_alloc     (a_slot);
+   rc = yFONT__map_texture   (a_slot);
+   rc = yFONT__map_clear     (a_slot);
+   x_font = g_yfont [a_slot];
+   x_max  = x_font->tex_w * x_font->tex_h;
+   return x_font->tex_map;
+}
+
+char
+yFONT_write_force       (char a_slot)
+{
+   /*---(locals)-----------+-----------+-*/
+   char        rc          =    0;
+   rc = yFONT__map_write     (a_slot);
+   printf ("write rc = %d\n", rc);
+   rc = yFONT__file_close    (a_slot);
+   printf ("close rc = %d\n", rc);
+   return 0;
+}
 

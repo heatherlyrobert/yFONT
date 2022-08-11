@@ -23,15 +23,21 @@ main               (int argc, char *argv[])
       return 0;
    }
    else strncpy (x_name, argv [1], 90);
+   printf ("x_name = %s\n", x_name);
    /*---(setup slot)---------------------*/
    if (rc >= 0)  rc = yFONT__slot_new    ();
+   printf ("x_slot = %d\n", x_slot);
    if (rc >= 0)  x_slot = rc;
    /*---(open the font)------------------*/
    if (rc >= 0)  rc = yFONT__head_name   (x_slot, x_name, 40);
+   printf ("head_name = %d\n", rc);
    if (rc >= 0)  rc = yFONT__file_open   (x_slot, 'r');
+   printf ("file_open = %d\n", rc);
    /*---(header)-------------------------*/
    if (rc >= 0)  rc = yFONT__head_read   (x_slot);
+   printf ("head_read = %d\n", rc);
    if (rc >= 0)  rc = yFONT__head_dump   (x_slot);
+   printf ("head_dump = %d\n", rc);
    /*---(index)--------------------------*/
    if (rc >= 0)  rc = yFONT__index_alloc (x_slot);
    if (rc >= 0)  rc = yFONT__index_read  (x_slot);

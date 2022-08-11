@@ -1197,45 +1197,93 @@ yFONT_width          (char a_slot, char a_point)
 int                /* PURPOSE : print a string with word wrapping             */
 yFONT_printw         (char a_slot, char a_point, char a_align, uchar *a_text, int a_width, int a_height, float a_spacing)
 {
-   /*---(defense)-------------------------------*/
-   if (a_slot < 0 || a_slot >= MAX_FONT)  return YF_BAD_SLOT;
-   tYFONT  *x_font = g_yfont [a_slot];
-   if (x_font == NULL)                     return YF_BAD_SLOT;
    /*---(locals)--------------------------------*/
-   int       i         = 0;                 /* iterator -- character          */
-   int       len       = strlen(a_text);     /* string length                  */
-   int       s         = 0;                 /* start of next print            */
-   int       w         = 0;                 /* current width                  */
-   int       l         = 1;                 /* number of lines                */
-   int       space     = 0;                 /* last breakable place in text   */
-   char     *x_str     = strdup(a_text);     /* alterable string               */
-   float     x_scale   = (float) a_point / (float) x_font->point;
-   int       v         = 0;                 /* vertical spacing               */
+   char        rce         =  -10;
+   int         i           =    0;                 /* iterator -- character          */
+   int         x_len       =    0;               /* string length                  */
+   int         s           =    0;                 /* start of next print            */
+   int         w           =    0;                 /* current width                  */
+   int         l           =    1;                 /* number of lines                */
+   int         space       =    0;                 /* last breakable place in text   */
+   char       *x_str       = NULL;               /* alterable string               */
+   float       x_scale     =  0.0;
+   int         v           =    0;                 /* vertical spacing               */
+   tYFONT     *x_font      = NULL;
+   tVERT      *x_vert      = NULL;
+   /*---(header)--------------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_complex ("args"      , "%d, %d, %d, %p, %d, %d, %f", a_slot, a_point, a_align, a_text, a_width, a_height, a_spacing);
+   /*---(defense)-------------------------------*/
+   --rce;  if (a_slot < 0 || a_slot >= MAX_FONT) {
+      DEBUG_YFONT_M  yLOG_exitr   (__FUNCTION__, rce);
+      return YF_BAD_SLOT;
+   }
+   x_font = g_yfont [a_slot];
+   DEBUG_YFONT_M  yLOG_point   ("x_font"    , x_font);
+   --rce;  if (x_font == NULL) {
+      DEBUG_YFONT_M  yLOG_exitr   (__FUNCTION__, rce);
+      return YF_BAD_SLOT;
+   }
+   --rce;  if (a_text == NULL) {
+      DEBUG_YFONT_M  yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YFONT_M  yLOG_info    ("a_text"    , a_text);
+   /*---(prepare)-------------------------------*/
+   x_len       = strlen (a_text);
+   DEBUG_YFONT_M  yLOG_value   ("x_len"     , x_len);
+   x_str     = strdup (a_text);
+   x_scale   = (float) a_point / (float) x_font->point;
    v = (x_font->max_ascent - x_font->max_descent) * a_spacing * x_scale;
-   if (l * v > a_height) return -1;
-   tVERT      *x_vert;
-   for (i = 0; i < len; i++) {
-      if (x_str[i] == '\0') break;
-      if (strchr("-/ ", x_str[i]) != 0) {
+   --rce;  if (l * v > a_height) {
+      DEBUG_YFONT_M  yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   --rce;  for (i = 0; i < x_len; i++) {
+      DEBUG_YFONT_M  yLOG_complex ("char"      , "%3d, %3d, %c", i, x_str [i], x_str [i]);
+      if (x_str[i] == '\0') {
+         DEBUG_YFONT_M  yLOG_note    ("hit the null/end, break");
+         break;
+      }
+      if (strchr("-/ ", x_str[i]) != NULL) {
+         DEBUG_YFONT_M  yLOG_note    ("found a delimiter/space");
          space = i;
       }
       x_vert = yFONT__verts_find  (x_font, x_str[i]);
-      if (x_vert == NULL) continue;
+      DEBUG_YFONT_M  yLOG_point   ("x_vert"    , x_vert);
+      if (x_vert == NULL) {
+         DEBUG_YFONT_M  yLOG_note    ("null vert, continue");
+         continue;
+      }
       w += x_vert->a * x_scale;
+      DEBUG_YFONT_M  yLOG_complex ("width"     , "%3d adv, %f scale, %3d width, %3d cum, %3d limit", x_vert->a, x_scale, x_vert->a * x_scale, w, a_width);
       if (w > a_width) {
-         x_str[space] = '\0';
-         yFONT_print (a_slot, a_point, a_align, &x_str[s]);
+         DEBUG_YFONT_M  yLOG_note    ("passed width, display");
+         x_str [space] = '\0';
+         yFONT_print (a_slot, a_point, a_align, &x_str [s]);
          glTranslatef(0.0, -v, 0.0);
          w = 0;
          i = space + 1;
          s = i;
          ++l;
-         if (l * v > a_height) return  2;
+         if (l * v > a_height) {
+            DEBUG_YFONT_M  yLOG_exitr   (__FUNCTION__, rce);
+            return rce;
+         }
+      } else {
+         DEBUG_YFONT_M  yLOG_note    ("under width limit, get next char");
       }
    }
-   if (s != len - 1) {
+   DEBUG_YFONT_M  yLOG_complex ("leftover"  , "%3d w, %3d s, %3d len", w, s, x_len);
+   /*> if (s != x_len - 1) {                                                          <*/
+   if (w > 0) {
+      DEBUG_YFONT_M  yLOG_note    ("print final bits");
       yFONT_print (a_slot, a_point, a_align, &x_str[s]);
+   } else {
+      DEBUG_YFONT_M  yLOG_note    ("nothing left at end to print");
    }
+   /*---(complete)------------------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return a_width;
 }
 

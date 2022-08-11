@@ -172,15 +172,15 @@ typedef unsigned char uchar;
  *    10  11  12
  */
 
-#define    YF_BASLEF         1
-#define    YF_BASCEN         2
-#define    YF_BASRIG         3
+#define    YF_TOPLEF         1
+#define    YF_TOPCEN         2
+#define    YF_TOPRIG         3
 #define    YF_MIDLEF         4
 #define    YF_MIDCEN         5
 #define    YF_MIDRIG         6
-#define    YF_TOPLEF         7
-#define    YF_TOPCEN         8
-#define    YF_TOPRIG         9
+#define    YF_BASLEF         7
+#define    YF_BASCEN         8
+#define    YF_BASRIG         9
 #define    YF_BOTLEF        10
 #define    YF_BOTCEN        11
 #define    YF_BOTRIG        12
@@ -205,6 +205,11 @@ int       yFONT_iconload     (void);
 int       yFONT_icon         (char *a_cat, char *a_name, int a_side);
 int       yFONT_iconno       (int a_icon, int a_side);
 
+/*---(external building)-----------------*/
+char      yFONT_head_force        (char *a_slot, char *a_name, char a_point, short a_twide, short a_ttall, short a_ascent, short a_descent, char a_margin, short a_glyphs);
+char      yFONT_index_force       (char a_slot, char a_gwide, char a_gtall);
+uchar*    yFONT_map_force         (char a_slot);
+char      yFONT_write_force       (char a_slot);
 
 
 #define    YF_NO_SLOTS         -1

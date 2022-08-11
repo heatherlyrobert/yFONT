@@ -15,22 +15,33 @@
 
 #define     P_FOCUS     "RS (run-time support)"
 #define     P_NICHE     "vs (desktop and visualization)"
+#define     P_SUBJECT   "texture-mapped fonts"
 #define     P_PURPOSE   "fast, clean, and aesthetic texture-mapped fonts for opengl"
 
-#define     P_NAMESAKE  "zephyros-anemoi (winds)"
+#define     P_NAMESAKE  "zephyros-anemoi (spring wind)"
 #define     P_HERITAGE  "one of eight wind gods, representing the gentle, spring west wind"
 #define     P_IMAGERY   "handsome, winged youth with a crown of flowers"
+#define     P_REASON    ""
+
+#define     P_ONELINE   P_NAMESAKE " " P_SUBJECT
+
+#define     P_BASENAME  ""
+#define     P_FULLPATH  ""
+#define     P_SUFFIX    ""
+#define     P_CONTENT   ""
 
 #define     P_SYSTEM    "gnu/linux   (powerful, ubiquitous, technical, and hackable)"
 #define     P_LANGUAGE  "ansi-c      (wicked, limitless, universal, and everlasting)"
 #define     P_CODESIZE  "large       (appoximately 10,000 slocl)"
+#define     P_DEPENDS   "none"
 
 #define     P_AUTHOR    "heatherlyrobert"
 #define     P_CREATED   "2010-08"
-#define     P_DEPENDS   "none"
 
-#define     P_VERNUM    "2.1m"
-#define     P_VERTXT    "updated alignment constants and calculations to make more clear"
+#define     P_VERMAJOR  ""
+#define     P_VERMINOR  ""
+#define     P_VERNUM    "2.1n"
+#define     P_VERTXT    "fixed printw to allow single character prints"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"

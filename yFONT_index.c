@@ -210,14 +210,17 @@ yFONT__index_dump       (char  a_slot)
 {
    /*---(locals)-----------+-----------+-*/
    int         i           = 0;
-   tYFONT      *x_font      = NULL;
+   tYFONT     *x_font      = NULL;
+   uchar       x_ch        =  '-';
    x_font = g_yfont [a_slot];
    printf ("\n");
    for (i = 0; i < x_font->num_glyph; ++i) {
       if (i % 5 == 0)  printf ("   order  unicode  c  xpos  ypos  wide  tall  xoff  yoff  adv  good\n");
+      if      (x_font->glyphs[i].code <   32)  x_ch = '´';
+      else if (x_font->glyphs[i].code == 127)  x_ch = '´';
+      else                                     x_ch = x_font->glyphs [i].code;
       printf ("   %5d  %7d  %c  %4d %4d %5d %5d %5d %5d %5d   %c\n", i,
-            x_font->glyphs[i].code , 
-            (x_font->glyphs[i].code < 128) ? x_font->glyphs[i].code : '-',
+            x_font->glyphs[i].code , x_ch,
             x_font->glyphs[i].xpos , x_font->glyphs[i].ypos , 
             x_font->glyphs[i].wide , x_font->glyphs[i].tall , 
             x_font->glyphs[i].xoff , x_font->glyphs[i].yoff ,
@@ -272,6 +275,73 @@ yFONT__index_read       (char  a_slot)
    for (i = 0; i < x_font->num_glyph; ++i) {
       fread  (&x_font->glyphs [i], sizeof (tGLYPH), 1, x_font->file);
    }
+   /*---(complete)-----------------------*/
+   DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char         /*--: layout the characters for texture -----[ ------ [ ------ ]-*/
+yFONT_layout_force      (char a_slot, char a_margin, short a_gwide, short a_gtall)
+{
+   /*---(locals)-----------+-----------+-*/
+   int         n           =      0;   /* iterator -- gylphs                  */
+   int         x, y;                   /* iterator -- gylphs                  */
+   int         x_pos       =      0;   /* current width                       */
+   int         y_pos       =      0;   /* current height                      */
+   /*---(header)-------------------------*/
+   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
+   /*---(initialize)---------------------*/
+   DEBUG_INPT   yLOG_value   ("a_gwide"   , a_gwide);
+   DEBUG_INPT   yLOG_value   ("a_gtall"   , a_gtall);
+   /*---(measure all glyphs)-------------*/
+   for (y = 0; y < 16; ++y) {
+      for (x = 0; x < 16; ++x) {
+         y_pos  = a_margin + 1 + (y * (a_gtall + a_margin));
+         x_pos  = a_margin + 1 + (x * (a_gwide + a_margin));
+         DEBUG_INPT   yLOG_complex ("char"      , "%3d#, %4dx, %4dy", n, x_pos, y_pos);
+         yFONT__index_pos   (a_slot, n, x_pos, y_pos);
+         ++n;
+         /*---(done)------------------------*/
+      }
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yFONT_index_force       (char a_slot, char a_gwide, char a_gtall)
+{
+   char        rc          =    0;
+   int         i           = 0;
+   tYFONT    *x_font    = NULL;              /* new font                       */
+   /*---(header)-------------------------*/
+   DEBUG_YFONT_M  yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT_M  yLOG_value   ("a_slot"    , a_slot);
+   /*---(allocate)------------------------------*/
+   rc = yFONT__index_alloc   (a_slot);
+   /*---(check file type)-----------------------*/
+   x_font = g_yfont [a_slot];
+   /*---(fill out index)-----------------*/
+   for (i = 0; i < x_font->num_glyph; ++i) {
+      /*---(lookup)--------------*/
+      x_font->glyphs [i].code   = i;
+      x_font->glyphs [i].good   = 'y';
+      /*---(texture)-------------*/
+      x_font->glyphs [i].xpos   = 0;
+      x_font->glyphs [i].ypos   = 0;
+      x_font->glyphs [i].wide   = a_gwide;
+      x_font->glyphs [i].tall   = a_gtall;
+      /*---(texture)-------------*/
+      x_font->glyphs [i].xoff   = 0;
+      x_font->glyphs [i].yoff   = x_font->max_ascent;
+      x_font->glyphs [i].adv    = a_gwide + x_font->margin;
+   }
+   /*---(layout)-------------------------*/
+   rc = yFONT_layout_force  (a_slot, x_font->margin, a_gwide, a_gtall);
+   /*---(write to file)------------------*/
+   rc = yFONT__index_write  (a_slot);
    /*---(complete)-----------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
    return 0;
