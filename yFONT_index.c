@@ -433,7 +433,7 @@ yFONT__index_widthu  (tYFONT *a_font, int *a_array, int a_len)
 }
 
 int         /* PURPOSE : determine the width of a displayed string     */
-yFONT__index_width   (tYFONT *a_font, char *a_text, int a_len)
+yFONT__index_width   (tYFONT *a_font, uchar *a_text, int a_len)
 {
    int         i           = 0;                 /* iterator -- character          */
    int         w           = 0;                 /* width                          */

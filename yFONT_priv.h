@@ -40,8 +40,8 @@
 
 #define     P_VERMAJOR  ""
 #define     P_VERMINOR  ""
-#define     P_VERNUM    "2.1n"
-#define     P_VERTXT    "fixed printw to allow single character prints"
+#define     P_VERNUM    "2.1o"
+#define     P_VERTXT    "added line-break to the yFONT_printw function for notes"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -266,7 +266,7 @@ char        yFONT__index_coords  (char  a_slot, int  a_entry, short *a_xpos, sho
 char        yFONT__index_write   (char  a_slot);
 char        yFONT__index_lookup  (char  a_slot);
 int         yFONT__index_widthu  (tYFONT *a_font, int  *a_array, int a_len);
-int         yFONT__index_width   (tYFONT *a_font, char *a_text , int a_len);
+int         yFONT__index_width   (tYFONT *a_font, uchar *a_text , int a_len);
 
 char        yFONT__map_alloc     (char  a_slot);
 char        yFONT__map_write     (char  a_slot);

@@ -1205,7 +1205,7 @@ yFONT_printw         (char a_slot, char a_point, char a_align, uchar *a_text, in
    int         w           =    0;                 /* current width                  */
    int         l           =    1;                 /* number of lines                */
    int         space       =    0;                 /* last breakable place in text   */
-   char       *x_str       = NULL;               /* alterable string               */
+   uchar      *x_str       = NULL;               /* alterable string               */
    float       x_scale     =  0.0;
    int         v           =    0;                 /* vertical spacing               */
    tYFONT     *x_font      = NULL;
@@ -1249,16 +1249,21 @@ yFONT_printw         (char a_slot, char a_point, char a_align, uchar *a_text, in
          DEBUG_YFONT_M  yLOG_note    ("found a delimiter/space");
          space = i;
       }
-      x_vert = yFONT__verts_find  (x_font, x_str[i]);
-      DEBUG_YFONT_M  yLOG_point   ("x_vert"    , x_vert);
-      if (x_vert == NULL) {
-         DEBUG_YFONT_M  yLOG_note    ("null vert, continue");
-         continue;
+      if (x_str [i] == (uchar) '¦') {
+         DEBUG_YFONT_M  yLOG_note    ("found new line");
+         space = i;
+      } else {
+         x_vert = yFONT__verts_find  (x_font, x_str[i]);
+         DEBUG_YFONT_M  yLOG_point   ("x_vert"    , x_vert);
+         if (x_vert == NULL) {
+            DEBUG_YFONT_M  yLOG_note    ("null vert, continue");
+            continue;
+         }
+         w += x_vert->a * x_scale;
       }
-      w += x_vert->a * x_scale;
       DEBUG_YFONT_M  yLOG_complex ("width"     , "%3d adv, %f scale, %3d width, %3d cum, %3d limit", x_vert->a, x_scale, x_vert->a * x_scale, w, a_width);
-      if (w > a_width) {
-         DEBUG_YFONT_M  yLOG_note    ("passed width, display");
+      if (w > a_width || x_str [i] == (uchar) '¦') {
+         DEBUG_YFONT_M  yLOG_note    ("passed width or newline, display");
          x_str [space] = '\0';
          yFONT_print (a_slot, a_point, a_align, &x_str [s]);
          glTranslatef(0.0, -v, 0.0);
