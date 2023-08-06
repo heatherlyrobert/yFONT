@@ -165,12 +165,15 @@ typedef unsigned char uchar;
  *    CEN : centered
  *    RIG : right
  *
+ *  left  cen  right
  *
- *     7   8   9
- *     4   5   6
- *     1   2   3
- *    10  11  12
+ *     1   2   3    -- top
+ *     4   5   6    -- middle
+ *     7   8   9    -- baselinne
+ *    10  11  12    -- full bottom
  */
+
+#define    YF_ORIGIN         0
 
 #define    YF_TOPLEF         1
 #define    YF_TOPCEN         2
@@ -184,6 +187,16 @@ typedef unsigned char uchar;
 #define    YF_BOTLEF        10
 #define    YF_BOTCEN        11
 #define    YF_BOTRIG        12
+
+#define    YF_ORILEF        13
+#define    YF_ORICEN        14
+#define    YF_ORIRIG        15
+#define    YF_TOPORI        16
+#define    YF_MIDORI        17
+#define    YF_BASORI        18
+#define    YF_BOTORI        19
+
+#define    YF_GREGG         20
 
 
 /*===[[ PROTOTYPES ]]=========================================================*/

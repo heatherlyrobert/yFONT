@@ -114,7 +114,7 @@
 #define     SRC_DIR     "/home/shared/fonts"
 #define     SRC_FILE    "comfortaa_regular.ttf"
 
-#define     DST_DIR     "/usr/local/share/fonts"
+#define     DST_DIR     "/usr/local/share/yfonts"
 #define     DST_EXT     "txf"
 
 char        FONT__init         (void);
@@ -429,28 +429,28 @@ char         /*--: pre-argument program initialization ---[ leaf   [ ------ ]-*/
 PROG_init          (void)
 {
    /*---(begin)--------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(flags)--------------------------*/
-   DEBUG_TOPS   yLOG_note    ("intialize program status flags");
+   DEBUG_YFONT   yLOG_note    ("intialize program status flags");
    /*---(fonts and files)----------------*/
-   DEBUG_TOPS   yLOG_note    ("intialize font and file names");
+   DEBUG_YFONT   yLOG_note    ("intialize font and file names");
    FONT__init    ();
    /*---(defaults)-----------------------*/
-   DEBUG_TOPS   yLOG_note    ("intialize global settings");
+   DEBUG_YFONT   yLOG_note    ("intialize global settings");
    my.byte   = YFONT_BYTE;  /* always byte version */
    my.point  = -1;
    my.adjust = -1;
    my.margin =  2;
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char         /*--: argument processing -------------------[ ------ [ ------ ]-*/
 PROG_args     (int argc, char *argv[])
 {
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)--------------------------------*/
    char     *a         = NULL;               /* current argument              */
@@ -469,7 +469,7 @@ PROG_args     (int argc, char *argv[])
    /*---(updates)-------------------------------*/
    DEBUG_PROG   yLOG_info    ("font_name" , my.font_name);
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -717,7 +717,7 @@ FREETYPE__setup      (char *a_font, int a_point)
     *  only effects the my.lib, my.face variables
     */
    /*---(begin)--------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
@@ -728,7 +728,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("freetype2 library could not be openned");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("initialization successful");
@@ -736,7 +736,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_note    ("load the source font");
    --rce;  if (a_font == NULL) {
       DEBUG_INPT   yLOG_fatal   ("font font name string argument is null");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_info    ("a_font"    , a_font);
@@ -744,7 +744,7 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not find font");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("font load successful");
@@ -755,12 +755,12 @@ FREETYPE__setup      (char *a_font, int a_point)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not set pixel size");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("point size setting successful");
    /*---(complete)------------------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -771,7 +771,7 @@ FREETYPE__shutdown   (void)
     *  only effects the my.lib, my.face variables
     */
    /*---(begin)--------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(locals)-----------+-----------+-*/
    int         rc          =   0;      /* simple return code                  */
@@ -782,7 +782,7 @@ FREETYPE__shutdown   (void)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("font freetype2 library could not close font");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("font unloaded successful");
@@ -792,12 +792,12 @@ FREETYPE__shutdown   (void)
    DEBUG_INPT   yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
       DEBUG_INPT   yLOG_fatal   ("freetype2 library could not be closed");
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rce;
    }
    DEBUG_INPT   yLOG_note    ("shutdown successful");
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -913,7 +913,7 @@ INDEX__load        (char a_slot)
    int         x_mycode    =      0;   /* glyph my shrike code                */
    char        x_good      =    '-';   /* good vs bad                         */
    /*---(header)-------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(measure all glyphs)-------------*/
    for (i = 0; i < s_nglist; ++i) {
@@ -955,7 +955,7 @@ INDEX__load        (char a_slot)
       /*---(done)------------------------*/
    }
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -971,7 +971,7 @@ INDEX__layout      (char a_slot)
    int         x_cumw      =      0;   /* current width                       */
    int         x_cumh      =      0;   /* current height                      */
    /*---(header)-------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(initialize)---------------------*/
    x_tall  = yFONT__index_maxes  (a_slot);
@@ -1012,7 +1012,7 @@ INDEX__layout      (char a_slot)
    yFONT__head_tex   (a_slot, x_texw, x_texh);
    my.texw = x_texw;
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -1114,12 +1114,12 @@ TEX__draw            (char a_slot)
    int         x_mycode    =   0;
    char        x_good      = '-';
    /*---(header)-------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(allocate texture)---------------*/
-   DEBUG_TOPS   yLOG_value   ("rc"        , rc);
+   DEBUG_YFONT   yLOG_value   ("rc"        , rc);
    if (rc < 0) {
-      DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+      DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
       return rc;
    }
    /*---(transfer all glyphs)------------*/
@@ -1135,7 +1135,7 @@ TEX__draw            (char a_slot)
       }
    }
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -1165,7 +1165,7 @@ main               (int argc, char *argv[])
    }
    /*> yFONT__conf_list ();                                                           <*/
    /*---(begin)--------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    /*---(set up font)--------------------*/
    while (1) {
       rc = 0;
@@ -1212,7 +1212,7 @@ main               (int argc, char *argv[])
       /*---(done)----------------------------------*/
    }
 
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 

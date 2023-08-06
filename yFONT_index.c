@@ -289,7 +289,7 @@ yFONT_layout_force      (char a_slot, char a_margin, short a_gwide, short a_gtal
    int         x_pos       =      0;   /* current width                       */
    int         y_pos       =      0;   /* current height                      */
    /*---(header)-------------------------*/
-   DEBUG_TOPS   yLOG_enter   (__FUNCTION__);
+   DEBUG_YFONT   yLOG_enter   (__FUNCTION__);
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
    /*---(initialize)---------------------*/
    DEBUG_INPT   yLOG_value   ("a_gwide"   , a_gwide);
@@ -306,7 +306,7 @@ yFONT_layout_force      (char a_slot, char a_margin, short a_gwide, short a_gtal
       }
    }
    /*---(complete)-----------------------*/
-   DEBUG_TOPS   yLOG_exit    (__FUNCTION__);
+   DEBUG_YFONT   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 

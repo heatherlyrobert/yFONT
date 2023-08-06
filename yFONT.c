@@ -15,15 +15,15 @@
 
 
 
-int     nfont     =   0;
-GLuint  syms      =   0;
-float   s_nrow    =   0;
-float   s_ncol    =   0;
-char    s_type    = '-';
+static int     nfont     =   0;
+static GLuint  syms      =   0;
+static float   s_nrow    =   0;
+static float   s_ncol    =   0;
+static char    s_type    = '-';
 
-int     s_iconcol  =  45;
-int     s_iconrow  =  21;
-int     s_iconside =  20;
+static int     s_iconcol  =  45;
+static int     s_iconrow  =  21;
+static int     s_iconside =  20;
 
 
 
@@ -1451,6 +1451,13 @@ yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_type)
    return syms;
 }
 
+char
+yFONT__color       (float a_red, float a_grn, float a_blu)
+{
+    glColor4f (a_red / 0xff, a_grn / 0xff, a_blu / 0xff,  0.3f);
+    return 0;
+}
+
 int
 yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
 {
@@ -1501,13 +1508,15 @@ yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
       glScalef (a_scale, a_scale, a_scale);
       if (a_mod != 0) {
          switch (a_mod) {
-         case  1  : glColor4f (1.0f, 0.0f, 0.0f, 0.2f); break; /* a */
-         case  2  : glColor4f (0.8f, 0.8f, 0.0f, 0.2f); break; /* e */
-         case  3  : glColor4f (0.0f, 1.0f, 0.0f, 0.2f); break; /* f */
-         case  4  : glColor4f (0.0f, 0.8f, 0.8f, 0.2f); break; /* i */
-         case  5  : glColor4f (0.0f, 0.0f, 1.0f, 0.2f); break; /* o */
-         case  6  : glColor4f (0.8f, 0.0f, 0.8f, 0.2f); break; /* u */
-         default  : glColor4f (0.8f, 0.8f, 0.8f, 0.2f); break;
+         case  0  : yFONT__color (0xaa, 0x66, 0x44);   break;  /* brown/base  */
+         case  1  : yFONT__color (0x00, 0xcc, 0x00);   break;  /* green/mate  */
+         case  2  : yFONT__color (0xff, 0x00, 0x00);   break;  /* red/twist   */
+         case  3  : yFONT__color (0xaa, 0xaa, 0x00);   break;  /* yellow/kenn */
+         case  4  : yFONT__color (0x44, 0xbb, 0xdd);   break;  /* blue/major  */
+         case  5  : yFONT__color (0x99, 0x30, 0xee);   break;  /* purple/part */
+         case  6  : yFONT__color (0xff, 0x77, 0x00);   break;  /* gold/embody */
+         case  7  : yFONT__color (0xee, 0x22, 0x99);   break;  /* crimson/fut */
+         default  : yFONT__color (0xff, 0xff, 0xff);   break;  /* white/error */
          }
          glBegin  (GL_POLYGON); {
             glVertex3f   (    0.0, -20.0,   0.0);
@@ -1596,7 +1605,7 @@ yFONT__testloud     (void)
 char       /*----: set up program urgents/debugging --------------------------*/
 yFONT__testend      (void)
 {
-   DEBUG_TOPS   yLOGS_end     ();
+   DEBUG_YFONT   yLOGS_end     ();
    return 0;
 }
 

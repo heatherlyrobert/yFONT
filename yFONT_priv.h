@@ -40,8 +40,8 @@
 
 #define     P_VERMAJOR  ""
 #define     P_VERMINOR  ""
-#define     P_VERNUM    "2.1o"
-#define     P_VERTXT    "added line-break to the yFONT_printw function for notes"
+#define     P_VERNUM    "2.1p"
+#define     P_VERTXT    "copied ten built txf fonts into github for quick use"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -80,7 +80,7 @@
 
 
 
-#define     ICON_SET  "/usr/local/share/fonts/outline_icons.png"
+#define     ICON_SET  "/usr/local/share/yfonts/outline_icons.png"
 
 
 

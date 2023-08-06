@@ -215,7 +215,7 @@ yFONT__file_open   (char a_slot, char a_mode)
    }
    /*---(full name)----------------------*/
    DEBUG_YFONT_M  yLOG_point   ("name"     , x_font->name);
-   snprintf (x_name, 900, "/usr/local/share/fonts/%s.txf", x_font->name);
+   snprintf (x_name, 900, "/usr/local/share/yfonts/%s.txf", x_font->name);
    DEBUG_YFONT_M  yLOG_info    ("file"      , x_name);
    /*---(open)---------------------------*/
    --rce;  switch (a_mode) {

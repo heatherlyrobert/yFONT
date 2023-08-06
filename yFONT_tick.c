@@ -5,13 +5,13 @@
 
 static char  s_fontname [LEN_LABEL] = "comic";
 static char  s_font;
-char        s_type       [LEN_LABEL];   /* type of source (font vs grid)       */
-char        s_point;                    /* point size of font                  */
-char        s_adjust;                   /* actual point size (for adjustment)  */
-int         s_spacer;                   /* unicode of space character          */
-char        s_glist      [LEN_LABEL];   /* type of source (font vs grid)       */
-uchar       s_text       [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
-uchar       s_text1      [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  · £ ¤ ¥ ¦ § ¨ © ª «   èéêëìíîïðñòóôõö÷øùúûüýþÿ.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
+static char        s_type       [LEN_LABEL];   /* type of source (font vs grid)       */
+static char        s_point;                    /* point size of font                  */
+static char        s_adjust;                   /* actual point size (for adjustment)  */
+static int         s_spacer;                   /* unicode of space character          */
+static char        s_glist      [LEN_LABEL];   /* type of source (font vs grid)       */
+static uchar       s_text       [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
+static uchar       s_text1      [LEN_STR]   = "the quick brown fox jumped over the lazy dog.  · £ ¤ ¥ ¦ § ¨ © ª «   èéêëìíîïðñòóôõö÷øùúûüýþÿ.  THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG.  abcdefghijklmnopqrstuvwxyz.  ABCDEFGHIJKLMNOPQRSTUVWXYZ.  ";
 /*---(sizes)-----------------------------*/
 int       win_w = 1600;                     /* window width                   */
 int       win_h =  170;                     /* window height                  */
