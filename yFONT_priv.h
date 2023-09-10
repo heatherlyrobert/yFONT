@@ -40,8 +40,8 @@
 
 #define     P_VERMAJOR  ""
 #define     P_VERMINOR  ""
-#define     P_VERNUM    "2.1p"
-#define     P_VERTXT    "copied ten built txf fonts into github for quick use"
+#define     P_VERNUM    "2.1q"
+#define     P_VERTXT    "updated ySTR functions to ¶ystr¶ prefix"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"

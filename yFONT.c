@@ -1127,7 +1127,7 @@ yFONT_print          (char a_slot, char a_size, char a_align, uchar *a_text)
       return rce;
    }
    DEBUG_YFONT_M  yLOG_info    ("a_text"    , a_text);
-   x_len     = strllen(a_text, LEN_HUGE);
+   x_len     = ystrllen(a_text, LEN_HUGE);
    DEBUG_YFONT_M  yLOG_value   ("x_len"     , x_len);
    /*---(place start)--------------------*/
    w = yFONT__index_width  (x_font, a_text, x_len);
@@ -1180,7 +1180,7 @@ yFONT_width          (char a_slot, char a_point)
    x_font = g_yfont [a_slot];
    if (x_font == NULL)                     return YF_BAD_SLOT;
    x_scale   = (float) a_point / (float) x_font->point;
-   x_len     = strllen (x_test, 1000);
+   x_len     = ystrllen (x_test, 1000);
    /*> printf ("%2d %2d   %-10p %2d   %5.2f  %3d\n", a_slot, a_point, x_font, x_font->point, x_scale, x_len);   <*/
    for (i = 0; i < x_len; i++) {
       if (x_test [i] == '\0') break;
@@ -1558,12 +1558,12 @@ yFONT__unit        (char *a_question, int a_num)
 {
    tYFONT      *x_font      = NULL;              /* new font                       */
    /*---(initialize)---------------------*/
-   strlcpy (unit_answer, "yFONT_unit, unknown request", 100);
+   ystrlcpy (unit_answer, "yFONT_unit, unknown request", 100);
    /*---(string testing)-----------------*/
    if        (strncmp(a_question, "font_name"   , 20)  == 0) {
       x_font = g_yfont [a_num];
       if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT font name  : no font assigned");
-      else                snprintf (unit_answer, LEN_TEXT, "yFONT font name  : %2d:%-20.20s     point=%2d", strllen (x_font->name, LEN_LABEL), x_font->name, x_font->point);
+      else                snprintf (unit_answer, LEN_TEXT, "yFONT font name  : %2d:%-20.20s     point=%2d", ystrllen (x_font->name, LEN_LABEL), x_font->name, x_font->point);
    } else if (strncmp(a_question, "tex_size"    , 20)  == 0) {
       x_font = g_yfont [a_num];
       if (x_font == NULL) snprintf (unit_answer, LEN_TEXT, "yFONT tex size   : no font assigned");

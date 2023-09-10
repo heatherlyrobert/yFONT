@@ -106,10 +106,10 @@ yFONT__slot_init   (char a_slot)
    DEBUG_YFONT_M  yLOG_note    ("clear file variables");
    g_yfont [a_slot]->slot         = a_slot;
    g_yfont [a_slot]->file         = NULL;
-   strlcpy (g_yfont [a_slot]->version, "                   ", LEN_LABEL);
-   strlcpy (g_yfont [a_slot]->version, ""                   , LEN_LABEL);
-   strlcpy (g_yfont [a_slot]->name   , "                   ", LEN_LABEL);
-   strlcpy (g_yfont [a_slot]->name   , ""                   , LEN_LABEL);
+   ystrlcpy (g_yfont [a_slot]->version, "                   ", LEN_LABEL);
+   ystrlcpy (g_yfont [a_slot]->version, ""                   , LEN_LABEL);
+   ystrlcpy (g_yfont [a_slot]->name   , "                   ", LEN_LABEL);
+   ystrlcpy (g_yfont [a_slot]->name   , ""                   , LEN_LABEL);
    /*---(characteristics)----------------*/
    DEBUG_YFONT_M  yLOG_note    ("clear characteristics");
    g_yfont [a_slot]->point        = 0;

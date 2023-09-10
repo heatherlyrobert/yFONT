@@ -464,7 +464,7 @@ PROG_args     (int argc, char *argv[])
       a = argv[i];
       if (a[0] == '@')  continue;
       DEBUG_ARGS  yLOG_info  ("argument"  , a);
-      strlcpy (my.font_name, argv[i], LEN_LABEL);
+      ystrlcpy (my.font_name, argv[i], LEN_LABEL);
    }
    /*---(updates)-------------------------------*/
    DEBUG_PROG   yLOG_info    ("font_name" , my.font_name);
@@ -484,10 +484,10 @@ char
 FONT__init         (void)
 {
    DEBUG_VIEW     printf       ("%s\n", __FUNCTION__);
-   strlcpy (my.font_name , "", LEN_LABEL);
-   strlcpy (my.out_name  , "", LEN_LABEL);
-   strlcpy (my.out_file  , "", LEN_LABEL);
-   strlcpy (my.src_file  , "", LEN_LABEL);
+   ystrlcpy (my.font_name , "", LEN_LABEL);
+   ystrlcpy (my.out_name  , "", LEN_LABEL);
+   ystrlcpy (my.out_file  , "", LEN_LABEL);
+   ystrlcpy (my.src_file  , "", LEN_LABEL);
    return 0;
 }
 
@@ -544,7 +544,7 @@ FONT__choose       (char a_slot)
          DEBUG_YFONT  yLOG_exit    (__FUNCTION__);
          return rc;
       }
-      strlcpy  (my.out_name, my.font_name, LEN_LABEL);
+      ystrlcpy  (my.out_name, my.font_name, LEN_LABEL);
    }
    /*---(setup output file)--------------*/
    sprintf (my.out_file, "%s/%s.%s", DST_DIR, my.out_name, DST_EXT);

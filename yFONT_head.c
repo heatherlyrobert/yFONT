@@ -33,7 +33,7 @@ yFONT__head_name   (char a_slot, char *a_name, char a_point)
       return rce;
    }
    DEBUG_YFONT_M  yLOG_info    ("a_name"    , a_name);
-   x_len = strllen (a_name, LEN_LABEL);
+   x_len = ystrllen (a_name, LEN_LABEL);
    DEBUG_YFONT_M  yLOG_value   ("x_len"     , x_len);
    --rce;  if (x_len <= 0 || x_len >= LEN_LABEL) {
       DEBUG_YFONT_M  yLOG_warn    ("name length not in required range (0 - LEN_LABEL)");
@@ -47,7 +47,7 @@ yFONT__head_name   (char a_slot, char *a_name, char a_point)
       return rce;
    }
    /*---(update)--------------------------------*/
-   strlcpy (x_font->name, a_name, LEN_LABEL);
+   ystrlcpy (x_font->name, a_name, LEN_LABEL);
    x_font->point   = a_point;
    /*---(complete)------------------------------*/
    DEBUG_YFONT_M  yLOG_exit    (__FUNCTION__);
@@ -396,8 +396,8 @@ yFONT__head_read   (char a_slot)
       return rce;
    }
    x_text [19] = '\0';
-   strltrim (x_text, ySTR_BOTH, LEN_LABEL);
-   strlcpy (x_font->name, x_text, LEN_LABEL);
+   ystrltrim (x_text, ySTR_BOTH, LEN_LABEL);
+   ystrlcpy (x_font->name, x_text, LEN_LABEL);
    DEBUG_YFONT_M  yLOG_info    ("name"      , x_text);
    /*---(point)---------------------------------*/
    --rce;  if ( 1 != fread (&x_char, sizeof (char),  1, x_font->file)) {
@@ -511,7 +511,7 @@ yFONT_head_force        (char *a_slot, char *a_name, char a_point, short a_wide,
    if (a_slot != NULL)  *a_slot = x_slot;
    x_font = g_yfont [x_slot];
    /*---(read name)-----------------------------*/
-   strlcpy (x_font->name, a_name, LEN_LABEL);
+   ystrlcpy (x_font->name, a_name, LEN_LABEL);
    DEBUG_YFONT_M  yLOG_info    ("name"      , x_font->name);
    /*---(point)---------------------------------*/
    x_font->point  = a_point;
