@@ -1371,7 +1371,7 @@ yFONT_iconload     (void)
 }
 
 int
-yFONT_icon         (char *a_cat, char *a_name, int a_side)
+yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod)
 {
    /*---(design notes)-------------------*/
    /*
@@ -1420,7 +1420,7 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side)
    x_row   = x_icon / s_iconcol;
    x_col   = x_icon - (x_row * s_iconcol);
    /*---(complete)-----------------------*/
-   return yFONT_symbol (x_scale, x_col, x_row, 0);
+   return yFONT_symbol (x_scale, x_col, x_row, a_mod);
 }
 
 int
@@ -1507,7 +1507,16 @@ yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
    glPushMatrix(); {
       glScalef (a_scale, a_scale, a_scale);
       if (a_mod != 0) {
+         glColor4f    (0.50, 0.50, 0.50, 1.00);
+         glBegin  (GL_POLYGON); {
+            glVertex3f   (  -10.0, -10.0,   0.0);
+            glVertex3f   (   10.0, -10.0,   0.0);
+            glVertex3f   (   10.0,  10.0,   0.0);
+            glVertex3f   (  -10.0,  10.0,   0.0);
+         } glEnd();
+
          switch (a_mod) {
+
          case  0  : yFONT__color (0xaa, 0x66, 0x44);   break;  /* brown/base  */
          case  1  : yFONT__color (0x00, 0xcc, 0x00);   break;  /* green/mate  */
          case  2  : yFONT__color (0xff, 0x00, 0x00);   break;  /* red/twist   */
@@ -1516,27 +1525,47 @@ yFONT_symbol       (float a_scale, int a_col, int a_row, int a_mod)
          case  5  : yFONT__color (0x99, 0x30, 0xee);   break;  /* purple/part */
          case  6  : yFONT__color (0xff, 0x77, 0x00);   break;  /* gold/embody */
          case  7  : yFONT__color (0xee, 0x22, 0x99);   break;  /* crimson/fut */
+
+         case YF_BRN_TINT  : glColor4f    (0.60, 0.30, 0.20, 0.50);  break;
+         case YF_RED_TINT  : glColor4f    (0.80, 0.00, 0.00, 0.50);  break;
+         case YF_ORA_TINT  : glColor4f    (1.00, 0.40, 0.00, 0.50);  break;
+         case YF_YEL_TINT  : glColor4f    (0.75, 0.75, 0.00, 0.50);  break;
+         case YF_GRN_TINT  : glColor4f    (0.00, 0.75, 0.00, 0.50);  break;
+         case YF_BLU_TINT  : glColor4f    (0.00, 0.65, 0.65, 0.50);  break;
+         case YF_PUR_TINT  : glColor4f    (0.50, 0.00, 1.00, 0.50);  break;
+         case YF_CRI_TINT  : glColor4f    (1.00, 0.00, 0.50, 0.50);  break;
+         case YF_GRY_TINT  : glColor4f    (0.50, 0.50, 0.50, 0.50);  break;
+
+         case YF_BRN_FULL  : glColor4f    (0.60, 0.30, 0.20, 1.00);  break;
+         case YF_RED_FULL  : glColor4f    (0.80, 0.00, 0.00, 1.00);  break;
+         case YF_ORA_FULL  : glColor4f    (1.00, 0.40, 0.00, 1.00);  break;
+         case YF_YEL_FULL  : glColor4f    (0.75, 0.75, 0.00, 1.00);  break;
+         case YF_GRN_FULL  : glColor4f    (0.00, 0.75, 0.00, 1.00);  break;
+         case YF_BLU_FULL  : glColor4f    (0.00, 0.65, 0.65, 1.00);  break;
+         case YF_PUR_FULL  : glColor4f    (0.50, 0.00, 1.00, 1.00);  break;
+         case YF_CRI_FULL  : glColor4f    (1.00, 0.00, 0.50, 1.00);  break;
+         case YF_GRY_FULL  : glColor4f    (0.50, 0.50, 0.50, 1.00);  break;
+
          default  : yFONT__color (0xff, 0xff, 0xff);   break;  /* white/error */
          }
          glBegin  (GL_POLYGON); {
-            glVertex3f   (    0.0, -20.0,   0.0);
-            glVertex3f   (   20.0, -20.0,   0.0);
-            glVertex3f   (   20.0,   0.0,   0.0);
-            glVertex3f   (    0.0,   0.0,   0.0);
+            glVertex3f   (  -10.0, -10.0,   0.0);
+            glVertex3f   (   10.0, -10.0,   0.0);
+            glVertex3f   (   10.0,  10.0,   0.0);
+            glVertex3f   (  -10.0,  10.0,   0.0);
          } glEnd();
       }
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
       glBindTexture(GL_TEXTURE_2D, syms);
-      glColor4f (1.0f, 1.0f, 1.0f, 1.0f);
       glBegin  (GL_POLYGON); {
          glTexCoord2f ( x          , y);
-         glVertex3f   (    0.0, -20.0,   0.0);
+         glVertex3f   (  -10.0, -10.0,   0.0);
          glTexCoord2f ( x + x_width, y);
-         glVertex3f   (   20.0, -20.0,   0.0);
+         glVertex3f   (   10.0, -10.0,   0.0);
          glTexCoord2f ( x + x_width, y + x_height);
-         glVertex3f   (   20.0,   0.0,   0.0);
+         glVertex3f   (   10.0,  10.0,   0.0);
          glTexCoord2f ( x          , y + x_height);
-         glVertex3f   (    0.0,   0.0,   0.0);
+         glVertex3f   (  -10.0,  10.0,   0.0);
       } glEnd();
       glBindTexture(GL_TEXTURE_2D, 0);
    } glPopMatrix();

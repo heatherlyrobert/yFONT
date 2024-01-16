@@ -199,6 +199,29 @@ typedef unsigned char uchar;
 #define    YF_GREGG         20
 
 
+#define    YF_BRN_TINT      10
+#define    YF_RED_TINT      11
+#define    YF_ORA_TINT      12
+#define    YF_YEL_TINT      13
+#define    YF_GRN_TINT      14
+#define    YF_BLU_TINT      15
+#define    YF_PUR_TINT      16
+#define    YF_CRI_TINT      17
+#define    YF_GRY_TINT      18
+#define    YF_WHI_TINT      19
+
+#define    YF_BRN_FULL      20
+#define    YF_RED_FULL      21
+#define    YF_ORA_FULL      22
+#define    YF_YEL_FULL      23
+#define    YF_GRN_FULL      24
+#define    YF_BLU_FULL      25
+#define    YF_PUR_FULL      26
+#define    YF_CRI_FULL      27
+#define    YF_GRY_FULL      28
+#define    YF_WHI_FULL      29
+
+
 /*===[[ PROTOTYPES ]]=========================================================*/
 
 char     *yFONT_version      (void);
@@ -215,7 +238,7 @@ int       yFONT_symload      (char *a_filename, int a_ncol, int a_nrow, char a_t
 int       yFONT_symbol       (float a_scale   , int a_col , int a_row , int a_mod);
 
 int       yFONT_iconload     (void);
-int       yFONT_icon         (char *a_cat, char *a_name, int a_side);
+int       yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod);
 int       yFONT_iconno       (int a_icon, int a_side);
 
 /*---(external building)-----------------*/
