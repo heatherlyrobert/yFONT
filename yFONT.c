@@ -1371,7 +1371,7 @@ yFONT_iconload     (void)
 }
 
 int
-yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod)
+yFONT_icon         (char *a_cat, char *a_sub, int a_side, char a_mod)
 {
    /*---(design notes)-------------------*/
    /*
@@ -1390,7 +1390,7 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod)
    int         x_row       =    0;
    /*---(defence)------------------------*/
    --rce;  if (a_cat  == NULL)  return rce;
-   --rce;  if (a_name == NULL)  return rce;
+   --rce;  if (a_sub  == NULL)  return rce;
    --rce;  if (a_side >= 0 && a_side <  10  )  return rce;
    --rce;  if (a_side >  50  )  return rce;
    /*---(find cat)-----------------------*/
@@ -1407,8 +1407,8 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod)
    for (i = x_off; i < MAX_ICONS; ++i) {
       if (s_icons[i].cat     == NULL)              break;
       if (s_icons[i].catno   != x_cat)             break;
-      if (s_icons[i].abbr[0] != a_name[0])         continue;
-      if (strcmp (s_icons[i].abbr, a_name) != 0)   continue;
+      if (s_icons[i].abbr[0] != a_sub [0])         continue;
+      if (strcmp (s_icons[i].abbr, a_sub) != 0)    continue;
       x_icon = i;
       break;
    }
@@ -1424,7 +1424,7 @@ yFONT_icon         (char *a_cat, char *a_name, int a_side, char a_mod)
 }
 
 int
-yFONT_iconno       (int a_icon, int a_side)
+yFONT_iconno       (int a_icon, int a_side, char a_mod)
 {
    /*---(locals)-----------+-----+-----+-*/
    float       x_scale     =  1.0;
@@ -1435,7 +1435,7 @@ yFONT_iconno       (int a_icon, int a_side)
    x_row   = a_icon / s_iconcol;
    x_col   = a_icon - (x_row * s_iconcol);
    /*---(complete)-----------------------*/
-   return yFONT_symbol (x_scale, x_col, x_row, 0);
+   return yFONT_symbol (x_scale, x_col, x_row, a_mod);
 }
 
 int                /* PURPOSE : make a png image into a texture --------------*/
